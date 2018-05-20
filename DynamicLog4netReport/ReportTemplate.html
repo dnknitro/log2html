@@ -333,21 +333,48 @@
 	</div>
 	<script type="text/babel">
 		var reportData = [
-			{"id":1,"Message":"Debug","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:24:58.6523796Z","ScreenshotPath":"actual path to file here"},
-			{"id":2,"Message":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:25:06.5363934Z","ScreenshotPath":null},
-			{"id":3,"Message":"Fail Skip test","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:25:06.7093976Z","ScreenshotPath":null},
-			{"id":4,"Message":"Debug","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:25:06.7104004Z","ScreenshotPath":"actual path to file here"},
-			{"id":5,"Message":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:33:34.7463754Z","ScreenshotPath":null},
-			{"id":6,"Message":"Fail Skip test","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:33:34.9033709Z","ScreenshotPath":null},
-			{"id":7,"Message":"Debug","ThreadName":"NonParallelWorker","StackTrace":null,"TimeStampUtc":"2018-05-17T15:33:34.9043714Z","ScreenshotPath":"actual path to file here"},
 			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
 		];
+
 
 		reportData.splice(-1,1)
 
 		for (var i = 0; i < reportData.length; i++) {
 			reportData[i].TimeStampUtc = new Date(reportData[i].TimeStampUtc);
 		}
+
+		//////////////////////////////////////////////////////////////////////////
+		var groupBy = function(list, key) {
+			return list.reduce(function(rv, x) {
+				(rv[x[key]] = rv[x[key]] || []).push(x);
+				return rv;
+			}, {});
+		};
+
+		var reportDataGroups = [];
+		var groupsObject = groupBy(reportData, 'FullTestCaseName');
+
+		Object.keys(groupsObject).forEach(function(key,index) {
+			var reportDataGroup = groupsObject[key];
+			reportDataGroup.FullTestCaseName = reportDataGroup[0].FullTestCaseName;
+			reportDataGroup.GetLevel = function() {
+				return reportDataGroup
+					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, reportDataGroup[0])
+					.Level;
+			};
+			reportDataGroup.GetStartTime = function() {
+				return reportDataGroup
+					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc < accumulator.TimeStampUtc ? currentValue : accumulator, reportDataGroup[0])
+					.TimeStampUtc;
+			};
+			reportDataGroup.GetEndTime = function() {
+				return reportDataGroup
+					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc > accumulator.TimeStampUtc ? currentValue : accumulator, reportDataGroup[0])
+					.TimeStampUtc;
+			};
+			reportDataGroups.push(reportDataGroup);
+		});
+		//////////////////////////////////////////////////////////////////////////
 
 		var timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
 
@@ -356,12 +383,13 @@
 				super(props);
 			}
 			render() {
+				var level = this.props.reportDataGroup.GetLevel();
 				return (
-					<tr className='summaryRow failskip'>
-						<td className='summaryStatus'><span>FailSkip</span></td>
-						<td className='summaryTestName'>{this.props.summaryRow.Message}</td>
-						<td className='summaryStart'>{timeOnlyFormatter.format(this.props.summaryRow.TimeStampUtc)}&nbsp;&nbsp;- </td>
-						<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.summaryRow.TimeStampUtc)} TODO</td>
+					<tr className={`summaryRow ${level.toLowerCase()}`}>
+						<td className='summaryStatus'><span>{level}</span></td>
+						<td className='summaryTestName'>{this.props.reportDataGroup.FullTestCaseName}</td>
+						<td className='summaryStart'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetStartTime())}&nbsp;&nbsp;- </td>
+						<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetEndTime())}</td>
 						<td className='summaryDuration' title='Duration: TODO!!!'><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
 					</tr>
 				)
@@ -376,9 +404,9 @@
 				return (
 					<table className='summary'>
 						<tbody>
-							{this.props.rowsData.map((item, i) => {
+							{this.props.reportDataGroups.map((reportDataGroup, i) => {
 								return (
-									<SummaryRow key={item.id} summaryRow={item}/>
+									<SummaryRow key={reportDataGroup.FullTestCaseName} reportDataGroup={reportDataGroup}/>
 								);
 							})}
 						</tbody>
@@ -388,7 +416,7 @@
 		}
 
 		ReactDOM.render(
-			<SummaryTable rowsData={reportData}/>,
+			<SummaryTable reportDataGroups={reportDataGroups}/>,
 			document.getElementById('content')
 		);
 	</script>
