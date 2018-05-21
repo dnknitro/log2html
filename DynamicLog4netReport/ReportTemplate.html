@@ -151,19 +151,14 @@
 			white-space: nowrap;
 		}
 
-	.summaryDetailsRow
+	.summaryDetailsRow > td
 	{
-		/*display: none;*/
+		padding: 0;
 	}
 
-		.summaryDetailsRow > td
-		{
-			padding: 0;
-		}
-
-		.summaryDetailsRow > td:last-child {
-			padding-right: 5px;
-		}
+	.summaryDetailsRow > td:last-child {
+		padding-right: 5px;
+	}
 
 	.square
 	{
@@ -388,7 +383,7 @@
 			{"ID":2,"Level":"INFO","LevelValue":40000,"Message":"TestAppend4: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
 			{"ID":3,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
 			{"ID":4,"Level":"WARN","LevelValue":60000,"Message":"TestAppend3: Warn test","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
-			{"ID":5,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend2: Fail Skip test","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:19.448499Z","ScreenshotPath":null,"Browser":"FireFox","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend2"},
+			{"ID":5,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend2: Fail Skip test","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:19.448499Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"FireFox","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend2"},
 			{"ID":6,"Level":"PASS","LevelValue":55000,"Message":"TestAppend4: Fail Skip test","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.0529907Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
 			{"ID":7,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend1: Fail Skip test","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.8276893Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
 			{"ID":8,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend3: Debug","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:21.0976978Z","ScreenshotPath":"actual path to file here","Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
@@ -410,7 +405,7 @@
 			{"ID":24,"Level":"INFO","LevelValue":40000,"Message":"110000 = FATAL","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:30.4607298Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
 			{"ID":25,"Level":"INFO","LevelValue":40000,"Message":"120000 = EMERGENCY","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:30.9190129Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
 			{"ID":26,"Level":"INFO","LevelValue":40000,"Message":"120000 = log4net:DEBUG","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:31.4127746Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
-			{"ID":27,"Level":"INFO","LevelValue":40000,"Message":"60000 = WARN","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:31.6755492Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":27,"Level":"INFO","LevelValue":40000,"Message":"60000 = WARN","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:31.6755492Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
 			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
 		];
 
@@ -455,7 +450,12 @@
 						<tr className={`detailsRow ${this.props.reportDataGroupRow.Level.toLowerCase()}`}>
 							<td className='timeCol' title={`[${this.props.reportDataGroupRow.ThreadName}]`}>{timeOnlyFormatter.format(this.props.reportDataGroupRow.TimeStampUtc)}</td>
 							<td className='statusCol'><span>{this.props.reportDataGroupRow.Level}</span></td>
-							<td className='messageCol'>{this.props.reportDataGroupRow.Message}</td>
+							<td className='messageCol'>
+								{this.props.reportDataGroupRow.ScreenshotPath != null && (
+									<span><a className='screenshot' target='_blank' href={this.props.reportDataGroupRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a>&nbsp;</span>
+								)}
+								{this.props.reportDataGroupRow.Message}
+							</td>
 						</tr>
 				)
 			}
@@ -548,11 +548,6 @@
 		var endTime = reportDataGroups
 			.reduce((accumulator, currentValue) => currentValue.tempEndTime > accumulator.tempEndTime ? currentValue : accumulator, reportDataGroups[0])
 			.tempEndTime;
-
-		/*var reportData.reduce(function(accumulator, currentValue) {
-			(accumulator[currentValue[key]] = accumulator[currentValue[key]] || []).push(currentValue);
-			return accumulator;
-		}, {});*/
 
 		var levelBrowserUnique = {};
 		reportDataGroups.map(item => {
