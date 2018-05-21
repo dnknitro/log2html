@@ -601,7 +601,15 @@
 							}
 						</h4>
 
-						[ <span id="stepNames">TODO</span> ]<br/><br/>
+						TODO: [<span id="stepNames">
+							{
+								Object.keys(groupBy(reportData, 'Level')).map(key => {
+									return (
+										<a key={key} href="javascript:void(0)" style={{marginLeft: '5px', marginRight: '5px'}} className={`status${key.toLowerCase()}`}>{key}</a>
+									);
+								})
+							}
+						</span>]<br/><br/>
 
 						[ <a id="expandCollapseAll" href="javascript:void(0)" onClick={this.toggleAllExpanded.bind(this)}>Expand/Collapse All</a> ]
 					</div>
@@ -617,10 +625,8 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 	<script type="text/babel">
-		console.log(reportDataGroups);
+		//////////////////////////////////// Pie Charts //////////////////////////////////////
 		var levelGroupped = groupBy(reportDataGroups, 'tempLevel');
-		console.log(levelGroupped);
-		console.log('-----------------------');
 
 		const levelCounts = [];
 		const levelBgColors = [];
@@ -635,20 +641,6 @@
 			levelLabels.push(key);
 		});
 
-		/*var levelUnique = {};
-		reportDataGroups.map(item => {
-			const key = item.tempLevel;
-			if(levelUnique[key]) levelUnique[key].Count = levelUnique[key].Count + 1;
-			else levelUnique[key] = {Count: 1, Level: item.tempLevel};
-		});
-
-		var levelCounts = Object.keys(levelGroupped).map(key => {
-			return levelUnique[key].length;
-		});
-		console.log(levelCounts);*/
-
-
-		// Pie Charts:
 		var data = {
 			datasets: [{
 				data: levelCounts,
