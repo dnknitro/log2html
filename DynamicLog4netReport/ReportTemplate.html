@@ -16,9 +16,23 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
+
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.2/react.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/15.6.2/react-dom.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.38/browser.min.js"></script>-->
+
+	<script type="text/babel">
+		const levelToColor = {
+			debug: 'gray',
+			pass: 'limegreen',
+			info: 'lightskyblue',
+			failskip: 'gold',
+			warn: 'coral',
+			retry: 'greenyellow',
+			fail: 'red',
+		};
+	</script>
 
 	<style>
 	*
@@ -375,7 +389,7 @@
 			{"ID":3,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
 			{"ID":4,"Level":"WARN","LevelValue":60000,"Message":"TestAppend3: Warn test","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
 			{"ID":5,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend2: Fail Skip test","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:19.448499Z","ScreenshotPath":null,"Browser":"FireFox","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend2"},
-			{"ID":6,"Level":"Pass","LevelValue":55000,"Message":"TestAppend4: Fail Skip test","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.0529907Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
+			{"ID":6,"Level":"PASS","LevelValue":55000,"Message":"TestAppend4: Fail Skip test","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.0529907Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
 			{"ID":7,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend1: Fail Skip test","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.8276893Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
 			{"ID":8,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend3: Debug","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:21.0976978Z","ScreenshotPath":"actual path to file here","Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
 			{"ID":9,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:22.4499116Z","ScreenshotPath":"actual path to file here","Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
@@ -459,13 +473,8 @@
 				this.setState({
 					expanded: !this.state.expanded
 				})
-				console.log(this.state.expanded);
 			}
 
-			onClick() {
-				console.log(this);
-				console.log(this.nextSibling);
-			}
 			render() {
 				var level = this.props.reportDataGroup.GetLevel();
 				
@@ -548,15 +557,25 @@
 		var levelBrowserUnique = {};
 		reportDataGroups.map(item => {
 			const key = item.tempLevel + ' ' + item.tempBrowser;
-			if(levelBrowserUnique[key]) levelBrowserUnique[key].count = levelBrowserUnique[key].Count + 1;
+			if(levelBrowserUnique[key]) levelBrowserUnique[key].Count = levelBrowserUnique[key].Count + 1;
 			else levelBrowserUnique[key] = {Count: 1, Level: item.tempLevel, Browser: item.tempBrowser};
 		});
-		console.log(levelBrowserUnique);
 
 		class PageSummary extends React.Component {
 			constructor(props) {
 				super(props);
+				this.state = {
+					allExpanded: false
+				};
 			}
+
+			toggleAllExpanded () {
+				this.setState({
+					allExpanded: !this.state.allExpanded
+				})
+				this.dispatchEvent('toggleAllExpanded')
+			}
+
 			render() {
 				return (
 					<div>
@@ -573,7 +592,9 @@
 									const count = levelBrowserUnique[key].Count;
 									return (
 										<span key={key}>
-											<label className={`status${level}`}>{key}:</label> <span className={`status${level}`}>{count}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											<div style={{float: 'left', marginRight: '20px'}}>
+												<label className={`status${level}`}>{key}:</label> <span className={`status${level}`}>{count}</span>
+											</div>
 										</span>
 									);
 								})
@@ -582,7 +603,7 @@
 
 						[ <span id="stepNames">TODO</span> ]<br/><br/>
 
-						[ <a id="expandCollapseAll" href="javascript:void(0)">Expand/Collapse All</a> ]
+						[ <a id="expandCollapseAll" href="javascript:void(0)" onClick={this.toggleAllExpanded.bind(this)}>Expand/Collapse All</a> ]
 					</div>
 				)
 			}
@@ -592,6 +613,76 @@
 			<PageSummary reportMetaData={reportMetaData}/>,
 			document.getElementById('headerLeft')
 		);
+	</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+	<script type="text/babel">
+		console.log(reportDataGroups);
+		var levelGroupped = groupBy(reportDataGroups, 'tempLevel');
+		console.log(levelGroupped);
+		console.log('-----------------------');
+
+		const levelCounts = [];
+		const levelBgColors = [];
+		const levelBorderColors = [];
+		const levelHoverBorderColor = [];
+		const levelLabels = [];
+		Object.keys(levelGroupped).map(key => {
+			levelCounts.push(levelGroupped[key].length);
+			levelBgColors.push(levelToColor[key.toLowerCase()]);
+			levelBorderColors.push('white');
+			levelHoverBorderColor.push('white');
+			levelLabels.push(key);
+		});
+
+		/*var levelUnique = {};
+		reportDataGroups.map(item => {
+			const key = item.tempLevel;
+			if(levelUnique[key]) levelUnique[key].Count = levelUnique[key].Count + 1;
+			else levelUnique[key] = {Count: 1, Level: item.tempLevel};
+		});
+
+		var levelCounts = Object.keys(levelGroupped).map(key => {
+			return levelUnique[key].length;
+		});
+		console.log(levelCounts);*/
+
+
+		// Pie Charts:
+		var data = {
+			datasets: [{
+				data: levelCounts,
+				backgroundColor: levelBgColors,
+				borderColor: levelBorderColors,
+				hoverBorderColor: levelHoverBorderColor,
+				label: 'Tests' // for legend
+			}],
+			labels: levelLabels
+		};
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		$(function () {
+			new Chart(ctx, {
+				data: data,
+				type: "pie",
+				options: {
+					maintainAspectRatio: false,
+					/*
+					LOOK INTO http://jsfiddle.net/5gyfykka/
+					tooltipTemplate: "<%= value %>",
+					onAnimationComplete: function () {
+						this.showTooltip(this.segments, true);
+					},
+					tooltipEvents: [],*/
+					showTooltips: true,
+					elements: {
+						arc: {
+							borderColor: "#000000"
+						}
+					}
+				}
+			});
+		});
 	</script>
 </body>
 </html>
