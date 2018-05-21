@@ -6,8 +6,14 @@
 
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.1/prop-types.js"></script>
+
 	<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
 	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react-transition-group/2.3.1/react-transition-group.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/reactstrap/6.0.1/reactstrap.js"></script>-->
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
 
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.2/react.min.js"></script>
@@ -42,8 +48,8 @@
 	}
 
 	/* Styles for statuses (Fail, Pass, Info etc). */
-	tr.retry > td.summaryStatus > span, tr.fail > td.summaryStatus > span, tr.pass > td.summaryStatus > span, tr.info > td.summaryStatus > span, tr.warning > td.summaryStatus > span, tr.failskip > td.summaryStatus > span, tr.debug > td.summaryStatus > span,
-	tr.retry > td.statusCol > span,     tr.fail > td.statusCol > span,     tr.pass > td.statusCol > span,     tr.info > td.statusCol > span,     tr.warning > td.statusCol > span,     tr.failskip > td.statusCol > span,     tr.debug > td.statusCol > span
+	tr.retry > td.summaryStatus > span, tr.fail > td.summaryStatus > span, tr.pass > td.summaryStatus > span, tr.info > td.summaryStatus > span, tr.warn > td.summaryStatus > span, tr.failskip > td.summaryStatus > span, tr.debug > td.summaryStatus > span,
+	tr.retry > td.statusCol > span,     tr.fail > td.statusCol > span,     tr.pass > td.statusCol > span,     tr.info > td.statusCol > span,     tr.warn > td.statusCol > span,     tr.failskip > td.statusCol > span,     tr.debug > td.statusCol > span
 	{
 		color: White;
 		float: left;
@@ -58,7 +64,7 @@
 	.statusPass, .statuspass { color: limegreen !important; }
 	.statusInfo, .statusinfo { color: lightskyblue !important; }
 	.statusFailSkip, .statusfailskip { color: gold !important; }
-	.statusWarning, .statuswarning { color: coral !important; }
+	.statusWarn, .statuswarn { color: coral !important; }
 	.statusRetry, .statusretry { color: GreenYellow !important; }
 	.statusFail, .statusfail { color: red !important; }
 
@@ -98,7 +104,7 @@
 		text-align: center;
 	}
 
-	tr.warning > td.summaryStatus > span, tr.warning > td.statusCol > span
+	tr.warn > td.summaryStatus > span, tr.warn > td.statusCol > span
 	{
 		background-color: coral;
 		text-align: center;
@@ -133,7 +139,7 @@
 
 	.summaryDetailsRow
 	{
-		display: none;
+		/*display: none;*/
 	}
 
 		.summaryDetailsRow > td
@@ -187,7 +193,7 @@
 		border-color: lightskyblue !important;
 	}
 
-	.warning .square {
+	.warn .square {
 		background-color: coral !important;
 		border-color: coral !important;
 	}
@@ -309,33 +315,92 @@
 		<div id="header">
 			<!-- Header of the report -->
 			<div id="headerLeft">
-				<h1 id="reportTitle">Test Execution Report</h1>
-				<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">QA</span></h4>
-				<h4 id="testCategory"><label>Category:</label> <span id="category">Smoke</span></h4>
-				<h4 id="timeInfo"><label>Start:</label> <span id="startTime">12:18:28</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>End:</label> <span id="endTime">12:20:10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Duration:</label> <span id="duration">0h 1m 42s</span></h4>
-
-				<h4 id="passFailInfo"><label class="statusFail">Fail IE:</label> <span class="statusFail" id="IE_statusFail">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="statusFailSkip">FailSkip IE:</label> <span class="statusFailSkip" id="IE_statusFailSkip">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="statusPass">Pass IE:</label> <span class="statusPass" id="IE_statusPass">4</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="statusRetry">Retry IE:</label> <span class="statusRetry" id="IE_statusRetry">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="statusWarning">Warning IE:</label> <span class="statusWarning" id="IE_statusWarning">1</span></h4>
-
-				[ <span id="stepNames"></span> ]<br/><br/>
-
-				<!-- Expand All / Collapse All link -->
-				[ <a id="expandCollapseAll" href="javascript:void(0)">Expand/Collapse All</a> ]
 			</div>
 			<div id="headerRight">
 				<div>
 					<canvas id="myCanvas" style="background-color: white;"></canvas>
 				</div>
 			</div>
-			<div class="clearBoth"></div>
+			<div className="clearBoth"></div>
 		</div>
 		<div id="content">
 		</div>
 	</div>
 	<script type="text/babel">
-		var reportData = [
+		//////////////////////////////////// lib //////////////////////////////////////
+		var groupBy = function(list, key) {
+			return list.reduce(function(accumulator, currentValue) {
+				(accumulator[currentValue[key]] = accumulator[currentValue[key]] || []).push(currentValue);
+				return accumulator;
+			}, {});
+		};
+
+		var calcDuration = function(/*Date*/ startTime, /*Date*/ endTime) {
+			var durationStr = "";
+
+			// Set the unit values in milliseconds.  
+			var msecPerMinute = 1000 * 60;  
+			var msecPerHour = msecPerMinute * 60;  
+			var msecPerDay = msecPerHour * 24;  
+			// Get the difference in milliseconds.  
+			var interval = endTime.getTime() - startTime.getTime();  
+
+			// Calculate how many days the interval contains. Subtract that  
+			// many days from the interval to determine the remainder.  
+			var days = Math.floor(interval / msecPerDay );  
+			if(days > 0) durationStr = days + "d "
+			interval = interval - (days * msecPerDay );  
+
+			// Calculate the hours, minutes, and seconds.  
+			var hours = Math.floor(interval / msecPerHour );  
+			if(hours > 0) durationStr = durationStr + hours + "h "
+			interval = interval - (hours * msecPerHour );  
+
+			var minutes = Math.floor(interval / msecPerMinute );  
+			if(minutes > 0) durationStr = durationStr + minutes + "m "
+			interval = interval - (minutes * msecPerMinute );  
+
+			var seconds = Math.floor(interval / 1000 );
+			if(seconds > 0) durationStr = durationStr + seconds + "s "
+
+			return durationStr;
+		};
+
+		var timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
+		//////////////////////////////////// end of lib //////////////////////////////////////
+
+		const reportData = [
+			{"ID":1,"Level":"INFO","LevelValue":40000,"Message":"TestAppend2: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"FireFox","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend2"},
+			{"ID":2,"Level":"INFO","LevelValue":40000,"Message":"TestAppend4: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
+			{"ID":3,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
+			{"ID":4,"Level":"WARN","LevelValue":60000,"Message":"TestAppend3: Warn test","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":5,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend2: Fail Skip test","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:19.448499Z","ScreenshotPath":null,"Browser":"FireFox","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend2"},
+			{"ID":6,"Level":"Pass","LevelValue":55000,"Message":"TestAppend4: Fail Skip test","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.0529907Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
+			{"ID":7,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend1: Fail Skip test","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:20.8276893Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
+			{"ID":8,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend3: Debug","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:21.0976978Z","ScreenshotPath":"actual path to file here","Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":9,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:22.4499116Z","ScreenshotPath":"actual path to file here","Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
+			{"ID":10,"Level":"INFO","LevelValue":40000,"Message":"2147483647 = OFF","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:23.2758689Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":11,"Level":"INFO","LevelValue":40000,"Message":"-2147483648 = ALL","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:23.8152096Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":12,"Level":"INFO","LevelValue":40000,"Message":"10000 = VERBOSE","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:24.5669992Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":13,"Level":"INFO","LevelValue":40000,"Message":"20000 = FINER","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:25.3537978Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":14,"Level":"INFO","LevelValue":40000,"Message":"20000 = TRACE","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:25.7172875Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":15,"Level":"INFO","LevelValue":40000,"Message":"30000 = FINE","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:26.1175102Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":16,"Level":"INFO","LevelValue":40000,"Message":"30000 = DEBUG","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:26.36323Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":17,"Level":"INFO","LevelValue":40000,"Message":"40000 = INFO","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:26.5563713Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":18,"Level":"INFO","LevelValue":40000,"Message":"50000 = NOTICE","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:27.2031041Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":19,"Level":"INFO","LevelValue":40000,"Message":"10000 = FINEST","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:27.9935328Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":20,"Level":"INFO","LevelValue":40000,"Message":"70000 = ERROR","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:28.5636686Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":21,"Level":"INFO","LevelValue":40000,"Message":"80000 = SEVERE","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:29.3977579Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":22,"Level":"INFO","LevelValue":40000,"Message":"90000 = CRITICAL","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:30.0456469Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":23,"Level":"INFO","LevelValue":40000,"Message":"100000 = ALERT","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:30.2917147Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":24,"Level":"INFO","LevelValue":40000,"Message":"110000 = FATAL","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:30.4607298Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":25,"Level":"INFO","LevelValue":40000,"Message":"120000 = EMERGENCY","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:30.9190129Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":26,"Level":"INFO","LevelValue":40000,"Message":"120000 = log4net:DEBUG","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:31.4127746Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":27,"Level":"INFO","LevelValue":40000,"Message":"60000 = WARN","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:31.6755492Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend3"},
 			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
 		];
 
+		//////////////////////////////////// Render Tests Execution Table //////////////////////////////////////
 
 		reportData.splice(-1,1)
 
@@ -343,18 +408,10 @@
 			reportData[i].TimeStampUtc = new Date(reportData[i].TimeStampUtc);
 		}
 
-		//////////////////////////////////////////////////////////////////////////
-		var groupBy = function(list, key) {
-			return list.reduce(function(rv, x) {
-				(rv[x[key]] = rv[x[key]] || []).push(x);
-				return rv;
-			}, {});
-		};
+		const reportDataGroups = [];
+		const groupsObject = groupBy(reportData, 'FullTestCaseName');
 
-		var reportDataGroups = [];
-		var groupsObject = groupBy(reportData, 'FullTestCaseName');
-
-		Object.keys(groupsObject).forEach(function(key,index) {
+		Object.keys(groupsObject).forEach(function(key, index) {
 			var reportDataGroup = groupsObject[key];
 			reportDataGroup.FullTestCaseName = reportDataGroup[0].FullTestCaseName;
 			reportDataGroup.GetLevel = function() {
@@ -374,24 +431,70 @@
 			};
 			reportDataGroups.push(reportDataGroup);
 		});
-		//////////////////////////////////////////////////////////////////////////
 
-		var timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
-
-		class SummaryRow extends React.Component {
+		class DetailsRow extends React.Component {
 			constructor(props) {
 				super(props);
 			}
 			render() {
-				var level = this.props.reportDataGroup.GetLevel();
 				return (
-					<tr className={`summaryRow ${level.toLowerCase()}`}>
-						<td className='summaryStatus'><span>{level}</span></td>
-						<td className='summaryTestName'>{this.props.reportDataGroup.FullTestCaseName}</td>
-						<td className='summaryStart'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetStartTime())}&nbsp;&nbsp;- </td>
-						<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetEndTime())}</td>
-						<td className='summaryDuration' title='Duration: TODO!!!'><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
-					</tr>
+						<tr className={`detailsRow ${this.props.reportDataGroupRow.Level.toLowerCase()}`}>
+							<td className='timeCol' title={`[${this.props.reportDataGroupRow.ThreadName}]`}>{timeOnlyFormatter.format(this.props.reportDataGroupRow.TimeStampUtc)}</td>
+							<td className='statusCol'><span>{this.props.reportDataGroupRow.Level}</span></td>
+							<td className='messageCol'>{this.props.reportDataGroupRow.Message}</td>
+						</tr>
+				)
+			}
+		}
+
+		class SummaryRow extends React.Component {
+			constructor(props) {
+				super(props);
+				this.state = {
+					expanded: false
+				};
+			}
+
+			toggleExpanded () {
+				this.setState({
+					expanded: !this.state.expanded
+				})
+				console.log(this.state.expanded);
+			}
+
+			onClick() {
+				console.log(this);
+				console.log(this.nextSibling);
+			}
+			render() {
+				var level = this.props.reportDataGroup.GetLevel();
+				
+				return (
+					<tbody>
+						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={this.toggleExpanded.bind(this)}>
+							<td className='summaryStatus'><span>{level}</span></td>
+							<td className='summaryTestName'>{this.props.reportDataGroup.FullTestCaseName}</td>
+							<td className='summaryStart'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetStartTime())}&nbsp;&nbsp;- </td>
+							<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetEndTime())}</td>
+							<td className='summaryDuration' title={`Duration: ${calcDuration(this.props.reportDataGroup.GetStartTime(), this.props.reportDataGroup.GetEndTime())}`}><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
+						</tr>
+						{ this.state.expanded && (
+							<tr className={`summaryDetailsRow ${level.toLowerCase()}`}>
+								<td>&nbsp;</td>
+								<td colSpan="4">
+									<table className='details'>
+										<tbody>
+											{this.props.reportDataGroup.map((reportDataGroupRow, i) => {
+												return (
+													<DetailsRow key={reportDataGroupRow.ID} reportDataGroupRow={reportDataGroupRow}/>
+												);
+											})}
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						) }
+					</tbody>
 				)
 			}
 		}
@@ -403,13 +506,11 @@
 			render() {
 				return (
 					<table className='summary'>
-						<tbody>
-							{this.props.reportDataGroups.map((reportDataGroup, i) => {
-								return (
-									<SummaryRow key={reportDataGroup.FullTestCaseName} reportDataGroup={reportDataGroup}/>
-								);
-							})}
-						</tbody>
+						{this.props.reportDataGroups.map((reportDataGroup, i) => {
+							return (
+								<SummaryRow key={reportDataGroup.FullTestCaseName} reportDataGroup={reportDataGroup}/>
+							);
+						})}
 					</table>
 				)
 			}
@@ -418,6 +519,78 @@
 		ReactDOM.render(
 			<SummaryTable reportDataGroups={reportDataGroups}/>,
 			document.getElementById('content')
+		);
+
+		//////////////////////////////////// Render Header //////////////////////////////////////
+
+		var reportMetaData = {};
+		var reportMetaData = {"ReportName":"My Test Execution Report","ReportEnvironment":"PROD","ReportCategory":"Unusual"};
+
+		reportDataGroups.map((reportDataGroup, i) => {
+			reportDataGroup.tempBrowser = reportDataGroup[0].Browser;
+			reportDataGroup.tempLevel = reportDataGroup.GetLevel();
+			reportDataGroup.tempStartTime = reportDataGroup.GetStartTime();
+			reportDataGroup.tempEndTime = reportDataGroup.GetEndTime();
+		});
+
+		var startTime = reportDataGroups
+			.reduce((accumulator, currentValue) => currentValue.tempStartTime < accumulator.tempStartTime ? currentValue : accumulator, reportDataGroups[0])
+			.tempStartTime;
+		var endTime = reportDataGroups
+			.reduce((accumulator, currentValue) => currentValue.tempEndTime > accumulator.tempEndTime ? currentValue : accumulator, reportDataGroups[0])
+			.tempEndTime;
+
+		/*var reportData.reduce(function(accumulator, currentValue) {
+			(accumulator[currentValue[key]] = accumulator[currentValue[key]] || []).push(currentValue);
+			return accumulator;
+		}, {});*/
+
+		var levelBrowserUnique = {};
+		reportDataGroups.map(item => {
+			const key = item.tempLevel + ' ' + item.tempBrowser;
+			if(levelBrowserUnique[key]) levelBrowserUnique[key].count = levelBrowserUnique[key].Count + 1;
+			else levelBrowserUnique[key] = {Count: 1, Level: item.tempLevel, Browser: item.tempBrowser};
+		});
+		console.log(levelBrowserUnique);
+
+		class PageSummary extends React.Component {
+			constructor(props) {
+				super(props);
+			}
+			render() {
+				return (
+					<div>
+						<h1 id="reportTitle">{this.props.reportMetaData.ReportName}</h1>
+						<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">{this.props.reportMetaData.ReportEnvironment}</span></h4>
+						<h4 id="testCategory"><label>Category:</label> <span id="category">{this.props.reportMetaData.ReportCategory}</span></h4>
+						<h4 id="timeInfo"><label>Start:</label> <span id="startTime">{timeOnlyFormatter.format(startTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>End:</label> <span id="endTime">{timeOnlyFormatter.format(endTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Duration:</label> <span id="duration">{calcDuration(startTime, endTime)}</span></h4>
+
+						<h4 id="passFailInfo">
+							{
+								Object.keys(levelBrowserUnique).map((key, index) => {
+									let level = levelBrowserUnique[key].Level.toLowerCase();
+									level = level.charAt(0).toUpperCase() + level.substr(1);
+									const count = levelBrowserUnique[key].Count;
+									return (
+										<span key={key}>
+											<label className={`status${level}`}>{key}:</label> <span className={`status${level}`}>{count}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										</span>
+									);
+								})
+							}
+						</h4>
+
+						[ <span id="stepNames">TODO</span> ]<br/><br/>
+
+						[ <a id="expandCollapseAll" href="javascript:void(0)">Expand/Collapse All</a> ]
+					</div>
+				)
+			}
+		}
+
+		ReactDOM.render(
+			<PageSummary reportMetaData={reportMetaData}/>,
+			document.getElementById('headerLeft')
 		);
 	</script>
 </body>

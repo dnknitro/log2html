@@ -58,8 +58,8 @@
     <Compile Include="CustomLoggingEvent.cs" />
     <Compile Include="LogExtensions.cs" />
     <Compile Include="HtmlReportAppender.cs" />
-    <Compile Include="NUnitActionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportMetaData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

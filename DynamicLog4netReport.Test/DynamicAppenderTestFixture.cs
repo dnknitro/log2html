@@ -15,6 +15,7 @@ namespace DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
+			log.SetBrowser("IE");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 			log.Screenshot(Level.Debug, prefix + "Debug");
@@ -25,6 +26,7 @@ namespace DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
+			log.SetBrowser("FireFox");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 		}
@@ -33,6 +35,7 @@ namespace DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
+			log.SetBrowser("Chrome");
 			log.Warn(prefix + "Warn test");
 			log.Screenshot(Level.Debug, prefix + "Debug");
 
@@ -68,6 +71,7 @@ namespace DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
+			log.SetBrowser("Chrome");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Pass(prefix + "Fail Skip test");
 		}

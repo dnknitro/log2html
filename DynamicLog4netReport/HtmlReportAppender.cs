@@ -25,16 +25,25 @@ namespace dnk.DynamicLog4netReport
 		private static int _indexToWrite;
 		private static readonly string ReportFolder = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName, "Results");
 
+		private static ReportMetaData _reportMetaData;
+
+		public static void Configure(ReportMetaData reportMetaData)
+		{
+			_reportMetaData = reportMetaData;
+		}
+
 		private static readonly Lazy<string> ReportPath = new Lazy<string>(() =>
 		{
 			_fileContent.Append(ResourceUtils.ReadStringFromEmbeddedResource("dnk.DynamicLog4netReport.ReportTemplate.html", typeof(HtmlReportAppender).Assembly));
+			var reportMetaDataJson = JsonConvert.SerializeObject(_reportMetaData);
+			_fileContent.Replace("var reportMetaData = {};", $"var reportMetaData = {reportMetaDataJson};");
 			Directory.CreateDirectory(ReportFolder);
 			var reportPath = Path.GetFullPath(Path.Combine(ReportFolder, $"Report {DateTime.Now:yyyy-MM-dd_hh.mm.ss.fff}.html"));
 			_indexToWrite = _fileContent.ToString().IndexOf("{\"EndOfReportData\":true}", StringComparison.Ordinal);
 			return reportPath;
 		});
 
-		private static Random _r = new Random();
+		private static readonly Random _r = new Random();
 
 		protected override void Append(LoggingEvent loggingEvent)
 		{
@@ -42,8 +51,8 @@ namespace dnk.DynamicLog4netReport
 			lock (_fileWriteLock)
 			{
 				var cle = new CustomLoggingEvent(_logEntryID++, loggingEvent);
-				//var json = JsonConvert.SerializeObject(cle,) + ",\r\n			";
-				var json = JsonConvert.SerializeObject(cle, Formatting.Indented) + ",\r\n";
+				var json = JsonConvert.SerializeObject(cle) + $",{Environment.NewLine}			";
+				//var json = JsonConvert.SerializeObject(cle, Formatting.Indented) + $",{Environment.NewLine}";
 
 				var reportPath = ReportPath.Value;
 				_fileContent.Insert(_indexToWrite, json);

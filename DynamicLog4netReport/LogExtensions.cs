@@ -8,6 +8,7 @@ namespace dnk.DynamicLog4netReport
 	public static class LogExtensions
 	{
 		public const string ScreenshotPathPropertyName = "ScreenshotPath";
+		public const string BrowserPropertyName = "Browser";
 
 		// -2147483648	 ALL
 		// 10000		 FINEST
@@ -18,7 +19,7 @@ namespace dnk.DynamicLog4netReport
 		// 30000		 FINE
 		// 40000		 INFO
 		// 50000		 NOTICE
-		private static readonly Level pass = new Level(55000, "Pass");
+		private static readonly Level pass = new Level(55000, "PASS");
 		// 60000		 WARN
 		// 70000		 ERROR
 		private static readonly Level fail = new Level(75000, "FAIL");
@@ -40,22 +41,17 @@ namespace dnk.DynamicLog4netReport
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, fail, message, ex);
 		}
 
-		//public static void Error(this ILog log, string message, Exception ex = null, string pathToScreenshot = null)
-		//{
-		//	var led = new LoggingEventData()
-		//	{
-		//		Level = Level.Error
-		//	};
-		//	var le = new LoggingEvent(MethodBase.GetCurrentMethod().DeclaringType, log.Logger.Repository, led);
-		//	log.Logger.Log(le);
-		//}
-
 		public static void Screenshot(this ILog log, Level level, string message, Exception ex = null)
 		{
 			var screenshotPath = "actual path to file here";
 			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = screenshotPath;
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, level, message, ex);
 			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = null;
+		}
+
+		public static void SetBrowser(this ILog log, string browser)
+		{
+			LogicalThreadContext.Properties[BrowserPropertyName] = browser;			
 		}
 	}
 }

@@ -17,6 +17,7 @@ namespace dnk.DynamicLog4netReport
 			StackTrace = loggingEvent.ExceptionObject?.StackTrace;
 			TimeStampUtc = loggingEvent.TimeStampUtc;
 			ScreenshotPath = LogicalThreadContext.Properties[LogExtensions.ScreenshotPathPropertyName]?.ToString();
+			Browser = LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName]?.ToString();
 
 			FullTestCaseName = TestContext.CurrentContext?.Test?.FullName ?? "TestCaseNA";
 			//TestClassFullName = TestContext.CurrentContext?.Test?.ClassName ?? "ClassNameNA";
@@ -31,9 +32,10 @@ namespace dnk.DynamicLog4netReport
 		public string StackTrace { get; }
 		public DateTime TimeStampUtc { get; }
 		public string ScreenshotPath { get; }
+		public string Browser { get; }
 
 		public string FullTestCaseName { get; }
-		//public string TestMethodName { get; }
 		//public string TestClassFullName { get; }
+		//public string TestMethodName { get; }
 	}
 }

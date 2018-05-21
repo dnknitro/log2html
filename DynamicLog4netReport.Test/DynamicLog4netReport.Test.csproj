@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplyToTestContext.cs" />
     <Compile Include="DynamicAppenderTestFixture.cs" />
+    <Compile Include="GlobalTestSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
