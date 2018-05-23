@@ -521,12 +521,13 @@
 			}
 
 			render() {
-				var level = this.props.summaryRow.level;
+				const level = this.props.summaryRow.level;
+				let anchorID = 0;
 				return (
 					<tbody>
 						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.fullTestCaseName)}>
 							<td className='summaryStatus'><span>{level}</span></td>
-							<td className='summaryTestName'>{this.props.summaryRow.fullTestCaseName}</td>
+							<td className='summaryTestName'><a href="#issue21"><b>&dArr;</b></a>&nbsp;{this.props.summaryRow.fullTestCaseName}</td>
 							<td className='summaryStart'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)}&nbsp;&nbsp;- </td>
 							<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
 							<td className='summaryDuration' title={`Duration: ${calcDuration(this.props.summaryRow.startTime, this.props.summaryRow.endTime)}`}><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
@@ -537,11 +538,16 @@
 								<td colSpan="4">
 									<table className='details'>
 										<tbody>
-											{this.props.summaryRow.detailsRows.map(detailsRow => {
-												return (
-													<DetailsRow key={detailsRow.ID} detailsRow={detailsRow}/>
-												);
-											})}
+											{
+												this.props.summaryRow.detailsRows.map(detailsRow => {
+													if(anchorID == 0 && detailsRow.LevelValue >= 60000) {
+														anchorID = detailsRow.ID;
+													}
+													return (
+														<DetailsRow key={detailsRow.ID} detailsRow={detailsRow} anchorID={anchorID}/>
+													);
+												})
+											}
 										</tbody>
 									</table>
 								</td>
@@ -553,13 +559,14 @@
 		}
 
 		const TagContainer = props => props.children;
-		const DetailsRow = ({detailsRow}) => {
+		const DetailsRow = ({detailsRow, anchorID}) => {
 			return (
 				<TagContainer>
 					<tr className={`detailsRow ${detailsRow.Level.toLowerCase()}`}>
 						<td className='timeCol' title={`[${detailsRow.ThreadName}]`}>{timeOnlyFormatter.format(detailsRow.TimeStampUtc)}</td>
 						<td className='statusCol'><span>{detailsRow.Level}</span></td>
 						<td className='messageCol'>
+							{anchorID > 0 && <a name={`issue${anchorID}`}></a>}
 							{detailsRow.ScreenshotPath != null && (
 								<span><a className='screenshot' target='_blank' href={detailsRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a>&nbsp;</span>
 							)}
