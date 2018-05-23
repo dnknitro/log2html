@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using dnk.DynamicLog4netReport;
 using log4net;
@@ -11,14 +12,30 @@ namespace DynamicLog4netReport.Test
 	public class DynamicAppenderTestFixture
 	{
 		[Test]
-		public void TestAppend1()
+		[TestCase(1)]
+		[TestCase(2)]
+		[TestCase(3)]
+		[TestCase(4)]
+		[TestCase(5)]
+		[TestCase(6)]
+		public void TestAppend1(int index)
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
 			log.SetBrowser("IE");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-			log.Fail(prefix + "Fail Skip test");
 			log.Screenshot(Level.Debug, prefix + "Debug");
+			if (index > 4)
+				try
+				{
+					throw new InvalidOperationException("test exception");
+				}
+				catch (Exception e)
+				{
+					log.Fail(e.Message, e);
+				}
+			else
+				log.Pass("No Fails!");
 		}
 
 		[Test]
@@ -30,6 +47,7 @@ namespace DynamicLog4netReport.Test
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 		}
+
 		[Test]
 		public void TestAppend3()
 		{
@@ -39,7 +57,7 @@ namespace DynamicLog4netReport.Test
 			log.Warn(prefix + "Warn test");
 			log.Screenshot(Level.Debug, prefix + "Debug");
 
-			var levels = new List<Level>()
+			var levels = new List<Level>
 			{
 				Level.Off,
 				Level.All,
@@ -61,9 +79,7 @@ namespace DynamicLog4netReport.Test
 				Level.Warn
 			};
 			foreach (var level in levels)
-			{
 				log.Info($"{level.Value} = {level.Name}");
-			}
 		}
 
 		[Test]

@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dnkUtils, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\dnkUtils.1.0.0.1\lib\net461\dnkUtils.dll</HintPath>
+    <Reference Include="dnkUtils, Version=1.0.0.42065, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\dnkUtils.1.0.0.42065\lib\net461\dnkUtils.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>

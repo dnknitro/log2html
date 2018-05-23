@@ -43,7 +43,7 @@ namespace dnk.DynamicLog4netReport
 
 		public static void Screenshot(this ILog log, Level level, string message, Exception ex = null)
 		{
-			var screenshotPath = "actual path to file here";
+			var screenshotPath = "http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif";
 			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = screenshotPath;
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, level, message, ex);
 			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = null;

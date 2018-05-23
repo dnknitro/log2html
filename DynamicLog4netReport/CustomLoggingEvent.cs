@@ -1,4 +1,5 @@
 ﻿using System;
+using dnkUtils.Diagnostics;
 using log4net;
 using log4net.Core;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ namespace dnk.DynamicLog4netReport
 			TimeStampUtc = loggingEvent.TimeStampUtc;
 			ScreenshotPath = LogicalThreadContext.Properties[LogExtensions.ScreenshotPathPropertyName]?.ToString();
 			Browser = LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName]?.ToString();
+			Exception = loggingEvent.ExceptionObject?.ToNiceString();
 
 			FullTestCaseName = TestContext.CurrentContext?.Test?.FullName ?? "TestCaseNA";
 			//TestClassFullName = TestContext.CurrentContext?.Test?.ClassName ?? "ClassNameNA";
@@ -33,6 +35,7 @@ namespace dnk.DynamicLog4netReport
 		public DateTime TimeStampUtc { get; }
 		public string ScreenshotPath { get; }
 		public string Browser { get; }
+		public string Exception { get; }
 
 		public string FullTestCaseName { get; }
 		//public string TestClassFullName { get; }
