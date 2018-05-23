@@ -16,6 +16,7 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0/redux.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
 
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.2/react.min.js"></script>
@@ -378,7 +379,7 @@
 		var timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
 		//////////////////////////////////// end of lib //////////////////////////////////////
 
-		const reportData = [
+		const detailsRows = [
 			{"ID":1,"Level":"INFO","LevelValue":40000,"Message":"TestAppend2: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"FireFox","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend2"},
 			{"ID":2,"Level":"INFO","LevelValue":40000,"Message":"TestAppend4: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"Chrome","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend4"},
 			{"ID":3,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-20T23:40:18.4459503Z","ScreenshotPath":null,"Browser":"IE","FullTestCaseName":"DynamicLog4netReport.Test.DynamicAppenderTestFixture.TestAppend1"},
@@ -409,93 +410,120 @@
 			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
 		];
 
+		detailsRows.splice(-1,1)
+
+		for (var i = 0; i < detailsRows.length; i++) {
+			detailsRows[i].TimeStampUtc = new Date(detailsRows[i].TimeStampUtc);
+		}
+
+		//////////////////////////////////// Define Application State //////////////////////////////////////
+
+		class SummaryDataRow {
+			constructor(detailsRows) {
+				this.detailsRows = detailsRows;
+				this.tempBrowser = detailsRows[0].Browser;
+
+				this.level = this.detailsRows
+					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, this.detailsRows[0])
+					.Level;
+				this.startTime =  this.detailsRows
+					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc < accumulator.TimeStampUtc ? currentValue : accumulator, this.detailsRows[0])
+					.TimeStampUtc;
+				this.endTime = this.detailsRows
+					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc > accumulator.TimeStampUtc ? currentValue : accumulator, this.detailsRows[0])
+					.TimeStampUtc;
+			};
+
+			get fullTestCaseName() { return this.detailsRows[0].FullTestCaseName; }
+		}
+
+		const groupsObject = groupBy(detailsRows, 'FullTestCaseName');
+
+		var summaryRows = Object.keys(groupsObject).map(key => new SummaryDataRow(groupsObject[key]));
+
+		//////////////////////////////////// Application State //////////////////////////////////////
+
+		function expandRowsReducer(state, action) {
+			var newState = {expandedRows: []};
+			if (typeof state === 'undefined') {
+				return newState;
+			}
+
+			switch (action.type) {
+				case 'TOGGLE_ROW':
+					var rowIDindex = state.expandedRows.indexOf(action.rowID);
+					if(rowIDindex == -1)
+						newState = {expandedRows: [...state.expandedRows, action.rowID]};
+					else
+						newState = {expandedRows: [...(state.expandedRows.slice(0, rowIDindex)), ...(state.expandedRows.slice(rowIDindex + 1))]};
+					break;
+				case 'TOGGLE_ALL_ROWS':
+					if(state.expandedRows.length > 0)
+						newState = {expandedRows: []};
+					else
+						newState = {expandedRows: summaryRows.map(summaryRow => summaryRow.fullTestCaseName)};
+					break;
+			}
+			return newState;
+		}
+
+		const toggleRow = rowID => ({ type: "TOGGLE_ROW", rowID: rowID });
+		const toggleAllRows = () => ({ type: "TOGGLE_ALL_ROWS" });
+
+		const mapStateToProps = state => {
+			return { expandedRows: state.expandedRows };
+		};
+
+		const mapDispatchToProps = dispatch => {
+			return {
+				toggleRow: rowID => dispatch(toggleRow(rowID)),
+				toggleAllRows: () => dispatch(toggleAllRows())
+			};
+		};
+
+		var store = Redux.createStore(expandRowsReducer);
+
+		//////////////////////////////////// End of Application State //////////////////////////////////////
+
 		//////////////////////////////////// Render Tests Execution Table //////////////////////////////////////
 
-		reportData.splice(-1,1)
-
-		for (var i = 0; i < reportData.length; i++) {
-			reportData[i].TimeStampUtc = new Date(reportData[i].TimeStampUtc);
-		}
-
-		const reportDataGroups = [];
-		const groupsObject = groupBy(reportData, 'FullTestCaseName');
-
-		Object.keys(groupsObject).forEach(function(key, index) {
-			var reportDataGroup = groupsObject[key];
-			reportDataGroup.FullTestCaseName = reportDataGroup[0].FullTestCaseName;
-			reportDataGroup.GetLevel = function() {
-				return reportDataGroup
-					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, reportDataGroup[0])
-					.Level;
-			};
-			reportDataGroup.GetStartTime = function() {
-				return reportDataGroup
-					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc < accumulator.TimeStampUtc ? currentValue : accumulator, reportDataGroup[0])
-					.TimeStampUtc;
-			};
-			reportDataGroup.GetEndTime = function() {
-				return reportDataGroup
-					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc > accumulator.TimeStampUtc ? currentValue : accumulator, reportDataGroup[0])
-					.TimeStampUtc;
-			};
-			reportDataGroups.push(reportDataGroup);
-		});
-
-		class DetailsRow extends React.Component {
-			constructor(props) {
-				super(props);
-			}
-			render() {
-				return (
-						<tr className={`detailsRow ${this.props.reportDataGroupRow.Level.toLowerCase()}`}>
-							<td className='timeCol' title={`[${this.props.reportDataGroupRow.ThreadName}]`}>{timeOnlyFormatter.format(this.props.reportDataGroupRow.TimeStampUtc)}</td>
-							<td className='statusCol'><span>{this.props.reportDataGroupRow.Level}</span></td>
-							<td className='messageCol'>
-								{this.props.reportDataGroupRow.ScreenshotPath != null && (
-									<span><a className='screenshot' target='_blank' href={this.props.reportDataGroupRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a>&nbsp;</span>
-								)}
-								{this.props.reportDataGroupRow.Message}
-							</td>
-						</tr>
-				)
-			}
-		}
+		const SummaryTable = ({summaryRows}) => {
+			return (
+				<table className='summary'>
+					{ summaryRows.map(summaryRow => <ConnectedSummaryRow key={summaryRow.fullTestCaseName} store={store} summaryRow={summaryRow}/>) }
+				</table>
+			);
+		};
 
 		class SummaryRow extends React.Component {
 			constructor(props) {
 				super(props);
-				this.state = {
-					expanded: false
-				};
 			}
 
-			toggleExpanded () {
-				this.setState({
-					expanded: !this.state.expanded
-				})
+			/*bool*/ isExpanded() {
+				return this.props.store.getState().expandedRows.indexOf(this.props.summaryRow.fullTestCaseName) >= 0;
 			}
 
 			render() {
-				var level = this.props.reportDataGroup.GetLevel();
-				
+				var level = this.props.summaryRow.level;
 				return (
 					<tbody>
-						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={this.toggleExpanded.bind(this)}>
+						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.fullTestCaseName)}>
 							<td className='summaryStatus'><span>{level}</span></td>
-							<td className='summaryTestName'>{this.props.reportDataGroup.FullTestCaseName}</td>
-							<td className='summaryStart'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetStartTime())}&nbsp;&nbsp;- </td>
-							<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.reportDataGroup.GetEndTime())}</td>
-							<td className='summaryDuration' title={`Duration: ${calcDuration(this.props.reportDataGroup.GetStartTime(), this.props.reportDataGroup.GetEndTime())}`}><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
+							<td className='summaryTestName'>{this.props.summaryRow.fullTestCaseName}</td>
+							<td className='summaryStart'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)}&nbsp;&nbsp;- </td>
+							<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
+							<td className='summaryDuration' title={`Duration: ${calcDuration(this.props.summaryRow.startTime, this.props.summaryRow.endTime)}`}><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
 						</tr>
-						{ this.state.expanded && (
+						{ this.isExpanded() && (
 							<tr className={`summaryDetailsRow ${level.toLowerCase()}`}>
 								<td>&nbsp;</td>
 								<td colSpan="4">
 									<table className='details'>
 										<tbody>
-											{this.props.reportDataGroup.map((reportDataGroupRow, i) => {
+											{this.props.summaryRow.detailsRows.map(detailsRow => {
 												return (
-													<DetailsRow key={reportDataGroupRow.ID} reportDataGroupRow={reportDataGroupRow}/>
+													<DetailsRow key={detailsRow.ID} detailsRow={detailsRow}/>
 												);
 											})}
 										</tbody>
@@ -508,25 +536,25 @@
 			}
 		}
 
-		class SummaryTable extends React.Component {
-			constructor(props) {
-				super(props);
-			}
-			render() {
-				return (
-					<table className='summary'>
-						{this.props.reportDataGroups.map((reportDataGroup, i) => {
-							return (
-								<SummaryRow key={reportDataGroup.FullTestCaseName} reportDataGroup={reportDataGroup}/>
-							);
-						})}
-					</table>
-				)
-			}
-		}
+		const DetailsRow = ({detailsRow}) => {
+			return (
+				<tr className={`detailsRow ${detailsRow.Level.toLowerCase()}`}>
+					<td className='timeCol' title={`[${detailsRow.ThreadName}]`}>{timeOnlyFormatter.format(detailsRow.TimeStampUtc)}</td>
+					<td className='statusCol'><span>{detailsRow.Level}</span></td>
+					<td className='messageCol'>
+						{detailsRow.ScreenshotPath != null && (
+							<span><a className='screenshot' target='_blank' href={detailsRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a>&nbsp;</span>
+						)}
+						{detailsRow.Message}
+					</td>
+				</tr>
+			);
+		};
+
+		const ConnectedSummaryRow = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(SummaryRow);
 
 		ReactDOM.render(
-			<SummaryTable reportDataGroups={reportDataGroups}/>,
+			<SummaryTable store={store} summaryRows={summaryRows}/>,
 			document.getElementById('content')
 		);
 
@@ -535,82 +563,89 @@
 		var reportMetaData = {};
 		var reportMetaData = {"ReportName":"My Test Execution Report","ReportEnvironment":"PROD","ReportCategory":"Unusual"};
 
-		reportDataGroups.map((reportDataGroup, i) => {
-			reportDataGroup.tempBrowser = reportDataGroup[0].Browser;
-			reportDataGroup.tempLevel = reportDataGroup.GetLevel();
-			reportDataGroup.tempStartTime = reportDataGroup.GetStartTime();
-			reportDataGroup.tempEndTime = reportDataGroup.GetEndTime();
-		});
-
-		var startTime = reportDataGroups
-			.reduce((accumulator, currentValue) => currentValue.tempStartTime < accumulator.tempStartTime ? currentValue : accumulator, reportDataGroups[0])
-			.tempStartTime;
-		var endTime = reportDataGroups
-			.reduce((accumulator, currentValue) => currentValue.tempEndTime > accumulator.tempEndTime ? currentValue : accumulator, reportDataGroups[0])
-			.tempEndTime;
+		var startTime = summaryRows
+			.reduce((accumulator, currentValue) => currentValue.startTime < accumulator.startTime ? currentValue : accumulator, summaryRows[0])
+			.startTime;
+		var endTime = summaryRows
+			.reduce((accumulator, currentValue) => currentValue.endTime > accumulator.endTime ? currentValue : accumulator, summaryRows[0])
+			.endTime;
 
 		var levelBrowserUnique = {};
-		reportDataGroups.map(item => {
-			const key = item.tempLevel + ' ' + item.tempBrowser;
+		summaryRows.map(item => {
+			const key = item.level + ' ' + item.tempBrowser;
 			if(levelBrowserUnique[key]) levelBrowserUnique[key].Count = levelBrowserUnique[key].Count + 1;
-			else levelBrowserUnique[key] = {Count: 1, Level: item.tempLevel, Browser: item.tempBrowser};
+			else levelBrowserUnique[key] = {Count: 1, Level: item.level, Browser: item.tempBrowser};
 		});
 
-		class PageSummary extends React.Component {
+		const PageSummary = ({reportMetaData}) => {
+			return (
+				<div>
+					<h1 id="reportTitle">{reportMetaData.ReportName}</h1>
+					<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">{reportMetaData.ReportEnvironment}</span></h4>
+					<h4 id="testCategory"><label>Category:</label> <span id="category">{reportMetaData.ReportCategory}</span></h4>
+					<h4 id="timeInfo"><label>Start:</label> <span id="startTime">{timeOnlyFormatter.format(startTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>End:</label> <span id="endTime">{timeOnlyFormatter.format(endTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Duration:</label> <span id="duration">{calcDuration(startTime, endTime)}</span></h4>
+
+					<LevelsBrowsers levelBrowser={levelBrowserUnique}/>
+					<div>
+						<ConnectedExpandCollapseAll store={store}/>&nbsp;&nbsp;
+						<StepLevels detailsRows={detailsRows}/>
+					</div>
+				</div>
+			);
+		};
+
+		const LevelsBrowsers = ({levelBrowser}) => {
+			return (
+				<h4 id="passFailInfo">
+					{
+						Object.keys(levelBrowser).map((key, index) => {
+							let level = levelBrowser[key].Level.toLowerCase();
+							level = level.charAt(0).toUpperCase() + level.substr(1);
+							const count = levelBrowser[key].Count;
+							return (
+								<div key={key} style={{float: 'left', marginRight: '20px'}}>
+									<label className={`status${level}`}>{key}:</label> <span className={`status${level}`}>{count}</span>
+								</div>
+							);
+						})
+					}
+					<div className="clearBoth"></div>
+				</h4>
+			);			
+		};
+
+		const StepLevels = ({detailsRows}) => {
+			return (
+				<span>
+					[<span id="stepNames">
+						{
+							Object.keys(groupBy(detailsRows, 'Level')).map(key => {
+								return (
+									<a key={key} href="javascript:void(0)" style={{marginLeft: '5px', marginRight: '5px'}} className={`status${key.toLowerCase()}`}>{key}</a>
+								);
+							})
+						}
+					</span>]
+				</span>
+			);			
+		};
+
+		class ExpandCollapseAll extends React.Component {
 			constructor(props) {
 				super(props);
-				this.state = {
-					allExpanded: false
-				};
-			}
-
-			toggleAllExpanded () {
-				this.setState({
-					allExpanded: !this.state.allExpanded
-				})
-				this.dispatchEvent('toggleAllExpanded')
 			}
 
 			render() {
 				return (
-					<div>
-						<h1 id="reportTitle">{this.props.reportMetaData.ReportName}</h1>
-						<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">{this.props.reportMetaData.ReportEnvironment}</span></h4>
-						<h4 id="testCategory"><label>Category:</label> <span id="category">{this.props.reportMetaData.ReportCategory}</span></h4>
-						<h4 id="timeInfo"><label>Start:</label> <span id="startTime">{timeOnlyFormatter.format(startTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>End:</label> <span id="endTime">{timeOnlyFormatter.format(endTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Duration:</label> <span id="duration">{calcDuration(startTime, endTime)}</span></h4>
-
-						<h4 id="passFailInfo">
-							{
-								Object.keys(levelBrowserUnique).map((key, index) => {
-									let level = levelBrowserUnique[key].Level.toLowerCase();
-									level = level.charAt(0).toUpperCase() + level.substr(1);
-									const count = levelBrowserUnique[key].Count;
-									return (
-										<span key={key}>
-											<div style={{float: 'left', marginRight: '20px'}}>
-												<label className={`status${level}`}>{key}:</label> <span className={`status${level}`}>{count}</span>
-											</div>
-										</span>
-									);
-								})
-							}
-						</h4>
-
-						TODO: [<span id="stepNames">
-							{
-								Object.keys(groupBy(reportData, 'Level')).map(key => {
-									return (
-										<a key={key} href="javascript:void(0)" style={{marginLeft: '5px', marginRight: '5px'}} className={`status${key.toLowerCase()}`}>{key}</a>
-									);
-								})
-							}
-						</span>]<br/><br/>
-
-						[ <a id="expandCollapseAll" href="javascript:void(0)" onClick={this.toggleAllExpanded.bind(this)}>Expand/Collapse All</a> ]
-					</div>
+					<span>
+						[ <a id="expandCollapseAll" href="javascript:void(0)" onClick={() => this.props.toggleAllRows()}>
+						{this.props.store.getState().expandedRows.length > 0 ? 'Collapse' : 'Expand'} All Rows</a> ]
+					</span>
 				)
 			}
-		}
+		};
+
+		const ConnectedExpandCollapseAll = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(ExpandCollapseAll);
 
 		ReactDOM.render(
 			<PageSummary reportMetaData={reportMetaData}/>,
@@ -621,7 +656,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 	<script type="text/babel">
 		//////////////////////////////////// Pie Charts //////////////////////////////////////
-		var levelGroupped = groupBy(reportDataGroups, 'tempLevel');
+		var levelGroupped = groupBy(summaryRows, 'level');
 
 		const levelCounts = [];
 		const levelBgColors = [];
