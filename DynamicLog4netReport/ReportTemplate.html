@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-	<title>Html Template</title>
+	<title>Report Template</title>
 	<meta charset="UTF-8">
 
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -370,7 +370,8 @@
 			return durationStr;
 		};
 
-		var timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
+		const timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
+		const TagContainer = props => props.children;
 		//////////////////////////////////// end of lib //////////////////////////////////////
 
 		const detailsRows = [
@@ -551,7 +552,6 @@
 			}
 		}
 
-		const TagContainer = props => props.children;
 		const DetailsRow = ({detailsRow, anchorID}) => {
 			return (
 				<TagContainer>
@@ -614,7 +614,7 @@
 					<LevelsBrowsers levelBrowser={levelBrowserUnique}/>
 					<div>
 						<ConnectedExpandCollapseAll store={store}/>&nbsp;&nbsp;
-						<StepLevels detailsRows={detailsRows}/>
+						{/*<StepLevels detailsRows={detailsRows}/>*/}
 					</div>
 				</div>
 			);
