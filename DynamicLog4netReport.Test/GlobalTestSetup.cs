@@ -1,7 +1,8 @@
-﻿using dnk.DynamicLog4netReport;
+﻿using System;
+using System.IO;
 using NUnit.Framework;
 
-namespace DynamicLog4netReport.Test
+namespace dnk.DynamicLog4netReport.Test
 {
 	[SetUpFixture]
 	public class GlobalTestSetup
@@ -9,17 +10,15 @@ namespace DynamicLog4netReport.Test
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
-			HtmlReportAppender.Configure(new ReportMetaData
-			{
-				ReportName = "Test Execution Report",
-				ReportCategory = "Smoke",
-				ReportEnvironment = "PROD"
-			});
+			HtmlReportAppender.Configure(
+				Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName, "Results"),
+				new ReportMetaData
+				{
+					ReportName = "Test Execution Report TEST",
+					ReportCategory = "Test",
+					ReportEnvironment = "DEV"
+				}
+			);
 		}
-
-		//[OneTimeTearDown]
-		//public void OneTimeTearDown()
-		//{
-		//}
 	}
 }

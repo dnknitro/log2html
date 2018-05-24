@@ -8,7 +8,7 @@
     <ProjectGuid>{53943992-DAEE-42CF-804B-B79DD3E93C67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DynamicLog4netReport.Test</RootNamespace>
+    <RootNamespace>dnk.DynamicLog4netReport.Test</RootNamespace>
     <AssemblyName>DynamicLog4netReport.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dnkUtils, Version=1.0.0.42065, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\dnkUtils.1.0.0.42065\lib\net461\dnkUtils.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -52,6 +55,7 @@
     <Compile Include="DynamicAppenderTestFixture.cs" />
     <Compile Include="GlobalTestSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config">
@@ -65,6 +69,9 @@
       <Project>{e55f8bad-8960-490e-ab0b-f2610a5a514b}</Project>
       <Name>DynamicLog4netReport</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

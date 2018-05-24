@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using dnk.DynamicLog4netReport;
 using log4net;
 using log4net.Core;
 using NUnit.Framework;
 
-namespace DynamicLog4netReport.Test
+namespace dnk.DynamicLog4netReport.Test
 {
 	[Parallelizable(ParallelScope.Children)]
 	public class DynamicAppenderTestFixture
