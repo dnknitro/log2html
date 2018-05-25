@@ -8,8 +8,8 @@
     <ProjectGuid>{E55F8BAD-8960-490E-AB0B-F2610A5A514B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>dnk.DynamicLog4netReport</RootNamespace>
-    <AssemblyName>DynamicLog4netReport</AssemblyName>
+    <RootNamespace>dnkLog4netHtmlReport</RootNamespace>
+    <AssemblyName>dnkLog4netHtmlReport</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -55,7 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="CustomLoggingEvent.cs" />
+    <Compile Include="LogLevel.cs" />
     <Compile Include="LogExtensions.cs" />
     <Compile Include="HtmlReportAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

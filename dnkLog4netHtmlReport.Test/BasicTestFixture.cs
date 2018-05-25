@@ -4,11 +4,12 @@ using System.Reflection;
 using log4net;
 using log4net.Core;
 using NUnit.Framework;
+using OpenQA.Selenium.Chrome;
 
-namespace dnk.DynamicLog4netReport.Test
+namespace dnkLog4netHtmlReport.SeleniumWebDriver.Test
 {
 	[Parallelizable(ParallelScope.Children)]
-	public class DynamicAppenderTestFixture
+	public class BasicTestFixture
 	{
 		[Test]
 		[TestCase(1)]
@@ -21,9 +22,8 @@ namespace dnk.DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
-			log.SetBrowser("IE");
+			Config.SetBrowser("IE");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-			log.Screenshot(Level.Debug, prefix + "Debug");
 			if (index > 4)
 				try
 				{
@@ -42,7 +42,7 @@ namespace dnk.DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
-			log.SetBrowser("FireFox");
+			Config.SetBrowser("FireFox");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 		}
@@ -52,9 +52,8 @@ namespace dnk.DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
-			log.SetBrowser("Chrome");
+			Config.SetBrowser("Chrome");
 			log.Warn(prefix + "Warn test");
-			log.Screenshot(Level.Debug, prefix + "Debug");
 
 			var levels = new List<Level>
 			{
@@ -86,9 +85,23 @@ namespace dnk.DynamicLog4netReport.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
-			log.SetBrowser("Chrome");
+			Config.SetBrowser("Chrome");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Pass(prefix + "Fail Skip test");
+		}
+
+		[Test]
+		public void TestScreenshot()
+		{
+			using (var webDriver = new ChromeDriver())
+			{
+				webDriver.Navigate().GoToUrl("http://google.com");
+				var prefix = MethodBase.GetCurrentMethod().Name + ": ";
+				var log = LogManager.GetLogger(GetType().Name);
+				Config.SetBrowser("Chrome");
+				log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+				log.LogWithScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
+			}
 		}
 	}
 }

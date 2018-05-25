@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DynamicLog4netReport")]
-[assembly: AssemblyDescription( "Html report generator based on log4net records" )]
+[assembly: AssemblyTitle("dnkLog4netHtmlReport.SeleniumWebDriver")]
+[assembly: AssemblyDescription("Provides convenience methods to add browser screenshots to dnkLog4netHtmlReport report")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany( "dnk / Volodymyr Shcherbyna" )]
-[assembly: AssemblyProduct("DynamicLog4netReport")]
+[assembly: AssemblyProduct("dnkLog4netHtmlReport.SeleniumWebDriver")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e55f8bad-8960-490e-ab0b-f2610a5a514b")]
+[assembly: Guid("c6261872-96fd-41b7-a897-be4f2d0f713f")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "1.0.0.*" )]
+[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

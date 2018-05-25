@@ -14,6 +14,8 @@
     <tags>html report log4net</tags>
   </metadata>
   <files>
-    <file src="..\Tools\Content\*.*" target="content" />
- </files>
+    <file src="..\Tools\Content\GlobalTestSetup.cs.pp" target="Content" />
+    <file src="..\Tools\Content\log4net.config" target="Content" />
+    <file src="..\Tools\Content\Install.ps1" target="tools" />
+  </files>
 </package>

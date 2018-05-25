@@ -4,7 +4,7 @@ using log4net;
 using log4net.Core;
 using NUnit.Framework;
 
-namespace dnk.DynamicLog4netReport
+namespace dnkLog4netHtmlReport
 {
 	internal class CustomLoggingEvent
 	{

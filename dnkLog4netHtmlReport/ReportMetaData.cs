@@ -1,4 +1,4 @@
-﻿namespace dnk.DynamicLog4netReport
+﻿namespace dnkLog4netHtmlReport
 {
 	public class ReportMetaData
 	{

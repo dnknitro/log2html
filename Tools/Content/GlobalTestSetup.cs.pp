@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace dnk.DynamicLog4netReport.Test
+namespace $rootnamespace$
 {
 	[SetUpFixture]
 	public class GlobalTestSetup
@@ -10,8 +10,9 @@ namespace dnk.DynamicLog4netReport.Test
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
-			HtmlReportAppender.Configure(
-				Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName, "Results"),
+			var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+			Config.Configure(
+				Path.Combine(Directory.GetParent(baseDirectory).Parent.Parent.FullName, "Results"),
 				new ReportMetaData
 				{
 					ReportName = "Test Execution Report TEST",

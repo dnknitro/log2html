@@ -5,7 +5,7 @@ using dnkUtils;
 using log4net;
 using NUnit.Framework;
 
-namespace dnk.DynamicLog4netReport.Test
+namespace dnkLog4netHtmlReport.SeleniumWebDriver.Test
 {
 	public class TestData
 	{
@@ -13,11 +13,9 @@ namespace dnk.DynamicLog4netReport.Test
 		[Explicit]
 		public void SetHardcodedTestData()
 		{
-			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("dnk.DynamicLog4netReport.Test.TestData.txt", this.GetType().Assembly);
+			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("dnkLog4netHtmlReport.Test.TestData.txt", GetType().Assembly);
 			StringBuilder reportTemplateContent = null;
 			HtmlReportAppender.Configure(
-				HtmlReportAppender.ReportFolder,
-				HtmlReportAppender.ReportMetaData,
 				content =>
 				{
 					reportTemplateContent = content;
@@ -25,7 +23,7 @@ namespace dnk.DynamicLog4netReport.Test
 				}
 			);
 			LogManager.GetLogger(GetType()).Pass("SetHardcodedTestData!");
-			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "DynamicLog4netReport", "ReportTemplate.html"), reportTemplateContent.ToString());
+			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "dnkLog4netHtmlReport", "ReportTemplate.html"), reportTemplateContent.ToString());
 		}
 	}
 }
