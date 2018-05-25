@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("dnkLog4netHtmlReport.SeleniumWebDriver")]
 [assembly: AssemblyDescription("Provides convenience methods to add browser screenshots to dnkLog4netHtmlReport report")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany( "dnk / Volodymyr Shcherbyna" )]
+[assembly: AssemblyCompany("dnk / Volodymyr Shcherbyna")]
 [assembly: AssemblyProduct("dnkLog4netHtmlReport.SeleniumWebDriver")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.3")]
-[assembly: AssemblyFileVersion("1.0.0.3")]
+
+[assembly: AssemblyVersion("1.0.0.5")]
+[assembly: AssemblyFileVersion("1.0.0.5")]
+[assembly: AssemblyInformationalVersion("1.0.0.5")]
