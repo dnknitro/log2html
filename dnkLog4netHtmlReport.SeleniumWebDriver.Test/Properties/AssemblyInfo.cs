@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("dnkLog4netHtmlReport.Test")]
+[assembly: AssemblyTitle("dnkLog4netHtmlReport.SeleniumWebDriver.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("dnkLog4netHtmlReport.Test")]
+[assembly: AssemblyProduct("dnkLog4netHtmlReport.SeleniumWebDriver.Test")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("53943992-daee-42cf-804b-b79dd3e93c67")]
+[assembly: Guid("b95e572e-1eaf-4331-9927-02a20e477fe3")]
 
 // Version information for an assembly consists of the following four values:
 //

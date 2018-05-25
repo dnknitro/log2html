@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace dnkLog4netHtmlReport.Test
+namespace dnkLog4netHtmlReport.SeleniumWebDriver.Test
 {
 	[SetUpFixture]
 	public class GlobalTestSetup

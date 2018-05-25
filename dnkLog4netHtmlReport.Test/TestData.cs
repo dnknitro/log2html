@@ -5,7 +5,7 @@ using dnkUtils;
 using log4net;
 using NUnit.Framework;
 
-namespace dnkLog4netHtmlReport.SeleniumWebDriver.Test
+namespace dnkLog4netHtmlReport.Test
 {
 	public class TestData
 	{
