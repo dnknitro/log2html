@@ -8,8 +8,8 @@
     <ProjectGuid>{53943992-DAEE-42CF-804B-B79DD3E93C67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>dnkLog4netHtmlReport.SeleniumWebDriver.Test</RootNamespace>
-    <AssemblyName>dnkLog4netHtmlReport.SeleniumWebDriver.Test</AssemblyName>
+    <RootNamespace>dnkLog4netHtmlReport.Test</RootNamespace>
+    <AssemblyName>dnkLog4netHtmlReport.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
