@@ -10,7 +10,7 @@ namespace dnkLog4netHtmlReport.SeleniumWebDriver.Test
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
-			var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+			var baseDirectory = AppDomain.CurrentDomain.BaseDirectory.Trim('\\');
 			dnkLog4netHtmlReport.Config.Configure(
 				Path.Combine(Directory.GetParent(baseDirectory).Parent.Parent.FullName, "Results"),
 				new ReportMetaData
