@@ -1,0 +1,5 @@
+language: csharp
+solution: dnkLog4netHtmlReport.sln
+install:
+  - nuget restore dnkLog4netHtmlReport.sln
+  - nuget install NUnit.Console -OutputDirectory testrunner
