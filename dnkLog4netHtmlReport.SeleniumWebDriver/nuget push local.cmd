@@ -1,0 +1,1 @@
+nuget.exe push %1 123453 -Source http://localhost/NuGet/api/v2/package

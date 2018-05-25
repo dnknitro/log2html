@@ -16,25 +16,26 @@ namespace dnkLog4netHtmlReport.SeleniumWebDriver
 		public static void LogWithScreenshot(this ILog log, IWebDriver webDriver, Level level, string message, Exception ex = null)
 		{
 			string targetScreeshotFile = null;
-			try
-			{
-				var tempScreenshotFile = TakeScreenshot(webDriver);
-				if (File.Exists(tempScreenshotFile))
+			if (webDriver != null)
+				try
 				{
-					var targetScreenshotRelativeFolder = Config.ReportFileNameOnly;
-					var targetScreenshotAbsoluteFolder = Path.Combine(Config.ReportFolder, targetScreenshotRelativeFolder);
-					Directory.CreateDirectory(targetScreenshotAbsoluteFolder);
+					var tempScreenshotFile = TakeScreenshot(webDriver);
+					if (File.Exists(tempScreenshotFile))
+					{
+						var targetScreenshotRelativeFolder = Config.ReportFileNameOnly;
+						var targetScreenshotAbsoluteFolder = Path.Combine(Config.ReportFolder, targetScreenshotRelativeFolder);
+						Directory.CreateDirectory(targetScreenshotAbsoluteFolder);
 
-					var screenshotFileName = $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}_{Thread.CurrentThread.ManagedThreadId}.png";
-					File.Move(tempScreenshotFile, Path.Combine(targetScreenshotAbsoluteFolder, screenshotFileName));
+						var screenshotFileName = $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}_{Thread.CurrentThread.ManagedThreadId}.png";
+						File.Move(tempScreenshotFile, Path.Combine(targetScreenshotAbsoluteFolder, screenshotFileName));
 
-					targetScreeshotFile = Path.Combine(targetScreenshotRelativeFolder, screenshotFileName).Replace("\\", "/");
+						targetScreeshotFile = Path.Combine(targetScreenshotRelativeFolder, screenshotFileName).Replace("\\", "/");
+					}
 				}
-			}
-			catch (Exception screenshotException)
-			{
-				LogManager.GetLogger(typeof(ScreenshotLogExtensions)).Debug("Failed to take screenshot", screenshotException);
-			}
+				catch (Exception screenshotException)
+				{
+					LogManager.GetLogger(typeof(ScreenshotLogExtensions)).Debug("Failed to take screenshot", screenshotException);
+				}
 
 			const string ScreenshotPathPropertyName = "ScreenshotPath";
 			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = targetScreeshotFile;
