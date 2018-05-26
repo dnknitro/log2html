@@ -4,16 +4,18 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>dnkLog4netHtmlReport.build</RootNamespace>
     <IsPackable>False</IsPackable>
     <NoWarn>CS0649;CS0169</NoWarn>
     
     <!-- NUKE CONFIGURATION -->
-    <NukeVersion>*</NukeVersion>
+    <NukeVersion>0.4.0</NukeVersion>
     <NukeCodeGeneration>False</NukeCodeGeneration>
+    <AssemblyName>dnkLog4netHtmlReport.build</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NuGet.CommandLine" Version="4.6.2" />
     <PackageReference Include="Nuke.Common" Version="$(NukeVersion)" />
     <PackageReference Include="Nuke.CodeGeneration" Version="$(NukeVersion)" Condition="'$(NukeCodeGeneration)' == 'True'" />
     <PackageReference Include="GitVersion.CommandLine" Version="3.6.5" />

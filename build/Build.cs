@@ -1,73 +1,80 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text.RegularExpressions;
+using dnkLog4netHtmlReport.build.Helpers;
 using Nuke.Common;
-using Nuke.Common.Git;
+using Nuke.Common.IO;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
-using static Nuke.Common.EnvironmentInfo;
-using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.IO.PathConstruction;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.NuGet;
 
-class Build : NukeBuild
+namespace dnkLog4netHtmlReport.build
 {
-	// Console application entry point. Also defines the default target.
-	public static int Main() => Execute<Build>(x => x.Compile);
+	class Build : NukeBuild
+	{
+		// Console application entry point. Also defines the default target.
+		public static int Main() => Execute<Build>(x => x.Compile);
 
-	// Auto-injection fields:
+		// Auto-injection fields:
 
-	[GitVersion] readonly GitVersion GitVersion;
-	// Semantic versioning. Must have 'GitVersion.CommandLine' referenced.
+		[GitVersion] readonly GitVersion GitVersion;
+		// Semantic versioning. Must have 'GitVersion.CommandLine' referenced.
 
-	// [GitRepository] readonly GitRepository GitRepository;
-	// Parses origin, branch name and head from git config.
+		// [GitRepository] readonly GitRepository GitRepository;
+		// Parses origin, branch name and head from git config.
 
-	// [Parameter] readonly string MyGetApiKey;
-	// Returns command-line arguments and environment variables.
+		// [Parameter] readonly string MyGetApiKey;
+		// Returns command-line arguments and environment variables.
 
-	// [Solution] readonly Solution Solution;
-	// Provides access to the structure of the solution.
+		// [Solution] readonly Solution Solution;
+		// Provides access to the structure of the solution.
 
-	Target Clean => _ => _
+		Target Clean => _ => _
 			.OnlyWhen(() => false) // Disabled for safety.
 			.Executes(() =>
 			{
-				DeleteDirectories(GlobDirectories(SourceDirectory, "**/bin", "**/obj"));
-				EnsureCleanDirectory(OutputDirectory);
+				FileSystemTasks.DeleteDirectories(PathConstruction.GlobDirectories(SourceDirectory, "**/bin", "**/obj"));
+				FileSystemTasks.EnsureCleanDirectory(OutputDirectory);
 			});
 
-	Target Restore => _ => _
-			.DependsOn(Clean)
+		Target Compile => _ => _
 			.Executes(() =>
 			{
-				DotNetRestore(s => DefaultDotNetRestore);
+				NuGetTasks.NuGetRestore(SolutionFile, config => config.SetToolPath(ToolsLocationHelper.NuGetPath));
+
+				MSBuildTasks.MSBuild(s => 
+					MSBuildTasks.DefaultMSBuildCompile
+					.SetVerbosity(MSBuildVerbosity.Minimal)
+					.SetTargets("Build")
+					.SetNodeReuse(true)
+					.SetMaxCpuCount(4));
 			});
 
-	Target Compile => _ => _
-			.DependsOn(Restore)
+		Target SetAssemblyVersion => _ => _
 			.Executes(() =>
 			{
-				DotNetBuild(s => DefaultDotNetBuild);
+				var assemblyInfos = new[]
+				{
+					@"dnkLog4netHtmlReport\Properties\AssemblyInfo.cs",
+					@"dnkLog4netHtmlReport.SeleniumWebDriver\Properties\AssemblyInfo.cs"
+				};
+
+				foreach(var assemblyInfo in assemblyInfos)
+				{
+					var assemblyInfoFile = RootDirectory / assemblyInfo;
+					var content = File.ReadAllText(assemblyInfoFile);
+					content = Regex.Replace(content, @"AssemblyVersion\(\s*"".+""\s*\)", $@"AssemblyVersion(""{GitVersion.GetNormalizedAssemblyVersion()}"")");
+					content = Regex.Replace(content, @"AssemblyFileVersion\(\s*"".+""\s*\)", $@"AssemblyFileVersion(""{GitVersion.GetNormalizedFileVersion()}"")");
+					content = Regex.Replace(content, @"AssemblyInformationalVersion\(\s*"".+""\s*\)", $@"AssemblyInformationalVersion(""{GitVersion.InformationalVersion}"")");
+					File.WriteAllText(assemblyInfoFile, content);
+				}
 			});
 
-	Target SetAssemblyVersion => _ => _
-		.Executes(() =>
-		{
-			var assemblyInfos = new[]
+		Target Pack => _ => _
+			.Executes(() =>
 			{
-				@"dnkLog4netHtmlReport\Properties\AssemblyInfo.cs",
-				@"dnkLog4netHtmlReport.SeleniumWebDriver\Properties\AssemblyInfo.cs"
-			};
-
-			foreach(var assemblyInfo in assemblyInfos)
-			{
-				var assemblyInfoFile = RootDirectory / assemblyInfo;
-				var content = File.ReadAllText(assemblyInfoFile);
-				content = Regex.Replace(content, @"AssemblyVersion\(\s*"".+""\s*\)", $@"AssemblyVersion(""{GitVersion.GetNormalizedAssemblyVersion()}"")");
-				content = Regex.Replace(content, @"AssemblyFileVersion\(\s*"".+""\s*\)", $@"AssemblyFileVersion(""{GitVersion.GetNormalizedFileVersion()}"")");
-				content = Regex.Replace(content, @"AssemblyInformationalVersion\(\s*"".+""\s*\)", $@"AssemblyInformationalVersion(""{GitVersion.InformationalVersion}"")");
-				File.WriteAllText(assemblyInfoFile, content);
-			}
-		});
+				ProcessHelper.StartProcess("nuget.exe", "pack -Version 1.0.0.4", RootDirectory / @"src\dnkLog4netHtmlReport");
+			});
+	}
 }
