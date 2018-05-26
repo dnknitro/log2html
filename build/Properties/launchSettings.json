@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dnkLog4netHtmlReport.build": {
+      "commandName": "Project",
+      "commandLineArgs": "IncrementVersion"
+    }
+  }
+}
