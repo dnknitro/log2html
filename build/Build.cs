@@ -85,17 +85,23 @@ namespace dnkLog4netHtmlReport.build
 		{
 			Environment.CurrentDirectory = RootDirectory;
 			var projectFolder = RootDirectory / projectRelativeFolder;
-			var nupkgFiles = Directory.GetFiles(projectFolder, "*.nupkg");
-			if(Version == null)
+			var nupkgFiles = Directory.GetFiles(projectFolder, "*.nupkg").ToList();
+			var versionWasNull = Version == null;
+			if (versionWasNull)
 			{
 				var highestVersion = nupkgFiles.Select(x => Regex.Replace(x, @".+\.(\d+\.\d+\.\d+\.\d+)\.nupkg", "$1")).OrderBy(x => x).LastOrDefault();
 				var versionParts = highestVersion.Split('.').ToList();
 				var bumpedVersion = int.Parse(versionParts.Last());
 				bumpedVersion++;
-				Version = string.Join(".", versionParts.Take(versionParts.Count - 1).Concat(new List<string> { bumpedVersion.ToString() }));
+				Version = string.Join(".", versionParts.Take(versionParts.Count - 1).Concat(new List<string> {bumpedVersion.ToString()}));
+			}
+			else
+			{
+				nupkgFiles.ForEach(x => File.Delete(x));
 			}
 			ProcessHelper.StartProcess(ToolsLocationHelper.NuGetPath, $"pack -Version {Version}", projectFolder);
-			nupkgFiles.ForEach(x => File.Delete(x));
+			if (versionWasNull)
+				nupkgFiles.ForEach(x => File.Delete(x));
 		}
 
 		private void NugetPushLocal(string projectRelativeFolder)
