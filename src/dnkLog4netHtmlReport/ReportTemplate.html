@@ -366,7 +366,7 @@
 			interval = interval - (minutes * msecPerMinute );  
 
 			var seconds = Math.floor(interval / 1000 );
-			if(seconds > 0) durationStr = durationStr + seconds + "s "
+			durationStr = durationStr + seconds + "s "
 
 			return durationStr;
 		};
