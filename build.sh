@@ -17,38 +17,34 @@ SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 # CONFIGURATION
 ###########################################################################
 
-DOTNET_CHANNEL="2.0"
+NUGET_VERSION="latest"
+SOLUTION_DIRECTORY="$SCRIPT_DIR/src"
 BUILD_PROJECT_FILE="$SCRIPT_DIR/./build/dnkLog4netHtmlReport.build.csproj"
+BUILD_EXE_FILE="$SCRIPT_DIR/./build/bin/Debug/dnkLog4netHtmlReport.build.exe"
 
 TEMP_DIRECTORY="$SCRIPT_DIR/./.tmp"
 
-DOTNET_SCRIPT_URL="https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.sh"
-DOTNET_DIRECTORY="$TEMP_DIRECTORY/dotnet-unix"
-DOTNET_FILE="$DOTNET_DIRECTORY/dotnet"
-export DOTNET_EXE="$DOTNET_FILE"
-
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-export NUGET_XMLDOC_MODE="skip"
+NUGET_URL="https://dist.nuget.org/win-x86-commandline/$NUGET_VERSION/nuget.exe"
+NUGET_FILE="$TEMP_DIRECTORY/nuget.exe"
+export NUGET_EXE="$NUGET_FILE"
 
 ###########################################################################
 # PREPARE BUILD
 ###########################################################################
 
 if ! ((NOINIT)); then
-  mkdir -p "$DOTNET_DIRECTORY"
+  mkdir -p "$TEMP_DIRECTORY"
 
-  DOTNET_SCRIPT_FILE="$TEMP_DIRECTORY/dotnet-install.sh"
-  if [ ! -f "$DOTNET_SCRIPT_FILE" ]; then curl -Lsfo "$DOTNET_SCRIPT_FILE" $DOTNET_SCRIPT_URL; chmod +x "$DOTNET_SCRIPT_FILE"; fi
-  "$DOTNET_SCRIPT_FILE" --install-dir "$DOTNET_DIRECTORY" --channel 2.0 --no-path
+  if [ ! -f "$NUGET_FILE" ]; then curl -Lsfo "$NUGET_FILE" $NUGET_URL;
+  elif [ $NUGET_VERSION == "latest" ]; then mono "$NUGET_FILE" update -Self; fi
 
-  "$DOTNET_FILE" restore "$BUILD_PROJECT_FILE"
+  mono "$NUGET_FILE" restore "$BUILD_PROJECT_FILE" -SolutionDirectory $SOLUTION_DIRECTORY
 fi
 
-"$DOTNET_FILE" build "$BUILD_PROJECT_FILE" --no-restore
+msbuild "$BUILD_PROJECT_FILE"
 
 ###########################################################################
 # EXECUTE BUILD
 ###########################################################################
 
-"$DOTNET_FILE" run --project "$BUILD_PROJECT_FILE" --no-build -- ${BUILD_ARGUMENTS[@]}
+mono "$BUILD_EXE_FILE" ${BUILD_ARGUMENTS[@]}

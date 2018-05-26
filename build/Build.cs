@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using dnkLog4netHtmlReport.build.Helpers;
 using Nuke.Common;
@@ -8,6 +11,7 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
+using Nuke.Common.Utilities.Collections;
 
 namespace dnkLog4netHtmlReport.build
 {
@@ -43,12 +47,12 @@ namespace dnkLog4netHtmlReport.build
 			{
 				NuGetTasks.NuGetRestore(SolutionFile, config => config.SetToolPath(ToolsLocationHelper.NuGetPath));
 
-				MSBuildTasks.MSBuild(s => 
+				MSBuildTasks.MSBuild(s =>
 					MSBuildTasks.DefaultMSBuildCompile
-					.SetVerbosity(MSBuildVerbosity.Minimal)
-					.SetTargets("Build")
-					.SetNodeReuse(true)
-					.SetMaxCpuCount(4));
+						.SetVerbosity(MSBuildVerbosity.Minimal)
+						.SetTargets("Build")
+						.SetNodeReuse(true)
+						.SetMaxCpuCount(4));
 			});
 
 		Target SetAssemblyVersion => _ => _
@@ -71,10 +75,52 @@ namespace dnkLog4netHtmlReport.build
 				}
 			});
 
+		[Parameter]
+		public string Version
+		{
+			get; set;
+		}
+
+		private void NugetPack(string projectRelativeFolder)
+		{
+			Environment.CurrentDirectory = RootDirectory;
+			var projectFolder = RootDirectory / projectRelativeFolder;
+			var nupkgFiles = Directory.GetFiles(projectFolder, "*.nupkg");
+			if(Version == null)
+			{
+				var highestVersion = nupkgFiles.Select(x => Regex.Replace(x, @".+\.(\d+\.\d+\.\d+\.\d+)\.nupkg", "$1")).OrderBy(x => x).LastOrDefault();
+				var versionParts = highestVersion.Split('.').ToList();
+				var bumpedVersion = int.Parse(versionParts.Last());
+				bumpedVersion++;
+				Version = string.Join(".", versionParts.Take(versionParts.Count - 1).Concat(new List<string> { bumpedVersion.ToString() }));
+			}
+			ProcessHelper.StartProcess(ToolsLocationHelper.NuGetPath, $"pack -Version {Version}", projectFolder);
+			nupkgFiles.ForEach(x => File.Delete(x));
+		}
+
+		private void NugetPushLocal(string projectRelativeFolder)
+		{
+			Environment.CurrentDirectory = RootDirectory;
+			var projectFolder = RootDirectory / projectRelativeFolder;
+			var nupkgFile = Directory.GetFiles(projectFolder, "*.nupkg").Single();
+			ProcessHelper.StartProcess(ToolsLocationHelper.NuGetPath, $"push {nupkgFile} 123453 -Source http://localhost/NuGet/api/v2/package", projectFolder);
+		}
+
 		Target Pack => _ => _
+			.DependsOn(Compile)
 			.Executes(() =>
 			{
-				ProcessHelper.StartProcess("nuget.exe", "pack -Version 1.0.0.4", RootDirectory / @"src\dnkLog4netHtmlReport");
+				NugetPack(@"src\dnkLog4netHtmlReport");
+				NugetPack(@"src\dnkLog4netHtmlReport.SeleniumWebDriver");
+			});
+
+
+		Target PushLocal => _ => _
+			.DependsOn(Pack)
+			.Executes(() =>
+			{
+				NugetPushLocal(@"src\dnkLog4netHtmlReport");
+				NugetPushLocal(@"src\dnkLog4netHtmlReport.SeleniumWebDriver");
 			});
 	}
 }

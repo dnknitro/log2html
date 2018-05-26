@@ -7,11 +7,11 @@ namespace dnkLog4netHtmlReport.build.Helpers
 {
 	class ToolsLocationHelper
 	{
-		public static readonly PathConstruction.AbsolutePath BuildTempDirectory = (PathConstruction.AbsolutePath)Path.Combine(EnvironmentInfo.WorkingDirectory, ".tmp");
+		public static PathConstruction.AbsolutePath BuildTempDirectory => (PathConstruction.AbsolutePath)Path.Combine(Environment.CurrentDirectory, ".tmp");
 
-		public static string NuGetPath = BuildTempDirectory / "nuget.exe";
+		public static string NuGetPath => BuildTempDirectory / "nuget.exe";
 
-		public static PathConstruction.AbsolutePath UserProfileFolder = (PathConstruction.AbsolutePath)EnvironmentInfo.Variable("userprofile");
+		public static PathConstruction.AbsolutePath UserProfileFolder => (PathConstruction.AbsolutePath)EnvironmentInfo.Variable("userprofile");
 
 
 		private static readonly Lazy<string> _vsTestExe = new Lazy<string>(() =>

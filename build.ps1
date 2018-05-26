@@ -12,19 +12,16 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 # CONFIGURATION
 ###########################################################################
 
-$DotNetChannel = "2.0"
+$NuGetVersion = "latest"
+$SolutionDirectory = "$PSScriptRoot\src"
 $BuildProjectFile = "$PSScriptRoot\.\build\dnkLog4netHtmlReport.build.csproj"
+$BuildExeFile = "$PSScriptRoot\.\build\bin\debug\dnkLog4netHtmlReport.build.exe"
 
 $TempDirectory = "$PSScriptRoot\.\.tmp"
 
-$DotNetScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
-$DotNetDirectory = "$TempDirectory\dotnet-win"
-$DotNetFile = "$DotNetDirectory\dotnet.exe"
-$env:DOTNET_EXE = $DotNetFile
-
-$env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
-$env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
-$env:NUGET_XMLDOC_MODE = "skip"
+$NuGetUrl = "https://dist.nuget.org/win-x86-commandline/$NuGetVersion/nuget.exe"
+$NuGetFile = "$TempDirectory\nuget.exe"
+$env:NUGET_EXE = $NuGetFile
 
 ###########################################################################
 # PREPARE BUILD
@@ -36,20 +33,21 @@ function ExecSafe([scriptblock] $cmd) {
 }
 
 if (!$NoInit) {
-    md -force $DotNetDirectory > $null
+    md -force $TempDirectory > $null
 
-    $DotNetScriptFile = "$TempDirectory\dotnet-install.ps1"
-    if (!(Test-Path $DotNetScriptFile)) { (New-Object System.Net.WebClient).DownloadFile($DotNetScriptUrl, $DotNetScriptFile) }
-    ExecSafe { & $DotNetScriptFile -InstallDir $DotNetDirectory -Channel $DotNetChannel -NoPath }
+    if (!(Test-Path $NuGetFile)) { (New-Object System.Net.WebClient).DownloadFile($NuGetUrl, $NuGetFile) }
+    elseif ($NuGetVersion -eq "latest") { & $NuGetFile update -Self }
 
-    ExecSafe { & $DotNetFile restore $BuildProjectFile }
+    ExecSafe { & $NuGetFile restore $BuildProjectFile -SolutionDirectory $SolutionDirectory }
+    ExecSafe { & $NuGetFile install Nuke.MSBuildLocator -ExcludeVersion -OutputDirectory $TempDirectory -SolutionDirectory $SolutionDirectory }
 }
 
-ExecSafe { & $DotNetFile build $BuildProjectFile --no-restore }
+$MSBuildFile = & "$TempDirectory\Nuke.MSBuildLocator\tools\Nuke.MSBuildLocator.exe"
+ExecSafe { & $MSBuildFile $BuildProjectFile /v:minimal /t:Build /nodeReuse:True }
 
 ###########################################################################
 # EXECUTE BUILD
 ###########################################################################
 
-& $DotNetFile run --project $BuildProjectFile --no-build -- $BuildArguments
+& $BuildExeFile $BuildArguments
 exit $LASTEXITCODE

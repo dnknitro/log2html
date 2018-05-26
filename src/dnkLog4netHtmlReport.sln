@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dnkLog4netHtmlReport.build", "..\build\dnkLog4netHtmlReport.build.csproj", "{4CBCA82B-711D-4BE3-9588-114B7FE360E8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnkLog4netHtmlReport", "dnkLog4netHtmlReport\dnkLog4netHtmlReport.csproj", "{E55F8BAD-8960-490E-AB0B-F2610A5A514B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnkLog4netHtmlReport.Test", "dnkLog4netHtmlReport.Test\dnkLog4netHtmlReport.Test.csproj", "{53943992-DAEE-42CF-804B-B79DD3E93C67}"
@@ -28,8 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4CBCA82B-711D-4BE3-9588-114B7FE360E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CBCA82B-711D-4BE3-9588-114B7FE360E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E55F8BAD-8960-490E-AB0B-F2610A5A514B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E55F8BAD-8960-490E-AB0B-F2610A5A514B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E55F8BAD-8960-490E-AB0B-F2610A5A514B}.Release|Any CPU.ActiveCfg = Release|Any CPU
