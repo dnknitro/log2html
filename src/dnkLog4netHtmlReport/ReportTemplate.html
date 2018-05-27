@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Report Template</title>
@@ -243,14 +243,9 @@
 		font-weight: normal;
 	}
 
-	td.summaryStart
+	td.summaryStartEnd
 	{
-		width: 70px;
-	}
-
-	td.summaryEnd
-	{
-		width: 70px;
+		width: 145px;
 	}
 
 	td.summaryDuration
@@ -343,27 +338,27 @@
 		var calcDuration = function(/*Date*/ startTime, /*Date*/ endTime) {
 			var durationStr = "";
 
-			// Set the unit values in milliseconds.  
-			var msecPerMinute = 1000 * 60;  
-			var msecPerHour = msecPerMinute * 60;  
-			var msecPerDay = msecPerHour * 24;  
-			// Get the difference in milliseconds.  
-			var interval = endTime.getTime() - startTime.getTime();  
+			// Set the unit values in milliseconds.
+			var msecPerMinute = 1000 * 60;
+			var msecPerHour = msecPerMinute * 60;
+			var msecPerDay = msecPerHour * 24;
+			// Get the difference in milliseconds.
+			var interval = endTime.getTime() - startTime.getTime();
 
-			// Calculate how many days the interval contains. Subtract that  
-			// many days from the interval to determine the remainder.  
-			var days = Math.floor(interval / msecPerDay );  
+			// Calculate how many days the interval contains. Subtract that
+			// many days from the interval to determine the remainder.
+			var days = Math.floor(interval / msecPerDay );
 			if(days > 0) durationStr = days + "d "
-			interval = interval - (days * msecPerDay );  
+			interval = interval - (days * msecPerDay );
 
-			// Calculate the hours, minutes, and seconds.  
-			var hours = Math.floor(interval / msecPerHour );  
+			// Calculate the hours, minutes, and seconds.
+			var hours = Math.floor(interval / msecPerHour );
 			if(hours > 0) durationStr = durationStr + hours + "h "
-			interval = interval - (hours * msecPerHour );  
+			interval = interval - (hours * msecPerHour );
 
-			var minutes = Math.floor(interval / msecPerMinute );  
+			var minutes = Math.floor(interval / msecPerMinute );
 			if(minutes > 0) durationStr = durationStr + minutes + "m "
-			interval = interval - (minutes * msecPerMinute );  
+			interval = interval - (minutes * msecPerMinute );
 
 			var seconds = Math.floor(interval / 1000 );
 			durationStr = durationStr + seconds + "s "
@@ -375,6 +370,8 @@
 		const TagContainer = props => props.children;
 		//////////////////////////////////// end of lib //////////////////////////////////////
 
+		//////////////////////////////////// data prep //////////////////////////////////////
+
 		const detailsRows = [
 			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
 		];
@@ -384,8 +381,6 @@
 		for (var i = 0; i < detailsRows.length; i++) {
 			detailsRows[i].TimeStampUtc = new Date(detailsRows[i].TimeStampUtc);
 		}
-
-		//////////////////////////////////// Define Application State //////////////////////////////////////
 
 		class SummaryDataRow {
 			constructor(detailsRows) {
@@ -401,6 +396,9 @@
 				this.endTime = this.detailsRows
 					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc > accumulator.TimeStampUtc ? currentValue : accumulator, this.detailsRows[0])
 					.TimeStampUtc;
+				this.durationMsec = this.endTime.getTime() - this.startTime.getTime();
+				this.durationStr = calcDuration(this.startTime, this.endTime);
+				this.relativeDuration = 0;
 			};
 
 			get fullTestCaseName() { return this.detailsRows[0].FullTestCaseName; }
@@ -409,6 +407,14 @@
 		const groupsObject = groupBy(detailsRows, 'FullTestCaseName');
 
 		var summaryRows = Object.keys(groupsObject).map(key => new SummaryDataRow(groupsObject[key]));
+		const maxDuration = summaryRows.reduce(
+			(accumulator, currentValue) => { return accumulator.durationMsec < currentValue.durationMsec ? currentValue : accumulator; },
+			summaryRows[0]);
+		summaryRows.map(summaryRow => {
+			summaryRow.relativeDuration = Math.round(summaryRow.durationMsec / maxDuration.durationMsec * 10);
+		});
+
+		//////////////////////////////////// end of data prep //////////////////////////////////////
 
 		//////////////////////////////////// Application State //////////////////////////////////////
 
@@ -476,19 +482,23 @@
 			render() {
 				const level = this.props.summaryRow.level;
 				let anchorID = 0;
+				const relativeDurationHack = [];
+				for(let i = 0; i < this.props.summaryRow.relativeDuration; i++) relativeDurationHack.push(i);
 				return (
 					<tbody>
 						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.fullTestCaseName)}>
 							<td className='summaryStatus'><span>{level}</span></td>
 							<td className='summaryTestName'>{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.fullTestCaseName}</td>
-							<td className='summaryStart'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)}&nbsp;&nbsp;- </td>
-							<td className='summaryEnd'>{timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
-							<td className='summaryDuration' title={`Duration: ${calcDuration(this.props.summaryRow.startTime, this.props.summaryRow.endTime)}`}><div style={{width: '52px'}}></div><span className='square'></span><span className='square'></span><span className='square'></span><span className='square'></span></td>
+							<td className='summaryStartEnd'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
+							<td className='summaryDuration' title={`Duration: ${this.props.summaryRow.durationStr}`}>
+								<div style={{width: '52px'}}></div>
+								{relativeDurationHack.map(x => (<span key={x} className='square'></span>))}
+							</td>
 						</tr>
 						{ this.isExpanded() && (
 							<tr className={`summaryDetailsRow ${level.toLowerCase()}`}>
 								<td>&nbsp;</td>
-								<td colSpan="4">
+								<td colSpan="3">
 									<table className='details'>
 										<tbody>
 											{
@@ -525,7 +535,7 @@
 							{detailsRow.Message}
 						</td>
 					</tr>
-					{detailsRow.Exception != null && 
+					{detailsRow.Exception != null &&
 					<tr className='detailsExceptionRow'>
 						<td className='exceptionCol' colSpan='3'>
 							<div>{detailsRow.Exception}</div>
@@ -557,7 +567,8 @@
 
 		var levelBrowserUnique = {};
 		summaryRows.map(item => {
-			const key = item.level + ' ' + item.tempBrowser;
+			let key = item.level;
+			if(item.tempBrowser) key = key + ' ' + item.tempBrowser;
 			if(levelBrowserUnique[key]) levelBrowserUnique[key].Count = levelBrowserUnique[key].Count + 1;
 			else levelBrowserUnique[key] = {Count: 1, Level: item.level, Browser: item.tempBrowser};
 		});
@@ -582,6 +593,9 @@
 		const LevelsBrowsers = ({levelBrowser}) => {
 			return (
 				<h4 id="passFailInfo">
+					<div style={{float: 'left', marginRight: '20px'}}>
+						<label>Tests Run:</label> <span>{summaryRows.length}</span>
+					</div>
 					{
 						Object.keys(levelBrowser).map((key, index) => {
 							let level = levelBrowser[key].Level.toLowerCase();
@@ -596,7 +610,7 @@
 					}
 					<div className="clearBoth"></div>
 				</h4>
-			);			
+			);
 		};
 
 		const StepLevels = ({detailsRows}) => {
@@ -612,7 +626,7 @@
 						}
 					</span>]
 				</span>
-			);			
+			);
 		};
 
 		class ExpandCollapseAll extends React.Component {
