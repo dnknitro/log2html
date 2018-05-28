@@ -16,18 +16,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0/redux.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
 
-	<script type="text/babel">
-		const levelToColor = {
-			debug: 'gray',
-			pass: 'limegreen',
-			info: 'lightskyblue',
-			failskip: 'gold',
-			warn: 'coral',
-			retry: 'greenyellow',
-			fail: 'red',
-		};
-	</script>
-
 	<style>
 	*
 	{
@@ -39,12 +27,15 @@
 		color: DimGray;
 	}
 
-	a:link
+	.link {
+		cursor: pointer;
+	}
+	/*a:link
 	{
 		color: DimGray;
 		background-color: transparent;
 		text-decoration: none;
-	}
+	}*/
 
 	a:visited
 	{
@@ -73,7 +64,7 @@
 	.statusInfo, .statusinfo { color: lightskyblue !important; }
 	.statusFailSkip, .statusfailskip { color: gold !important; }
 	.statusWarn, .statuswarn { color: coral !important; }
-	.statusRetry, .statusretry { color: GreenYellow !important; }
+	.statusRetry, .statusretry { color: greenyellow !important; }
 	.statusFail, .statusfail { color: red !important; }
 
 	tr.debug > td.summaryStatus > span, tr.debug > td.statusCol > span
@@ -90,7 +81,7 @@
 
 	tr.retry > td.summaryStatus > span, tr.retry > td.statusCol > span
 	{
-		background-color: GreenYellow;
+		background-color: greenyellow;
 		text-align: center;
 	}
 
@@ -177,8 +168,8 @@
 	}
 
 	.retry .square {
-		background-color: GreenYellow !important;
-		border-color: GreenYellow !important;
+		background-color: greenyellow !important;
+		border-color: greenyellow !important;
 	}
 
 	.fail .square {
@@ -307,10 +298,42 @@
 	.clearBoth {
 		clear: both;
 	}
+
+	#stepNames span {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
 	</style>
 </head>
 
 <body>
+	<script type="text/babel">
+		const levelToColor = {
+			debug:    {color: 'gray', oldColor: 'gray'},
+			pass:     {color: '#3cb87e', oldColor: 'limegreen'},
+			info:     {color: 'lightskyblue', oldColor: 'lightskyblue'},
+			failskip: {color: 'gold', oldColor: 'gold'},
+			warn:     {color: 'coral', oldColor: 'coral'},
+			retry:    {color: 'greenyellow', oldColor: 'greenyellow'},
+			fail:     {color: 'red', oldColor: 'red'}
+		};
+
+		const cssRules = document.styleSheets[0].cssRules;
+		const oldColors = Object.keys(levelToColor).map(level => levelToColor[level].oldColor);
+		Object.keys(cssRules).map(ruleID => {
+			if(cssRules[ruleID].style["background-color"] != "") {
+				const index = oldColors.indexOf(cssRules[ruleID].style["background-color"]);
+				if(index >= 0)
+					cssRules[ruleID].style["background-color"] = levelToColor[Object.keys(levelToColor)[index]].color;
+			}
+			if(cssRules[ruleID].style["color"] != "") {
+				const index = oldColors.indexOf(cssRules[ruleID].style["color"]);
+				if(index >= 0)
+					cssRules[ruleID].style["color"] = levelToColor[Object.keys(levelToColor)[index]].color;
+			}
+		});
+	</script>
+
 	<div style="width: 1000px;">
 		<div id="header">
 			<!-- Header of the report -->
@@ -378,8 +401,11 @@
 
 		detailsRows.splice(-1,1)
 
+		const uniqueStepNames = {};
+
 		for (var i = 0; i < detailsRows.length; i++) {
 			detailsRows[i].TimeStampUtc = new Date(detailsRows[i].TimeStampUtc);
+			uniqueStepNames[detailsRows[i].Level] = detailsRows[i].Level != "DEBUG";
 		}
 
 		class SummaryDataRow {
@@ -419,24 +445,34 @@
 		//////////////////////////////////// Application State //////////////////////////////////////
 
 		function expandRowsReducer(state, action) {
-			var newState = {expandedRows: []};
+			const stepNames = {};
+			const newState = {
+				expandedRows: [],
+				stepNames: stepNames
+			};
+
 			if (typeof state === 'undefined') {
+				Object.keys(uniqueStepNames).map(level => newState.stepNames[level] = uniqueStepNames[level]);
 				return newState;
 			}
+			newState.expandedRows = [...(state.expandedRows)];
+			Object.keys(uniqueStepNames).map(level => newState.stepNames[level] = state.stepNames[level]);
 
 			switch (action.type) {
 				case 'TOGGLE_ROW':
-					var rowIDindex = state.expandedRows.indexOf(action.rowID);
-					if(rowIDindex == -1)
-						newState = {expandedRows: [...state.expandedRows, action.rowID]};
+					if(state.expandedRows.indexOf(action.rowID) == -1)
+						newState.expandedRows.push(action.rowID);
 					else
-						newState = {expandedRows: [...(state.expandedRows.slice(0, rowIDindex)), ...(state.expandedRows.slice(rowIDindex + 1))]};
+						newState.expandedRows = newState.expandedRows.filter(rowID => rowID != action.rowID);
 					break;
 				case 'TOGGLE_ALL_ROWS':
 					if(state.expandedRows.length > 0)
-						newState = {expandedRows: []};
+						newState.expandedRows = [];
 					else
-						newState = {expandedRows: summaryRows.map(summaryRow => summaryRow.fullTestCaseName)};
+						newState.expandedRows = summaryRows.map(summaryRow => summaryRow.fullTestCaseName);
+					break;
+				case 'TOGGLE_LEVEL':
+					newState.stepNames[action.level] = !newState.stepNames[action.level];
 					break;
 			}
 			return newState;
@@ -444,15 +480,20 @@
 
 		const toggleRow = rowID => ({ type: "TOGGLE_ROW", rowID: rowID });
 		const toggleAllRows = () => ({ type: "TOGGLE_ALL_ROWS" });
+		const toggleLevel = level => ({ type: "TOGGLE_LEVEL",  level: level });
 
 		const mapStateToProps = state => {
-			return { expandedRows: state.expandedRows };
+			return {
+				expandedRows: state.expandedRows,
+				stepNames: state.stepNames
+			};
 		};
 
 		const mapDispatchToProps = dispatch => {
 			return {
 				toggleRow: rowID => dispatch(toggleRow(rowID)),
-				toggleAllRows: () => dispatch(toggleAllRows())
+				toggleAllRows: () => dispatch(toggleAllRows()),
+				toggleLevel: level => dispatch(toggleLevel(level))
 			};
 		};
 
@@ -482,8 +523,12 @@
 			render() {
 				const level = this.props.summaryRow.level;
 				let anchorID = 0;
+
 				const relativeDurationHack = [];
 				for(let i = 0; i < this.props.summaryRow.relativeDuration; i++) relativeDurationHack.push(i);
+
+				const levels = this.props.store.getState().stepNames;
+
 				return (
 					<tbody>
 						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.fullTestCaseName)}>
@@ -502,7 +547,7 @@
 									<table className='details'>
 										<tbody>
 											{
-												this.props.summaryRow.detailsRows.map(detailsRow => {
+												this.props.summaryRow.detailsRows.filter(detailsRow => levels[detailsRow.Level]).map(detailsRow => {
 													if(anchorID == 0 && detailsRow.LevelValue >= 60000) {
 														anchorID = detailsRow.ID;
 													}
@@ -584,7 +629,7 @@
 					<LevelsBrowsers levelBrowser={levelBrowserUnique}/>
 					<div>
 						<ConnectedExpandCollapseAll store={store}/>&nbsp;&nbsp;
-						{/*<StepLevels detailsRows={detailsRows}/>*/}
+						<ConnectedStepLevels store={store}/>
 					</div>
 				</div>
 			);
@@ -613,20 +658,27 @@
 			);
 		};
 
-		const StepLevels = ({detailsRows}) => {
-			return (
-				<span>
-					[<span id="stepNames">
-						{
-							Object.keys(groupBy(detailsRows, 'Level')).map(key => {
+		class StepLevels extends React.Component {
+			constructor(props) {
+				super(props);
+			}
+
+			render() {
+				const levels = this.props.store.getState().stepNames;
+				return (
+					<span>
+						[<span id="stepNames">
+							{Object.keys(levels).map(level => {
+								let crossedOutClass = "";
+								if(!levels[level]) crossedOutClass = "crossedOut";
 								return (
-									<a key={key} href="javascript:void(0)" style={{marginLeft: '5px', marginRight: '5px'}} className={`status${key.toLowerCase()}`}>{key}</a>
+									<span key={level} className={`link ${crossedOutClass} status${level.toLowerCase()}`} onClick={() => this.props.toggleLevel(level)}>{level}</span>
 								);
-							})
-						}
-					</span>]
-				</span>
-			);
+							})}
+						</span>]
+					</span>
+				)
+			}
 		};
 
 		class ExpandCollapseAll extends React.Component {
@@ -637,13 +689,14 @@
 			render() {
 				return (
 					<span>
-						[ <a id="expandCollapseAll" href="javascript:void(0)" onClick={() => this.props.toggleAllRows()}>
-						{this.props.store.getState().expandedRows.length > 0 ? 'Collapse' : 'Expand'} All Rows</a> ]
+						[ <span id="expandCollapseAll" className='link' onClick={() => this.props.toggleAllRows()}>
+						{this.props.store.getState().expandedRows.length > 0 ? 'Collapse' : 'Expand'} All Rows</span> ]
 					</span>
 				)
 			}
 		};
 
+		const ConnectedStepLevels = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(StepLevels);
 		const ConnectedExpandCollapseAll = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(ExpandCollapseAll);
 
 		ReactDOM.render(
@@ -664,7 +717,7 @@
 		const levelLabels = [];
 		Object.keys(levelGroupped).map(key => {
 			levelCounts.push(levelGroupped[key].length);
-			levelBgColors.push(levelToColor[key.toLowerCase()]);
+			levelBgColors.push(levelToColor[key.toLowerCase()].color);
 			levelBorderColors.push('white');
 			levelHoverBorderColor.push('white');
 			levelLabels.push(key);
