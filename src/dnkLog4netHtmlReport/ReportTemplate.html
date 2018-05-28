@@ -17,6 +17,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
 
 	<style>
+	/* consider for icons https://codepen.io/mshwery/pen/njibr?editors=1100 */
 	*
 	{
 		font-family: Helvetica, Arial, sans-serif;
@@ -437,7 +438,7 @@
 			(accumulator, currentValue) => { return accumulator.durationMsec < currentValue.durationMsec ? currentValue : accumulator; },
 			summaryRows[0]);
 		summaryRows.map(summaryRow => {
-			summaryRow.relativeDuration = Math.round(summaryRow.durationMsec / maxDuration.durationMsec * 10);
+			summaryRow.relativeDuration = Math.round(summaryRow.durationMsec / maxDuration.durationMsec * 9) + 1;
 		});
 
 		//////////////////////////////////// end of data prep //////////////////////////////////////
