@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Report Template</title>
+	<meta charset="UTF-8">
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.1/prop-types.js"></script>
+
+	<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0/redux.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
+
+	<style>
+	/* consider for icons https://codepen.io/mshwery/pen/njibr?editors=1100 */
+	*
+	{
+		font-family: Helvetica, Arial, sans-serif;
+	}
+
+	label
+	{
+		color: DimGray;
+	}
+
+	.link {
+		cursor: pointer;
+	}
+	/*a:link
+	{
+		color: DimGray;
+		background-color: transparent;
+		text-decoration: none;
+	}*/
+
+	a:visited
+	{
+		color: DimGray;
+	}
+
+	.crossedOut {
+		text-decoration: line-through !important;
+	}
+
+	/* Styles for statuses (Fail, Pass, Info etc). */
+	tr.retry > td.summaryStatus > span, tr.fail > td.summaryStatus > span, tr.pass > td.summaryStatus > span, tr.info > td.summaryStatus > span, tr.warn > td.summaryStatus > span, tr.failskip > td.summaryStatus > span, tr.debug > td.summaryStatus > span,
+	tr.retry > td.statusCol > span,     tr.fail > td.statusCol > span,     tr.pass > td.statusCol > span,     tr.info > td.statusCol > span,     tr.warn > td.statusCol > span,     tr.failskip > td.statusCol > span,     tr.debug > td.statusCol > span
+	{
+		color: White;
+		float: left;
+		width: 65px;
+		padding: 2px 5px;
+		margin: 2px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+	}
+
+	.statusDebug, .statusdebug { color: gray !important; }
+	.statusPass, .statuspass { color: limegreen !important; }
+	.statusInfo, .statusinfo { color: lightskyblue !important; }
+	.statusFailSkip, .statusfailskip { color: gold !important; }
+	.statusWarn, .statuswarn { color: coral !important; }
+	.statusRetry, .statusretry { color: greenyellow !important; }
+	.statusFail, .statusfail { color: red !important; }
+
+	tr.debug > td.summaryStatus > span, tr.debug > td.statusCol > span
+	{
+		background-color: gray;
+		text-align: center;
+	}
+
+	tr.pass > td.summaryStatus > span, tr.pass > td.statusCol > span
+	{
+		background-color: limegreen;
+		text-align: center;
+	}
+
+	tr.retry > td.summaryStatus > span, tr.retry > td.statusCol > span
+	{
+		background-color: greenyellow;
+		text-align: center;
+	}
+
+	tr.fail > td.summaryStatus > span, tr.fail > td.statusCol > span
+	{
+		background-color: red;
+		text-align: center;
+	}
+
+	tr.failskip > td.summaryStatus > span, tr.failskip > td.statusCol > span
+	{
+		background-color: gold;
+		text-align: center;
+	}
+
+	tr.info > td.summaryStatus > span, tr.info > td.statusCol > span
+	{
+		background-color: lightskyblue;
+		text-align: center;
+	}
+
+	tr.warn > td.summaryStatus > span, tr.warn > td.statusCol > span
+	{
+		background-color: coral;
+		text-align: center;
+	}
+
+	table.summary
+	{
+		border-collapse: separate;
+		border-spacing: 0px 3px;
+		font-size: 12pt;
+		width: 100%;
+		margin-top: 10px;
+	}
+
+	tr.summaryRow
+	{
+		background-color: #efeeee;
+		cursor: pointer;
+		padding-top: 10px;
+		border-collapse: collapse;
+	}
+	tr.summaryRow td:first-child { border-top-left-radius:  8px; border-bottom-left-radius:  8px;   border-left: 1px solid gray; }
+	tr.summaryRow td:last-child  { border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-right: 1px solid gray;}
+
+		tr.summaryRow > td
+		{
+			border-top: 1px solid gray;
+			border-bottom: 1px solid gray;
+			padding: 3px;
+			white-space: nowrap;
+		}
+
+	.summaryDetailsRow > td
+	{
+		padding: 0;
+	}
+
+	.summaryDetailsRow > td:last-child {
+		padding-right: 5px;
+	}
+
+	.square
+	{
+		border: 1px solid limegreen;
+		float: left;
+		width: 6px;
+		height: 6px;
+		background-color: limegreen;
+		margin: 2px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+	}
+
+	.debug .square {
+		background-color: gray !important;
+		border-color: gray !important;
+	}
+
+	.pass .square {
+		background-color: limegreen !important;
+		border-color: limegreen !important;
+	}
+
+	.retry .square {
+		background-color: greenyellow !important;
+		border-color: greenyellow !important;
+	}
+
+	.fail .square {
+		background-color: red !important;
+		border-color: red !important;
+	}
+
+	.failskip .square {
+		background-color: gold !important;
+		border-color: gold !important;
+	}
+
+	.info .square {
+		background-color: lightskyblue !important;
+		border-color: lightskyblue !important;
+	}
+
+	.warn .square {
+		background-color: coral !important;
+		border-color: coral !important;
+	}
+
+
+	table.details
+	{
+		border-collapse: collapse;
+		font-size: 12pt;
+		margin-bottom: 20px;
+		width: 100%;
+	}
+
+		table.details > tbody > tr > td
+		{
+			border: 1px solid gray;
+			padding: 3px;
+		}
+
+	tr.detailsHeaderRow
+	{
+		font-weight: bold;
+	}
+
+		tr.detailsHeaderRow > td
+		{
+			border-top: none !important;
+		}
+
+	tr.header > td
+	{
+		font-family: Helvetica, Arial, sans-serif;
+		border-top: none !important;
+	}
+
+	td.summaryStatus
+	{
+		font-weight: bold;
+		width: 80px;
+	}
+
+	td.summaryTestName
+	{
+		font-weight: normal;
+	}
+
+	td.summaryStartEnd
+	{
+		width: 145px;
+	}
+
+	td.summaryDuration
+	{
+		width: 140px;
+	}
+
+	td.timeCol
+	{
+		width: 70px;
+	}
+
+	td.statusCol
+	{
+		width: 80px;
+	}
+
+	tr.detailsExceptionRow > td > div, .detailsException
+	{
+		font-family: monospace;
+		white-space: pre-wrap;
+		max-height: 20em;
+		overflow: scroll;
+	}
+
+	a.screenshot {
+		float: left; margin-right: 5px;
+	}
+
+	.pageNavigation {
+		color: RGB(0,154,250)
+	}
+
+	.exceptionCol {
+		font-size: 85%;
+	}
+
+		span.screenshotIcon::before
+		{
+			content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAC4jAAAuIwF4pT92AAAFEklEQVR42p1Ve1BUVRy+YP/1h+k4Kaiw7vIKcM0adabyn2aapmzGtBkQEU0SMIZ8ZFIW7K67Aj5gWNjlpe6qgPhCcQZmV7SpRNOy8dFTx7EUQ1QItNDdvfecc7/OuYsPcjFrZ7577tl77u873+/7nd+VLBaLZDabJYvFLJnMa6V1pjVSWUGeVFrwwbAQz21rVkhmi/WpB+9bQuL+jdlsCbNZCqV8W3nkW+Wnyt4sP+OaVX5m66zys66hOL35dfs594fO1sW2gnyxqRGPI5HuP7TaRny6Kk+aYT1Zr3cDsbUcdaERXQ1ktQMbdhzKM635iCtZO6wS7VJYWCgVFZeELVmULunzjx02uqmSXBXwT64hSgiQeKesZLURpehbYK37UJ75MSTaxWQyScUl68MzM+ZJMauPeiZvA5KqFSW5luGfSKqlalwVRXYbVW0dlJi+BqzuoBKT2RJMVygCriD8vYVpUkx+h0aQWKUQYx3DlLrBwDUPSGKdRM1qo9h0UlWtxxgpOgWU1LfnrSv8WCgJf1jFEAWDBN5kt6aATKpkiKpgSKh+iKSGIoEreMlN1aWtfuS23lXfb/WR3MMqlttbsk2fDSV5hMCwusNrDKaILGhhyPUwvLwtGFwoMtZRGGupNo93+NS49V0wFHcqsfY7alTuwaM5mRnSOp4NETOEB0EFCS5gbKlCzvcwAAxz9zA8s5EhmiuaWDEIO+VzFTq7rD63qZskOf1qVPbutnfTU0SsMFE4jxBkcQURKzq8OUeAw5cU0jPAwBjDDzcYvrrMcLzzHiiO8fHLyxT13/MUOnwksVpBdM5eT2ZGquZnSAXZi9KkUXkd3rIzfONQiKoy3JUZbg5Q9PsYbvmIhv67DD13qKbu2p8U8U6FTOa+6Zbu92YuSNVihSQQHkSv6vC+tg9YfFAh3X8x/Mh3H10hPKAwOKFBGD3BzvDdNYrOW7yqKmVi3KFi0jKPNzOYouE9iB30YMxGhVzsZTjfQ6GvlHm+KUyeXbAeatC80PH/TnczdHEFMQ6uYDtXsNz77wpEFU3hi+P4S7/2Ufxyk8FQqWA83/mrO7rxRv1viOL3gvDsdYrfb3MFDqEAQQULUh5PIKrIyAkMXPalPxgu9CgYYweKdjbhldpeRDiApuYSxFQGcKILmgexfDOCQLfsCRTcI9BXKuRKn4JvrgPzXfyofqHD6ZY02JtqgM9Hw7WnFD/dGMDVW5SXaoAk8bMziadocfoTEhgqZHKhj1dJ7zV0H5gB2qYHWkZxPA3loA5oHQ/0H8XF28BMl49Mb+Rp+y8KYniKfu5VAdoNXG0COncCVxo4+Ni1n8/3gt7pQoCKsxIgNt5ZR+V4vVkZT0Agmp3IqzhQfX7ghgz0Kg+Bz/sJIPOjMBCguO1XSOFJYDQnWDIcQZEg4O3aMNiuE6tk8uIWhmlbKaZtke9jOkdStYz0A5wFFOKsTK2TydQGYbLHM2wViQ+OpuCTE+3JWwlJdPj8CU6ZJDgCJMEZCI6D0HNTZ7oDpPFcgJQdl0ms3edPdhGiX3mkXXggYg0hEI2pZP2G8EWpc6SIzMZdU3mKRdlNaQiN57mhyfVA1BZeOa7g2hf4O+PSN+9emPq2FmtIsxO922q1heWvWimNjDDEjZ1bvC1yfnVzxDznvoi0quZQiOSYmF7VPGG+c59Y++ycou0jx+niRQwRa8j3QFNRUCBt3FQqpcydLf3fX8o7s7UYIta9uH8Dkzb9MDhq7RMAAAAASUVORK5CYII=);
+		}
+
+	#headerLeft {
+		margin-right: 10px;
+		float: left;
+		max-width: 580px;
+	}
+	#headerLeft > h1 {
+		margin-top: 0px;
+	}
+	#headerRight {
+		float: right;
+	}
+	#headerRight > div {
+		width: 400px;
+		height: 300px;
+		border: 0px solid lightgray;
+	}
+	.clearBoth {
+		clear: both;
+	}
+
+	#stepNames span {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+	</style>
+</head>
+
+<body>
+	<script type="text/babel">
+		const levelToColor = {
+			debug:    {color: 'gray', oldColor: 'gray'},
+			pass:     {color: '#0AC775', oldColor: 'limegreen'},
+			info:     {color: '#45CAE6', oldColor: 'lightskyblue'},
+			failskip: {color: 'gold', oldColor: 'gold'},
+			warn:     {color: '#FFAB40', oldColor: 'coral'},
+			retry:    {color: '#A6ED5F', oldColor: 'greenyellow'},
+			fail:     {color: '#F24965', oldColor: 'red'}
+		};
+
+		const cssRules = document.styleSheets[0].cssRules;
+		const oldColors = Object.keys(levelToColor).map(level => levelToColor[level].oldColor);
+		Object.keys(cssRules).map(ruleID => {
+			if(cssRules[ruleID].style["background-color"] != "") {
+				const index = oldColors.indexOf(cssRules[ruleID].style["background-color"]);
+				if(index >= 0)
+					cssRules[ruleID].style["background-color"] = levelToColor[Object.keys(levelToColor)[index]].color;
+			}
+			if(cssRules[ruleID].style["color"] != "") {
+				const index = oldColors.indexOf(cssRules[ruleID].style["color"]);
+				if(index >= 0)
+					cssRules[ruleID].style["color"] = levelToColor[Object.keys(levelToColor)[index]].color;
+			}
+		});
+	</script>
+
+	<div style="width: 1000px;">
+		<div id="header">
+			<!-- Header of the report -->
+			<div id="headerLeft">
+			</div>
+			<div id="headerRight">
+				<div>
+					<canvas id="myCanvas" style="background-color: white;"></canvas>
+				</div>
+			</div>
+			<div className="clearBoth"></div>
+		</div>
+		<div id="content">
+		</div>
+	</div>
+	<script type="text/babel">
+		//////////////////////////////////// lib //////////////////////////////////////
+		var groupBy = function(list, key) {
+			return list.reduce(function(accumulator, currentValue) {
+				(accumulator[currentValue[key]] = accumulator[currentValue[key]] || []).push(currentValue);
+				return accumulator;
+			}, {});
+		};
+
+		var calcDuration = function(/*Date*/ startTime, /*Date*/ endTime) {
+			var durationStr = "";
+
+			// Set the unit values in milliseconds.
+			var msecPerMinute = 1000 * 60;
+			var msecPerHour = msecPerMinute * 60;
+			var msecPerDay = msecPerHour * 24;
+			// Get the difference in milliseconds.
+			var interval = endTime.getTime() - startTime.getTime();
+
+			// Calculate how many days the interval contains. Subtract that
+			// many days from the interval to determine the remainder.
+			var days = Math.floor(interval / msecPerDay );
+			if(days > 0) durationStr = days + "d "
+			interval = interval - (days * msecPerDay );
+
+			// Calculate the hours, minutes, and seconds.
+			var hours = Math.floor(interval / msecPerHour );
+			if(hours > 0) durationStr = durationStr + hours + "h "
+			interval = interval - (hours * msecPerHour );
+
+			var minutes = Math.floor(interval / msecPerMinute );
+			if(minutes > 0) durationStr = durationStr + minutes + "m "
+			interval = interval - (minutes * msecPerMinute );
+
+			var seconds = Math.floor(interval / 1000 );
+			durationStr = durationStr + seconds + "s "
+
+			return durationStr;
+		};
+
+		const timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false});
+		const TagContainer = props => props.children;
+		//////////////////////////////////// end of lib //////////////////////////////////////
+
+		//////////////////////////////////// data prep //////////////////////////////////////
+
+		const detailsRows = [
+			{"ID":1,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:38.2117412Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(2)"},
+			{"ID":2,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:38.2117412Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(1)"},
+			{"ID":3,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:38.2117412Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(3)"},
+			{"ID":4,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:38.2117412Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(4)"},
+			{"ID":5,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:38.6786882Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(2)"},
+			{"ID":6,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:39.5899008Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(1)"},
+			{"ID":7,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:39.7698994Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(3)"},
+			{"ID":8,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:40.0866758Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(4)"},
+			{"ID":9,"Level":"PASS","LevelValue":55000,"Message":"No Fails!","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:40.7480408Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(2)"},
+			{"ID":10,"Level":"PASS","LevelValue":55000,"Message":"No Fails!","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:41.1270541Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(1)"},
+			{"ID":11,"Level":"PASS","LevelValue":55000,"Message":"No Fails!","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:41.7622474Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(3)"},
+			{"ID":12,"Level":"PASS","LevelValue":55000,"Message":"No Fails!","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:42.5403783Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(4)"},
+			{"ID":13,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:42.9848336Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(5)"},
+			{"ID":14,"Level":"INFO","LevelValue":40000,"Message":"TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:43.0988322Z","ScreenshotPath":null,"Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(6)"},
+			{"ID":15,"Level":"INFO","LevelValue":40000,"Message":"TestAppend2: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:43.6045741Z","ScreenshotPath":null,"Browser":"FireFox","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend2"},
+			{"ID":16,"Level":"WARN","LevelValue":60000,"Message":"TestAppend3: Warn test","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:44.2036445Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":17,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#2","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:45.1730337Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(5)"},
+			{"ID":18,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend1: Debug","ThreadName":"ParallelWorker#1","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:46.0792519Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"IE","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(6)"},
+			{"ID":19,"Level":"FAIL","LevelValue":75000,"Message":"TestAppend2: Fail Skip test","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:46.4143842Z","ScreenshotPath":null,"Browser":"FireFox","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend2"},
+			{"ID":20,"Level":"DEBUG","LevelValue":30000,"Message":"TestAppend3: Debug","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:47.0936321Z","ScreenshotPath":"http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif","Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":21,"Level":"FAIL","LevelValue":75000,"Message":"test exception","ThreadName":"ParallelWorker#2","StackTrace":"   at dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(Int32 index) in c:\\Projects\\R&D\\dnkLog4netHtmlReport\\dnkLog4netHtmlReport.Test\\DynamicAppenderTestFixture.cs:line 31","TimeStampUtc":"2018-05-23T05:10:47.2508532Z","ScreenshotPath":null,"Browser":"IE","Exception":"An exception of type 'System.InvalidOperationException' occurred and was caught.\r\n................................................................................\r\n05/23/2018 00:10:50\r\nType: System.InvalidOperationException, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\r\nMessage: test exception\r\nSource: dnkLog4netHtmlReport.Test\r\nData: System.Collections.ListDictionaryInternal\r\nTargetSite: Void TestAppend1(Int32)\r\nHResult: -2146233079\r\nStack Trace: \r\n   at dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(Int32 index) in c:\\Projects\\R&D\\dnkLog4netHtmlReport\\dnkLog4netHtmlReport.Test\\DynamicAppenderTestFixture.cs:line 31\r\n\r\n\r\nData[ListDictionaryInternal][6]=\r\n[\r\n\t\"MachineName\"[String]=DNK1\r\n\t\"OS Version\"[String]=Microsoft Windows NT 10.0.17134.0\r\n\t\"AssemblyFullName\"[String]=dnkUtils, Version=1.0.0.42065, Culture=neutral, PublicKeyToken=null\r\n\t\"Thread\"[String]=[20]\r\n\t\"WindowsIdentity\"[String]=DNK1\\dnknitro\r\n]\r\n\r\n","FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(5)"},
+			{"ID":22,"Level":"FAIL","LevelValue":75000,"Message":"test exception","ThreadName":"ParallelWorker#1","StackTrace":"   at dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(Int32 index) in c:\\Projects\\R&D\\dnkLog4netHtmlReport\\dnkLog4netHtmlReport.Test\\DynamicAppenderTestFixture.cs:line 31","TimeStampUtc":"2018-05-23T05:10:47.840745Z","ScreenshotPath":null,"Browser":"IE","Exception":"An exception of type 'System.InvalidOperationException' occurred and was caught.\r\n................................................................................\r\n05/23/2018 00:10:50\r\nType: System.InvalidOperationException, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\r\nMessage: test exception\r\nSource: dnkLog4netHtmlReport.Test\r\nData: System.Collections.ListDictionaryInternal\r\nTargetSite: Void TestAppend1(Int32)\r\nHResult: -2146233079\r\nStack Trace: \r\n   at dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(Int32 index) in c:\\Projects\\R&D\\dnkLog4netHtmlReport\\dnkLog4netHtmlReport.Test\\DynamicAppenderTestFixture.cs:line 31\r\n\r\n\r\nData[ListDictionaryInternal][6]=\r\n[\r\n\t\"MachineName\"[String]=DNK1\r\n\t\"OS Version\"[String]=Microsoft Windows NT 10.0.17134.0\r\n\t\"AssemblyFullName\"[String]=dnkUtils, Version=1.0.0.42065, Culture=neutral, PublicKeyToken=null\r\n\t\"Thread\"[String]=[19]\r\n\t\"WindowsIdentity\"[String]=DNK1\\dnknitro\r\n]\r\n\r\n","FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend1(6)"},
+			{"ID":23,"Level":"INFO","LevelValue":40000,"Message":"TestAppend4: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:48.7122348Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend4"},
+			{"ID":24,"Level":"INFO","LevelValue":40000,"Message":"2147483647 = OFF","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:49.5152995Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":25,"Level":"PASS","LevelValue":55000,"Message":"TestAppend4: Fail Skip test","ThreadName":"ParallelWorker#4","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:51.4029348Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend4"},
+			{"ID":26,"Level":"INFO","LevelValue":40000,"Message":"-2147483648 = ALL","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:52.3991608Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":27,"Level":"INFO","LevelValue":40000,"Message":"10000 = VERBOSE","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:53.3823509Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":28,"Level":"INFO","LevelValue":40000,"Message":"20000 = FINER","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:53.7856297Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":29,"Level":"INFO","LevelValue":40000,"Message":"20000 = TRACE","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:54.4653032Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":30,"Level":"INFO","LevelValue":40000,"Message":"30000 = FINE","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:55.3460892Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":31,"Level":"DEBUG","LevelValue":40000,"Message":"30000 = DEBUG","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:56.176832Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":32,"Level":"INFO","LevelValue":40000,"Message":"40000 = INFO","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:56.8895708Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":33,"Level":"INFO","LevelValue":40000,"Message":"50000 = NOTICE","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:57.2889365Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":34,"Level":"INFO","LevelValue":40000,"Message":"10000 = FINEST","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:57.4030151Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":35,"Level":"INFO","LevelValue":40000,"Message":"70000 = ERROR","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:58.1916037Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":36,"Level":"INFO","LevelValue":40000,"Message":"80000 = SEVERE","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:58.2986772Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":37,"Level":"INFO","LevelValue":40000,"Message":"90000 = CRITICAL","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:58.5516766Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":38,"Level":"INFO","LevelValue":40000,"Message":"100000 = ALERT","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:58.7881044Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":39,"Level":"INFO","LevelValue":40000,"Message":"110000 = FATAL","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:59.156211Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":40,"Level":"RETRY","LevelValue":40000,"Message":"120000 = EMERGENCY","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:10:59.5575047Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":41,"Level":"FAILSKIP","LevelValue":40000,"Message":"120000 = log4net:DEBUG","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:11:00.0628846Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"ID":42,"Level":"INFO","LevelValue":40000,"Message":"60000 = WARN","ThreadName":"ParallelWorker#3","StackTrace":null,"TimeStampUtc":"2018-05-23T05:11:00.4649914Z","ScreenshotPath":null,"Browser":"Chrome","Exception":null,"FullTestCaseName":"dnkLog4netHtmlReport.Test.DynamicAppenderTestFixture.TestAppend3"},
+			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
+		];
+
+		detailsRows.splice(-1,1)
+
+		const uniqueStepNames = {};
+
+		for (var i = 0; i < detailsRows.length; i++) {
+			detailsRows[i].TimeStampUtc = new Date(detailsRows[i].TimeStampUtc);
+			uniqueStepNames[detailsRows[i].Level] = detailsRows[i].Level != "DEBUG";
+		}
+
+		class SummaryDataRow {
+			constructor(detailsRows) {
+				this.detailsRows = detailsRows;
+				this.tempBrowser = detailsRows[0].Browser;
+
+				this.level = this.detailsRows
+					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, this.detailsRows[0])
+					.Level;
+				this.startTime =  this.detailsRows
+					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc < accumulator.TimeStampUtc ? currentValue : accumulator, this.detailsRows[0])
+					.TimeStampUtc;
+				this.endTime = this.detailsRows
+					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc > accumulator.TimeStampUtc ? currentValue : accumulator, this.detailsRows[0])
+					.TimeStampUtc;
+				this.durationMsec = this.endTime.getTime() - this.startTime.getTime();
+				this.durationStr = calcDuration(this.startTime, this.endTime);
+				this.relativeDuration = 0;
+			};
+
+			get fullTestCaseName() { return this.detailsRows[0].FullTestCaseName; }
+		}
+
+		const groupsObject = groupBy(detailsRows, 'FullTestCaseName');
+
+		var summaryRows = Object.keys(groupsObject).map(key => new SummaryDataRow(groupsObject[key]));
+		const maxDuration = summaryRows.reduce(
+			(accumulator, currentValue) => { return accumulator.durationMsec < currentValue.durationMsec ? currentValue : accumulator; },
+			summaryRows[0]);
+		summaryRows.map(summaryRow => {
+			summaryRow.relativeDuration = Math.round(summaryRow.durationMsec / maxDuration.durationMsec * 9) + 1;
+		});
+
+		//////////////////////////////////// end of data prep //////////////////////////////////////
+
+		//////////////////////////////////// Application State //////////////////////////////////////
+
+		function expandRowsReducer(state, action) {
+			const stepNames = {};
+			const newState = {
+				expandedRows: [],
+				stepNames: stepNames
+			};
+
+			if (typeof state === 'undefined') {
+				Object.keys(uniqueStepNames).map(level => newState.stepNames[level] = uniqueStepNames[level]);
+				return newState;
+			}
+			newState.expandedRows = [...(state.expandedRows)];
+			Object.keys(uniqueStepNames).map(level => newState.stepNames[level] = state.stepNames[level]);
+
+			switch (action.type) {
+				case 'TOGGLE_ROW':
+					if(state.expandedRows.indexOf(action.rowID) == -1)
+						newState.expandedRows.push(action.rowID);
+					else
+						newState.expandedRows = newState.expandedRows.filter(rowID => rowID != action.rowID);
+					break;
+				case 'TOGGLE_ALL_ROWS':
+					if(state.expandedRows.length > 0)
+						newState.expandedRows = [];
+					else
+						newState.expandedRows = summaryRows.map(summaryRow => summaryRow.fullTestCaseName);
+					break;
+				case 'TOGGLE_LEVEL':
+					newState.stepNames[action.level] = !newState.stepNames[action.level];
+					break;
+			}
+			return newState;
+		}
+
+		const toggleRow = rowID => ({ type: "TOGGLE_ROW", rowID: rowID });
+		const toggleAllRows = () => ({ type: "TOGGLE_ALL_ROWS" });
+		const toggleLevel = level => ({ type: "TOGGLE_LEVEL",  level: level });
+
+		const mapStateToProps = state => {
+			return {
+				expandedRows: state.expandedRows,
+				stepNames: state.stepNames
+			};
+		};
+
+		const mapDispatchToProps = dispatch => {
+			return {
+				toggleRow: rowID => dispatch(toggleRow(rowID)),
+				toggleAllRows: () => dispatch(toggleAllRows()),
+				toggleLevel: level => dispatch(toggleLevel(level))
+			};
+		};
+
+		var store = Redux.createStore(expandRowsReducer);
+
+		//////////////////////////////////// End of Application State //////////////////////////////////////
+
+		//////////////////////////////////// Render Tests Execution Table //////////////////////////////////////
+
+		const SummaryTable = ({summaryRows}) => {
+			return (
+				<table className='summary'>
+					{ summaryRows.map(summaryRow => <ConnectedSummaryRow key={summaryRow.fullTestCaseName} store={store} summaryRow={summaryRow}/>) }
+				</table>
+			);
+		};
+
+		class SummaryRow extends React.Component {
+			constructor(props) {
+				super(props);
+			}
+
+			/*bool*/ isExpanded() {
+				return this.props.store.getState().expandedRows.indexOf(this.props.summaryRow.fullTestCaseName) >= 0;
+			}
+
+			render() {
+				const level = this.props.summaryRow.level;
+				let anchorID = 0;
+
+				const relativeDurationHack = [];
+				for(let i = 0; i < this.props.summaryRow.relativeDuration; i++) relativeDurationHack.push(i);
+
+				const levels = this.props.store.getState().stepNames;
+
+				return (
+					<tbody>
+						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.fullTestCaseName)}>
+							<td className='summaryStatus'><span>{level}</span></td>
+							<td className='summaryTestName'>{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.fullTestCaseName}</td>
+							<td className='summaryStartEnd'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
+							<td className='summaryDuration' title={`Duration: ${this.props.summaryRow.durationStr}`}>
+								<div style={{width: '52px'}}></div>
+								{relativeDurationHack.map(x => (<span key={x} className='square'></span>))}
+							</td>
+						</tr>
+						{ this.isExpanded() && (
+							<tr className={`summaryDetailsRow ${level.toLowerCase()}`}>
+								<td>&nbsp;</td>
+								<td colSpan="3">
+									<table className='details'>
+										<tbody>
+											{
+												this.props.summaryRow.detailsRows.filter(detailsRow => levels[detailsRow.Level]).map(detailsRow => {
+													if(anchorID == 0 && detailsRow.LevelValue >= 60000) {
+														anchorID = detailsRow.ID;
+													}
+													return (
+														<DetailsRow key={detailsRow.ID} detailsRow={detailsRow} anchorID={anchorID}/>
+													);
+												})
+											}
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						) }
+					</tbody>
+				)
+			}
+		}
+
+		const DetailsRow = ({detailsRow, anchorID}) => {
+			return (
+				<TagContainer>
+					<tr className={`detailsRow ${detailsRow.Level.toLowerCase()}`}>
+						<td className='timeCol' title={`[${detailsRow.ThreadName}]`}>{timeOnlyFormatter.format(detailsRow.TimeStampUtc)}</td>
+						<td className='statusCol'><span>{detailsRow.Level}</span></td>
+						<td className='messageCol'>
+							{anchorID > 0 && <a name={`issue${anchorID}`}></a>}
+							{detailsRow.ScreenshotPath != null && (
+								<span><a className='screenshot' target='_blank' href={detailsRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a></span>
+							)}
+							{detailsRow.Message}
+						</td>
+					</tr>
+					{detailsRow.Exception != null &&
+					<tr className='detailsExceptionRow'>
+						<td className='exceptionCol' colSpan='3'>
+							<div>{detailsRow.Exception}</div>
+						</td>
+					</tr>
+					}
+				</TagContainer>
+			);
+		};
+
+		const ConnectedSummaryRow = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(SummaryRow);
+
+		ReactDOM.render(
+			<SummaryTable store={store} summaryRows={summaryRows}/>,
+			document.getElementById('content')
+		);
+
+		//////////////////////////////////// Render Header //////////////////////////////////////
+
+		var reportMetaData = {"ReportName":"Test Execution Report TEST","ReportEnvironment":"DEV","ReportCategory":"Test"};
+		document.title = reportMetaData.ReportName + ' ' + reportMetaData.ReportEnvironment + ' ' + reportMetaData.ReportCategory;
+
+		var startTime = summaryRows
+			.reduce((accumulator, currentValue) => currentValue.startTime < accumulator.startTime ? currentValue : accumulator, summaryRows[0])
+			.startTime;
+		var endTime = summaryRows
+			.reduce((accumulator, currentValue) => currentValue.endTime > accumulator.endTime ? currentValue : accumulator, summaryRows[0])
+			.endTime;
+
+		var levelBrowserUnique = {};
+		summaryRows.map(item => {
+			let key = item.level;
+			if(item.tempBrowser) key = key + ' ' + item.tempBrowser;
+			if(levelBrowserUnique[key]) levelBrowserUnique[key].Count = levelBrowserUnique[key].Count + 1;
+			else levelBrowserUnique[key] = {Count: 1, Level: item.level, Browser: item.tempBrowser};
+		});
+
+		const PageSummary = ({reportMetaData}) => {
+			return (
+				<div>
+					<h1 id="reportTitle">{reportMetaData.ReportName}</h1>
+					<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">{reportMetaData.ReportEnvironment}</span></h4>
+					<h4 id="testCategory"><label>Category:</label> <span id="category">{reportMetaData.ReportCategory}</span></h4>
+					<h4 id="timeInfo"><label>Start:</label> <span id="startTime">{timeOnlyFormatter.format(startTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>End:</label> <span id="endTime">{timeOnlyFormatter.format(endTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Duration:</label> <span id="duration">{calcDuration(startTime, endTime)}</span></h4>
+
+					<LevelsBrowsers levelBrowser={levelBrowserUnique}/>
+					<div>
+						<ConnectedExpandCollapseAll store={store}/>&nbsp;&nbsp;
+						<ConnectedStepLevels store={store}/>
+					</div>
+				</div>
+			);
+		};
+
+		const LevelsBrowsers = ({levelBrowser}) => {
+			return (
+				<h4 id="passFailInfo">
+					<div style={{float: 'left', marginRight: '20px'}}>
+						<label>Tests Run:</label> <span>{summaryRows.length}</span>
+					</div>
+					{
+						Object.keys(levelBrowser).map((key, index) => {
+							let level = levelBrowser[key].Level.toLowerCase();
+							level = level.charAt(0).toUpperCase() + level.substr(1);
+							const count = levelBrowser[key].Count;
+							return (
+								<div key={key} style={{float: 'left', marginRight: '20px'}}>
+									<label className={`status${level}`}>{key}:</label> <span className={`status${level}`}>{count}</span>
+								</div>
+							);
+						})
+					}
+					<div className="clearBoth"></div>
+				</h4>
+			);
+		};
+
+		class StepLevels extends React.Component {
+			constructor(props) {
+				super(props);
+			}
+
+			render() {
+				const levels = this.props.store.getState().stepNames;
+				return (
+					<span>
+						[<span id="stepNames">
+							{Object.keys(levels).map(level => {
+								let crossedOutClass = "";
+								if(!levels[level]) crossedOutClass = "crossedOut";
+								return (
+									<span key={level} className={`link ${crossedOutClass} status${level.toLowerCase()}`} onClick={() => this.props.toggleLevel(level)}>{level}</span>
+								);
+							})}
+						</span>]
+					</span>
+				)
+			}
+		};
+
+		class ExpandCollapseAll extends React.Component {
+			constructor(props) {
+				super(props);
+			}
+
+			render() {
+				return (
+					<span>
+						[ <span id="expandCollapseAll" className='link' onClick={() => this.props.toggleAllRows()}>
+						{this.props.store.getState().expandedRows.length > 0 ? 'Collapse' : 'Expand'} All Rows</span> ]
+					</span>
+				)
+			}
+		};
+
+		const ConnectedStepLevels = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(StepLevels);
+		const ConnectedExpandCollapseAll = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(ExpandCollapseAll);
+
+		ReactDOM.render(
+			<PageSummary reportMetaData={reportMetaData}/>,
+			document.getElementById('headerLeft')
+		);
+	</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+	<script type="text/babel">
+		//////////////////////////////////// Pie Charts //////////////////////////////////////
+		var levelGroupped = groupBy(summaryRows, 'level');
+
+		const levelCounts = [];
+		const levelBgColors = [];
+		const levelBorderColors = [];
+		const levelHoverBorderColor = [];
+		const levelLabels = [];
+		Object.keys(levelGroupped).map(key => {
+			levelCounts.push(levelGroupped[key].length);
+			levelBgColors.push(levelToColor[key.toLowerCase()].color);
+			levelBorderColors.push('white');
+			levelHoverBorderColor.push('white');
+			levelLabels.push(key);
+		});
+
+		var data = {
+			datasets: [{
+				data: levelCounts,
+				backgroundColor: levelBgColors,
+				borderColor: levelBorderColors,
+				hoverBorderColor: levelHoverBorderColor,
+				label: 'Tests' // for legend
+			}],
+			labels: levelLabels
+		};
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		$(function () {
+			new Chart(ctx, {
+				data: data,
+				type: "pie",
+				options: {
+					maintainAspectRatio: false,
+					/*
+					LOOK INTO http://jsfiddle.net/5gyfykka/
+					tooltipTemplate: "<%= value %>",
+					onAnimationComplete: function () {
+						this.showTooltip(this.segments, true);
+					},
+					tooltipEvents: [],*/
+					showTooltips: true,
+					elements: {
+						arc: {
+							borderColor: "#000000"
+						}
+					}
+				}
+			});
+		});
+	</script>
+</body>
+</html>

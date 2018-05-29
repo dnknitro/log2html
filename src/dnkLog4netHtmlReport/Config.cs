@@ -12,13 +12,11 @@ namespace dnkLog4netHtmlReport
 			ReportName = "Please call HtmlReportAppender.Configure() in your OneTimeSetUp SetUpFixture"
 		};
 
-
 		public static void Configure(string reportFolder, ReportMetaData reportMetaData)
 		{
 			ReportFolder = reportFolder;
 			ReportMetaData = reportMetaData;
 		}
-
 
 		public static void SetBrowser(string browser)
 		{
