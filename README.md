@@ -3,6 +3,9 @@
 ## Description
 Library to generate an HTML report based on [log4net](https://logging.apache.org/log4net/) records during application or tests ([NUnit](http://nunit.org/)) execution.
 
+## Example
+[ReportExample.html](https://nitro.duckdns.org/dnkLog4netHtmlReport/ReportExample.html)
+
 ## Installation
 It can be installed through [nuget.org](https://www.nuget.org/packages/dnkLog4netHtmlReport/).
 During package installation it adds two files to the project:
