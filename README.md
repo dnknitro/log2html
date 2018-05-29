@@ -35,7 +35,7 @@ If the Debug folder location is `C:\Projects\MySolution\MyProject.Tests\Bin\Debu
 Additionally "browser" can be specified for tests which use Selenium WebDriver:
 ```C#
 [Test]
-public void TestAppend1(int index)
+public void TestAppend1()
 {
 	Config.SetBrowser("IE");
   ...
