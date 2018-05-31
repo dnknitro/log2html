@@ -21,7 +21,7 @@ namespace dnkLog4netHtmlReport
 			Browser = LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName]?.ToString();
 			Exception = loggingEvent.ExceptionObject?.ToNiceString();
 
-			FullTestCaseName = TestContext.CurrentContext?.Test?.FullName ?? "TestCaseNA";
+			TestCaseName = LogicalThreadContext.Properties[LogExtensions.TestCaseName]?.ToString() ?? TestContext.CurrentContext?.Test?.FullName ?? "TestCaseNA";
 			//TestClassFullName = TestContext.CurrentContext?.Test?.ClassName ?? "ClassNameNA";
 			//TestMethodName = TestContext.CurrentContext?.Test?.MethodName ?? "MethodNameNA";
 		}
@@ -37,7 +37,7 @@ namespace dnkLog4netHtmlReport
 		public string Browser { get; }
 		public string Exception { get; }
 
-		public string FullTestCaseName { get; }
+		public string TestCaseName { get; }
 		//public string TestClassFullName { get; }
 		//public string TestMethodName { get; }
 	}

@@ -428,10 +428,10 @@
 				this.relativeDuration = 0;
 			};
 
-			get fullTestCaseName() { return this.detailsRows[0].FullTestCaseName; }
+			get testCaseName() { return this.detailsRows[0].TestCaseName; }
 		}
 
-		const groupsObject = groupBy(detailsRows, 'FullTestCaseName');
+		const groupsObject = groupBy(detailsRows, 'TestCaseName');
 
 		var summaryRows = Object.keys(groupsObject).map(key => new SummaryDataRow(groupsObject[key]));
 		const maxDuration = summaryRows.reduce(
@@ -470,7 +470,7 @@
 					if(state.expandedRows.length > 0)
 						newState.expandedRows = [];
 					else
-						newState.expandedRows = summaryRows.map(summaryRow => summaryRow.fullTestCaseName);
+						newState.expandedRows = summaryRows.map(summaryRow => summaryRow.testCaseName);
 					break;
 				case 'TOGGLE_LEVEL':
 					newState.stepNames[action.level] = !newState.stepNames[action.level];
@@ -507,7 +507,7 @@
 		const SummaryTable = ({summaryRows}) => {
 			return (
 				<table className='summary'>
-					{ summaryRows.map(summaryRow => <ConnectedSummaryRow key={summaryRow.fullTestCaseName} store={store} summaryRow={summaryRow}/>) }
+					{ summaryRows.map(summaryRow => <ConnectedSummaryRow key={summaryRow.testCaseName} store={store} summaryRow={summaryRow}/>) }
 				</table>
 			);
 		};
@@ -518,7 +518,7 @@
 			}
 
 			/*bool*/ isExpanded() {
-				return this.props.store.getState().expandedRows.indexOf(this.props.summaryRow.fullTestCaseName) >= 0;
+				return this.props.store.getState().expandedRows.indexOf(this.props.summaryRow.testCaseName) >= 0;
 			}
 
 			render() {
@@ -532,9 +532,9 @@
 
 				return (
 					<tbody>
-						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.fullTestCaseName)}>
+						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
 							<td className='summaryStatus'><span>{level}</span></td>
-							<td className='summaryTestName'>{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.fullTestCaseName}</td>
+							<td className='summaryTestName'>{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.testCaseName}</td>
 							<td className='summaryStartEnd'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
 							<td className='summaryDuration' title={`Duration: ${this.props.summaryRow.durationStr}`}>
 								<div style={{width: '52px'}}></div>

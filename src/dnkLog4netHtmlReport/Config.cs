@@ -22,5 +22,10 @@ namespace dnkLog4netHtmlReport
 		{
 			LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName] = browser;
 		}
+
+		public static void SetTestCaseName(string testCaseName)
+		{
+			LogicalThreadContext.Properties[LogExtensions.TestCaseName] = testCaseName;
+		}
 	}
 }

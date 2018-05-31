@@ -8,6 +8,7 @@ namespace dnkLog4netHtmlReport
 	{
 		public const string ScreenshotPathPropertyName = "ScreenshotPath";
 		public const string BrowserPropertyName = "Browser";
+		public const string TestCaseName = "TestCaseName";
 
 		public static void Pass(this ILog log, string message, Exception ex = null)
 		{

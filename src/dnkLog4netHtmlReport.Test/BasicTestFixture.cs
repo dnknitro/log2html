@@ -42,6 +42,7 @@ namespace dnkLog4netHtmlReport.Test
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
 			Config.SetBrowser("FireFox");
+			Config.SetTestCaseName("Custome Test Case Name");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 		}
