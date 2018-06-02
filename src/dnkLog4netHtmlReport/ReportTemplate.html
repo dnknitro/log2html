@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<title>Report Template</title>
@@ -48,8 +48,8 @@
 	}
 
 	/* Styles for statuses (Fail, Pass, Info etc). */
-	tr.retry > td.summaryStatus > span, tr.fail > td.summaryStatus > span, tr.pass > td.summaryStatus > span, tr.info > td.summaryStatus > span, tr.warn > td.summaryStatus > span, tr.failskip > td.summaryStatus > span, tr.debug > td.summaryStatus > span,
-	tr.retry > td.statusCol > span,     tr.fail > td.statusCol > span,     tr.pass > td.statusCol > span,     tr.info > td.statusCol > span,     tr.warn > td.statusCol > span,     tr.failskip > td.statusCol > span,     tr.debug > td.statusCol > span
+	.retry > .summaryStatus > span, .fail > .summaryStatus > span, .pass > .summaryStatus > span, .info > .summaryStatus > span, .warn > .summaryStatus > span, .failskip > .summaryStatus > span, .debug > .summaryStatus > span,
+	.retry > td.statusCol > span,     .fail > td.statusCol > span,     .pass > td.statusCol > span,     .info > td.statusCol > span,     .warn > td.statusCol > span,     .failskip > td.statusCol > span,     .debug > td.statusCol > span
 	{
 		color: White;
 		float: left;
@@ -68,73 +68,74 @@
 	.statusRetry, .statusretry { color: greenyellow !important; }
 	.statusFail, .statusfail { color: red !important; }
 
-	tr.debug > td.summaryStatus > span, tr.debug > td.statusCol > span
+	.debug > .summaryStatus > span, .debug > td.statusCol > span
 	{
 		background-color: gray;
 		text-align: center;
 	}
 
-	tr.pass > td.summaryStatus > span, tr.pass > td.statusCol > span
+	.pass > .summaryStatus > span, .pass > td.statusCol > span
 	{
 		background-color: limegreen;
 		text-align: center;
 	}
 
-	tr.retry > td.summaryStatus > span, tr.retry > td.statusCol > span
+	.retry > .summaryStatus > span, .retry > td.statusCol > span
 	{
 		background-color: greenyellow;
 		text-align: center;
 	}
 
-	tr.fail > td.summaryStatus > span, tr.fail > td.statusCol > span
+	.fail > .summaryStatus > span, .fail > td.statusCol > span
 	{
 		background-color: red;
 		text-align: center;
 	}
 
-	tr.failskip > td.summaryStatus > span, tr.failskip > td.statusCol > span
+	.failskip > .summaryStatus > span, .failskip > td.statusCol > span
 	{
 		background-color: gold;
 		text-align: center;
 	}
 
-	tr.info > td.summaryStatus > span, tr.info > td.statusCol > span
+	.info > .summaryStatus > span, .info > td.statusCol > span
 	{
 		background-color: lightskyblue;
 		text-align: center;
 	}
 
-	tr.warn > td.summaryStatus > span, tr.warn > td.statusCol > span
+	.warn > .summaryStatus > span, .warn > td.statusCol > span
 	{
 		background-color: coral;
 		text-align: center;
 	}
 
-	table.summary
+	canvas { background-color: white; }
+
+	.summary
 	{
-		border-collapse: separate;
-		border-spacing: 0px 3px;
 		font-size: 12pt;
 		width: 100%;
 		margin-top: 10px;
 	}
 
-	tr.summaryRow
+	.summaryRow
 	{
-		background-color: #efeeee;
 		cursor: pointer;
-		padding-top: 10px;
-		border-collapse: collapse;
 	}
-	tr.summaryRow td:first-child { border-top-left-radius:  8px; border-bottom-left-radius:  8px;   border-left: 1px solid gray; }
-	tr.summaryRow td:last-child  { border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-right: 1px solid gray;}
+	/*.summaryRow td:first-child { border-top-left-radius:  8px; border-bottom-left-radius:  8px;   border-left: 1px solid gray; }
+	.summaryRow td:last-child  { border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-right: 1px solid gray;}*/
 
-		tr.summaryRow > td
+		.summaryRow > div
 		{
-			border-top: 1px solid gray;
 			border-bottom: 1px solid gray;
 			padding: 3px;
-			white-space: nowrap;
+			/*white-space: nowrap;*/
+		}
+
+		.summaryRow:last-child > div
+		{
+			border-bottom: none;
 		}
 
 	.summaryDetailsRow > td
@@ -204,7 +205,7 @@
 
 		table.details > tbody > tr > td
 		{
-			border: 1px solid gray;
+			border-bottom: 1px solid gray;
 			padding: 3px;
 		}
 
@@ -224,7 +225,7 @@
 		border-top: none !important;
 	}
 
-	td.summaryStatus
+	.summaryStatus
 	{
 		font-weight: bold;
 		width: 80px;
@@ -281,28 +282,53 @@
 		}
 
 	#headerLeft {
-		margin-right: 10px;
-		float: left;
-		max-width: 580px;
+		width: 580px;
 	}
 	#headerLeft > h1 {
 		margin-top: 0px;
 	}
 	#headerRight {
-		float: right;
-	}
-	#headerRight > div {
-		width: 400px;
-		height: 300px;
-		border: 0px solid lightgray;
+		width: 410px;
 	}
 	.clearBoth {
 		clear: both;
+		width: 100%;
 	}
 
 	#stepNames span {
 		margin-left: 5px;
 		margin-right: 5px;
+	}
+
+	/* div table*/
+	.div-table {
+		display: table;
+		width: auto;
+		/*border: 3px solid red;*/
+	}
+	.div-table-row {
+		display: flex;
+		width: auto;
+		clear: both;
+	}
+	.div-table-col {
+		float: left; /* fix for  buggy browsers */
+		display: table-column;
+		/*border: 2px solid green;*/
+		background-color: white;
+	}
+	/* end of div table*/
+
+	.summaryStatus {
+		width: 80px;
+	}
+	.summaryTestName {
+		width: 750px;
+		padding-top: 7px !important;
+		font-weight: bold;
+	}
+	.summaryStartEnd {
+		width: 140px;
 	}
 	</style>
 </head>
@@ -335,19 +361,16 @@
 		});
 	</script>
 
-	<div style="width: 1000px;">
-		<div id="header">
-			<!-- Header of the report -->
-			<div id="headerLeft">
+	<div class="div-table" style="width: 1000px;">
+		<div class="div-table-row">
+			<div id="headerLeft" class="div-table-col">
 			</div>
-			<div id="headerRight">
-				<div>
-					<canvas id="myCanvas" style="background-color: white;"></canvas>
-				</div>
+			<div id="headerRight" class="div-table-col">
+				<canvas id="myCanvas"></canvas>
 			</div>
-			<div className="clearBoth"></div>
 		</div>
-		<div id="content">
+		<div class="div-table-row">
+			<div id="content" class="div-table-col"></div>
 		</div>
 	</div>
 	<script type="text/babel">
@@ -506,9 +529,9 @@
 
 		const SummaryTable = ({summaryRows}) => {
 			return (
-				<table className='summary'>
+				<div className="div-table summary">
 					{ summaryRows.map(summaryRow => <ConnectedSummaryRow key={summaryRow.testCaseName} store={store} summaryRow={summaryRow}/>) }
-				</table>
+				</div>
 			);
 		};
 
@@ -523,49 +546,50 @@
 
 			render() {
 				const level = this.props.summaryRow.level;
-				let anchorID = 0;
 
 				const relativeDurationHack = [];
 				for(let i = 0; i < this.props.summaryRow.relativeDuration; i++) relativeDurationHack.push(i);
 
-				const levels = this.props.store.getState().stepNames;
-
 				return (
-					<tbody>
-						<tr className={`summaryRow ${level.toLowerCase()}`} onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-							<td className='summaryStatus'><span>{level}</span></td>
-							<td className='summaryTestName'>{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.testCaseName}</td>
-							<td className='summaryStartEnd'>{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}</td>
-							<td className='summaryDuration' title={`Duration: ${this.props.summaryRow.durationStr}`}>
-								<div style={{width: '52px'}}></div>
-								{relativeDurationHack.map(x => (<span key={x} className='square'></span>))}
-							</td>
-						</tr>
+					<TagContainer>
+						<div className={`div-table-row summaryRow ${level.toLowerCase()}`}>
+							<div className='div-table-col summaryStatus'><span>{level}</span></div>
+							<div className='div-table-col summaryTestName' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
+								{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.testCaseName}
+							</div>
+							<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr}`}>
+								{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}
+								<div className='summaryDuration'>
+									<div style={{width: '52px'}}></div>
+									{relativeDurationHack.map(x => (<span key={x} className='square'></span>))}
+								</div>
+							</div>
+						</div>
 						{ this.isExpanded() && (
-							<tr className={`summaryDetailsRow ${level.toLowerCase()}`}>
-								<td>&nbsp;</td>
-								<td colSpan="3">
-									<table className='details'>
-										<tbody>
-											{
-												this.props.summaryRow.detailsRows.filter(detailsRow => levels[detailsRow.Level]).map(detailsRow => {
-													if(anchorID == 0 && detailsRow.LevelValue >= 60000) {
-														anchorID = detailsRow.ID;
-													}
-													return (
-														<DetailsRow key={detailsRow.ID} detailsRow={detailsRow} anchorID={anchorID}/>
-													);
-												})
-											}
-										</tbody>
-									</table>
-								</td>
-							</tr>
+							<div className={`div-table-row summaryDetailsRow ${level.toLowerCase()}`}>
+								<div className="div-table-col">
+									<DetailsTable detailsRows={this.props.summaryRow.detailsRows} levels={this.props.store.getState().stepNames}/>
+								</div>
+							</div>
 						) }
-					</tbody>
+					</TagContainer>
 				)
 			}
 		}
+
+		const DetailsTable = ({detailsRows, levels}) => {
+			return (
+				<table className='details'>
+					<tbody>
+						{detailsRows.filter(detailsRow => levels[detailsRow.Level]).map(detailsRow => {
+							return (
+								<DetailsRow key={detailsRow.ID} detailsRow={detailsRow} anchorID={0}/>
+							);
+						})}
+					</tbody>
+				</table>
+			);
+		};
 
 		const DetailsRow = ({detailsRow, anchorID}) => {
 			return (
@@ -621,7 +645,7 @@
 
 		const PageSummary = ({reportMetaData}) => {
 			return (
-				<div>
+				<TagContainer>
 					<h1 id="reportTitle">{reportMetaData.ReportName}</h1>
 					<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">{reportMetaData.ReportEnvironment}</span></h4>
 					<h4 id="testCategory"><label>Category:</label> <span id="category">{reportMetaData.ReportCategory}</span></h4>
@@ -632,7 +656,7 @@
 						<ConnectedExpandCollapseAll store={store}/>&nbsp;&nbsp;
 						<ConnectedStepLevels store={store}/>
 					</div>
-				</div>
+				</TagContainer>
 			);
 		};
 
