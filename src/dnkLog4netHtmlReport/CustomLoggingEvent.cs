@@ -22,6 +22,7 @@ namespace dnkLog4netHtmlReport
 			Exception = loggingEvent.ExceptionObject?.ToNiceString();
 
 			TestCaseName = LogicalThreadContext.Properties[LogExtensions.TestCaseName]?.ToString() ?? TestContext.CurrentContext?.Test?.FullName ?? "TestCaseNA";
+			if (TestCaseName.Contains("AdhocContext.AdhocTestMethod")) TestCaseName = "Main";
 			//TestClassFullName = TestContext.CurrentContext?.Test?.ClassName ?? "ClassNameNA";
 			//TestMethodName = TestContext.CurrentContext?.Test?.MethodName ?? "MethodNameNA";
 		}
