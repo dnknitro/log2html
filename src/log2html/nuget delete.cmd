@@ -1,0 +1,1 @@
+nuget delete log2html %1 -NonInteractive -Source http://localhost/NuGet/api/v2/package -ApiKey 123453
