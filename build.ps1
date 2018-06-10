@@ -14,8 +14,8 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 
 $NuGetVersion = "latest"
 $SolutionDirectory = "$PSScriptRoot\src"
-$BuildProjectFile = "$PSScriptRoot\.\build\dnkLog4netHtmlReport.build.csproj"
-$BuildExeFile = "$PSScriptRoot\.\build\bin\debug\dnkLog4netHtmlReport.build.exe"
+$BuildProjectFile = "$PSScriptRoot\.\build\log2html.build.csproj"
+$BuildExeFile = "$PSScriptRoot\.\build\bin\debug\log2html.build.exe"
 
 $TempDirectory = "$PSScriptRoot\.\.tmp"
 

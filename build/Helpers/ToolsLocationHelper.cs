@@ -3,7 +3,7 @@ using System.IO;
 using Nuke.Common;
 using Nuke.Common.IO;
 
-namespace dnkLog4netHtmlReport.build.Helpers
+namespace dnk.log2html.build.Helpers
 {
 	class ToolsLocationHelper
 	{

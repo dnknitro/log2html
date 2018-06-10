@@ -19,8 +19,8 @@ SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 
 NUGET_VERSION="latest"
 SOLUTION_DIRECTORY="$SCRIPT_DIR/src"
-BUILD_PROJECT_FILE="$SCRIPT_DIR/./build/dnkLog4netHtmlReport.build.csproj"
-BUILD_EXE_FILE="$SCRIPT_DIR/./build/bin/Debug/dnkLog4netHtmlReport.build.exe"
+BUILD_PROJECT_FILE="$SCRIPT_DIR/./build/log2html.build.csproj"
+BUILD_EXE_FILE="$SCRIPT_DIR/./build/bin/Debug/log2html.build.exe"
 
 TEMP_DIRECTORY="$SCRIPT_DIR/./.tmp"
 

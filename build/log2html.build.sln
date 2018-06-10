@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dnkLog4netHtmlReport.build", "dnkLog4netHtmlReport.build.csproj", "{9C73F53F-6710-4985-B7F2-7F0576CA55F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log2html.build", "log2html.build.csproj", "{9C73F53F-6710-4985-B7F2-7F0576CA55F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

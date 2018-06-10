@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using dnkLog4netHtmlReport.build.Helpers;
+using dnk.log2html.build.Helpers;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
-using Nuke.Common.Utilities.Collections;
 
-namespace dnkLog4netHtmlReport.build
+namespace dnk.log2html.build
 {
 	class Build : NukeBuild
 	{
@@ -60,8 +58,8 @@ namespace dnkLog4netHtmlReport.build
 			{
 				var assemblyInfos = new[]
 				{
-					@"dnkLog4netHtmlReport\Properties\AssemblyInfo.cs",
-					@"dnkLog4netHtmlReport.SeleniumWebDriver\Properties\AssemblyInfo.cs"
+					@"log2html\Properties\AssemblyInfo.cs",
+					@"log2html.Support\Properties\AssemblyInfo.cs"
 				};
 
 				foreach(var assemblyInfo in assemblyInfos)
@@ -116,8 +114,8 @@ namespace dnkLog4netHtmlReport.build
 			.DependsOn(Compile)
 			.Executes(() =>
 			{
-				NugetPack(@"src\dnkLog4netHtmlReport");
-				NugetPack(@"src\dnkLog4netHtmlReport.SeleniumWebDriver");
+				NugetPack(@"src\log2html");
+				NugetPack(@"src\log2html.Support");
 			});
 
 
@@ -125,8 +123,8 @@ namespace dnkLog4netHtmlReport.build
 			.DependsOn(Pack)
 			.Executes(() =>
 			{
-				NugetPushLocal(@"src\dnkLog4netHtmlReport");
-				NugetPushLocal(@"src\dnkLog4netHtmlReport.SeleniumWebDriver");
+				NugetPushLocal(@"src\log2html");
+				NugetPushLocal(@"src\log2html.Support");
 			});
 	}
 }

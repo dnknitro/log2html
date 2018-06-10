@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Nuke.Core.Tooling;
 
-namespace dnkLog4netHtmlReport.build.Helpers
+namespace dnk.log2html.build.Helpers
 {
 	class ProcessHelper
 	{

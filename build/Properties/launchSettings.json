@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "dnkLog4netHtmlReport.build": {
+    "log2html.build": {
       "commandName": "Project",
       "commandLineArgs": "Pack"
     }

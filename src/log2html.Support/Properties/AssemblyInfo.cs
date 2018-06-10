@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("log2html.SeleniumWebDriver")]
+[assembly: AssemblyTitle("log2html.Support")]
 [assembly: AssemblyDescription("Provides convenience methods to add browser screenshots to log2html report")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("dnk / Volodymyr Shcherbyna")]
-[assembly: AssemblyProduct("log2html.SeleniumWebDriver")]
+[assembly: AssemblyProduct("log2html.Support")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
