@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Report Template</title>
@@ -11,106 +11,35 @@
 	<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
 	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0/redux.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
 
-	<style>
+	<style type="text/css">
 	/* consider for icons https://codepen.io/mshwery/pen/njibr?editors=1100 */
-	*
-	{
-		font-family: Helvetica, Arial, sans-serif;
-	}
+	* { font-family: Helvetica, Arial, sans-serif; }
 
-	label
-	{
-		color: DimGray;
-	}
+	label { color: DimGray; }
 
-	.link {
-		cursor: pointer;
-	}
-	/*a:link
-	{
-		color: DimGray;
-		background-color: transparent;
-		text-decoration: none;
-	}*/
+	.link { cursor: pointer; }
 
-	a:visited
-	{
-		color: DimGray;
-	}
+	a:visited { color: DimGray; }
 
-	.crossedOut {
-		text-decoration: line-through !important;
-	}
+	h1 {margin: 20px 0;}
+	h4 {margin: 10px 0;}
 
-	/* Styles for statuses (Fail, Pass, Info etc). */
-	.retry > .summaryStatus > span, .fail > .summaryStatus > span, .pass > .summaryStatus > span, .info > .summaryStatus > span, .warn > .summaryStatus > span, .failskip > .summaryStatus > span, .debug > .summaryStatus > span,
-	.retry > td.statusCol > span,     .fail > td.statusCol > span,     .pass > td.statusCol > span,     .info > td.statusCol > span,     .warn > td.statusCol > span,     .failskip > td.statusCol > span,     .debug > td.statusCol > span
-	{
+	.crossedOut { text-decoration: line-through !important; }
+
+	.statusMark {
 		color: White;
 		float: left;
 		width: 65px;
 		padding: 2px 5px;
 		margin: 2px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
-
-	.statusDebug, .statusdebug { color: gray !important; }
-	.statusPass, .statuspass { color: limegreen !important; }
-	.statusInfo, .statusinfo { color: lightskyblue !important; }
-	.statusFailSkip, .statusfailskip { color: gold !important; }
-	.statusWarn, .statuswarn { color: coral !important; }
-	.statusRetry, .statusretry { color: greenyellow !important; }
-	.statusFail, .statusfail { color: red !important; }
-
-	.debug > .summaryStatus > span, .debug > td.statusCol > span
-	{
-		background-color: gray;
-		text-align: center;
-	}
-
-	.pass > .summaryStatus > span, .pass > td.statusCol > span
-	{
-		background-color: limegreen;
-		text-align: center;
-	}
-
-	.retry > .summaryStatus > span, .retry > td.statusCol > span
-	{
-		background-color: greenyellow;
-		text-align: center;
-	}
-
-	.fail > .summaryStatus > span, .fail > td.statusCol > span
-	{
-		background-color: red;
-		text-align: center;
-	}
-
-	.failskip > .summaryStatus > span, .failskip > td.statusCol > span
-	{
-		background-color: gold;
-		text-align: center;
-	}
-
-	.info > .summaryStatus > span, .info > td.statusCol > span
-	{
-		background-color: lightskyblue;
-		text-align: center;
-	}
-
-	.warn > .summaryStatus > span, .warn > td.statusCol > span
-	{
-		background-color: coral;
-		text-align: center;
-	}
-
-	canvas { background-color: white; }
 
 	.summary
 	{
@@ -119,24 +48,16 @@
 		margin-top: 10px;
 	}
 
-	.summaryRow
+	.summaryRow > div
 	{
-		cursor: pointer;
+		border: 1px solid gray;
+		background-color: GhostWhite;
+		padding: 3px;
+		margin-bottom: 4px;
+		/*white-space: nowrap;*/
+		border-radius:  3px;
+		width: 100%;
 	}
-	/*.summaryRow td:first-child { border-top-left-radius:  8px; border-bottom-left-radius:  8px;   border-left: 1px solid gray; }
-	.summaryRow td:last-child  { border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-right: 1px solid gray;}*/
-
-		.summaryRow > div
-		{
-			border-bottom: 1px solid gray;
-			padding: 3px;
-			/*white-space: nowrap;*/
-		}
-
-		.summaryRow:last-child > div
-		{
-			border-bottom: none;
-		}
 
 	.summaryDetailsRow > td
 	{
@@ -147,53 +68,17 @@
 		padding-right: 5px;
 	}
 
-	.square
+	.durationMark
 	{
-		border: 1px solid limegreen;
+		border: 1px solid black;
 		float: left;
 		width: 6px;
 		height: 6px;
-		background-color: limegreen;
+		background-color: black;
 		margin: 2px;
 		-moz-border-radius: 6px;
 		border-radius: 6px;
 	}
-
-	.debug .square {
-		background-color: gray !important;
-		border-color: gray !important;
-	}
-
-	.pass .square {
-		background-color: limegreen !important;
-		border-color: limegreen !important;
-	}
-
-	.retry .square {
-		background-color: greenyellow !important;
-		border-color: greenyellow !important;
-	}
-
-	.fail .square {
-		background-color: red !important;
-		border-color: red !important;
-	}
-
-	.failskip .square {
-		background-color: gold !important;
-		border-color: gold !important;
-	}
-
-	.info .square {
-		background-color: lightskyblue !important;
-		border-color: lightskyblue !important;
-	}
-
-	.warn .square {
-		background-color: coral !important;
-		border-color: coral !important;
-	}
-
 
 	table.details
 	{
@@ -209,15 +94,12 @@
 			padding: 3px;
 		}
 
-	tr.detailsHeaderRow
-	{
-		font-weight: bold;
-	}
+	.messageCol { width: 100%; }
 
-		tr.detailsHeaderRow > td
-		{
-			border-top: none !important;
-		}
+	tr.detailsHeaderRow > td
+	{
+		border-top: none !important;
+	}
 
 	tr.header > td
 	{
@@ -227,32 +109,7 @@
 
 	.summaryStatus
 	{
-		font-weight: bold;
-		width: 80px;
-	}
-
-	td.summaryTestName
-	{
-		font-weight: normal;
-	}
-
-	td.summaryStartEnd
-	{
-		width: 145px;
-	}
-
-	td.summaryDuration
-	{
-		width: 140px;
-	}
-
-	td.timeCol
-	{
-		width: 70px;
-	}
-
-	td.statusCol
-	{
+		/*font-weight: bold;*/
 		width: 80px;
 	}
 
@@ -282,7 +139,7 @@
 		}
 
 	#headerLeft {
-		width: 580px;
+		width: 590px;
 	}
 	#headerLeft > h1 {
 		margin-top: 0px;
@@ -290,6 +147,8 @@
 	#headerRight {
 		width: 410px;
 	}
+	#headerRight canvas { background-color: white; }
+	.chart-container { position: relative; width: 410px; }
 	.clearBoth {
 		clear: both;
 		width: 100%;
@@ -313,22 +172,28 @@
 	}
 	.div-table-col {
 		float: left; /* fix for  buggy browsers */
-		display: table-column;
+		display: flex;
+		width: 100%;
+  		flex-direction: column;
 		/*border: 2px solid green;*/
-		background-color: white;
+		/*background-color: white;*/
 	}
+	.div-table-row-visible { display: flex; }
+	.div-table-row-hidden { display: none; }
 	/* end of div table*/
 
 	.summaryStatus {
+		padding-top: 2px !important;
 		width: 80px;
 	}
 	.summaryTestName {
-		width: 750px;
+		width: 760px;
 		padding-top: 7px !important;
-		font-weight: bold;
+		/*font-weight: bold;*/
 	}
 	.summaryStartEnd {
 		width: 140px;
+		/*border-right: 1px solid gray;*/
 	}
 	</style>
 </head>
@@ -336,28 +201,22 @@
 <body>
 	<script type="text/babel">
 		const levelToColor = {
-			debug:    {color: 'gray', oldColor: 'gray'},
-			pass:     {color: '#0AC775', oldColor: 'limegreen'},
-			info:     {color: '#45CAE6', oldColor: 'lightskyblue'},
-			failskip: {color: 'gold', oldColor: 'gold'},
-			warn:     {color: '#FFAB40', oldColor: 'coral'},
-			retry:    {color: '#A6ED5F', oldColor: 'greenyellow'},
-			fail:     {color: '#F24965', oldColor: 'red'}
+			debug:    {color: 'gray'/*, oldColor: 'gray'*/},
+			pass:     {color: '#0AC775'/*, oldColor: 'limegreen'*/},
+			info:     {color: '#45CAE6'/*, oldColor: 'lightskyblue'*/},
+			failskip: {color: 'gold'/*, oldColor: 'gold'*/},
+			warn:     {color: '#FFAB40'/*, oldColor: 'coral'*/},
+			retry:    {color: '#A6ED5F'/*, oldColor: 'greenyellow'*/},
+			fail:     {color: '#F24965'/*, oldColor: 'red'*/}
 		};
 
-		const cssRules = document.styleSheets[0].cssRules;
-		const oldColors = Object.keys(levelToColor).map(level => levelToColor[level].oldColor);
-		Object.keys(cssRules).map(ruleID => {
-			if(cssRules[ruleID].style["background-color"] != "") {
-				const index = oldColors.indexOf(cssRules[ruleID].style["background-color"]);
-				if(index >= 0)
-					cssRules[ruleID].style["background-color"] = levelToColor[Object.keys(levelToColor)[index]].color;
-			}
-			if(cssRules[ruleID].style["color"] != "") {
-				const index = oldColors.indexOf(cssRules[ruleID].style["color"]);
-				if(index >= 0)
-					cssRules[ruleID].style["color"] = levelToColor[Object.keys(levelToColor)[index]].color;
-			}
+		const styleSheet = document.styleSheets[0];
+
+		Object.keys(levelToColor).map(level => {
+			const color = levelToColor[level].color;
+			styleSheet.insertRule(`.${level} .durationMark { background-color: ${color} !important; border-color: ${color} !important; }`, 1);	
+			styleSheet.insertRule(`.${level}StatusMark { background-color: ${color} !important; text-align: center; }`, 1);	
+			styleSheet.insertRule(`.status${level} { color: ${color} !important; }`, 1);	
 		});
 	</script>
 
@@ -366,7 +225,9 @@
 			<div id="headerLeft" class="div-table-col">
 			</div>
 			<div id="headerRight" class="div-table-col">
-				<canvas id="myCanvas"></canvas>
+				<div class="chart-container">
+					<canvas id="myCanvas"></canvas>
+				</div>
 			</div>
 		</div>
 		<div class="div-table-row">
@@ -422,6 +283,8 @@
 		const detailsRows = [
 			{"EndOfReportData":true} // logger will add data into reportData array during tests execution
 		];
+
+		console.log("Starting data processing...");
 
 		detailsRows.splice(-1,1)
 
@@ -525,7 +388,7 @@
 
 		//////////////////////////////////// End of Application State //////////////////////////////////////
 
-		//////////////////////////////////// Render Tests Execution Table //////////////////////////////////////
+		//////////////////////////////////// Tests Execution Table //////////////////////////////////////
 
 		const SummaryTable = ({summaryRows}) => {
 			return (
@@ -552,26 +415,26 @@
 
 				return (
 					<TagContainer>
-						<div className={`div-table-row summaryRow ${level.toLowerCase()}`}>
-							<div className='div-table-col summaryStatus'><span>{level}</span></div>
-							<div className='div-table-col summaryTestName' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-								{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.testCaseName}
-							</div>
-							<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr}`}>
-								{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}
-								<div className='summaryDuration'>
-									<div style={{width: '52px'}}></div>
-									{relativeDurationHack.map(x => (<span key={x} className='square'></span>))}
+						<div className="div-table-row summaryRow">
+							<div className={level.toLowerCase()}>
+								<div className='div-table-col summaryStatus'><span className={`statusMark ${level.toLowerCase()}StatusMark`}>{level}</span></div>
+								<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
+									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.testCaseName}
+								</div>
+								<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr}`}>
+									{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}
+									<div className='summaryDuration'>
+										<div style={{width: '52px'}}></div>
+										{relativeDurationHack.map(x => (<span key={x} className='durationMark'></span>))}
+									</div>
 								</div>
 							</div>
 						</div>
-						{ this.isExpanded() && (
-							<div className={`div-table-row summaryDetailsRow ${level.toLowerCase()}`}>
-								<div className="div-table-col">
-									<DetailsTable detailsRows={this.props.summaryRow.detailsRows} levels={this.props.store.getState().stepNames}/>
-								</div>
+						<div className={`div-table-row summaryDetailsRow ${this.isExpanded() ? 'div-table-row-visible' : 'div-table-row-hidden'}`}>
+							<div className="div-table-col">
+								<DetailsTable detailsRows={this.props.summaryRow.detailsRows} levels={this.props.store.getState().stepNames}/>
 							</div>
-						) }
+						</div>
 					</TagContainer>
 				)
 			}
@@ -596,7 +459,7 @@
 				<TagContainer>
 					<tr className={`detailsRow ${detailsRow.Level.toLowerCase()}`}>
 						<td className='timeCol' title={`[${detailsRow.ThreadName}]`}>{timeOnlyFormatter.format(detailsRow.TimeStampUtc)}</td>
-						<td className='statusCol'><span>{detailsRow.Level}</span></td>
+						<td className='statusCol'><span className={`statusMark ${detailsRow.Level.toLowerCase()}StatusMark`}>{detailsRow.Level}</span></td>
 						<td className='messageCol'>
 							{anchorID > 0 && <a name={`issue${anchorID}`}></a>}
 							{detailsRow.ScreenshotPath != null && (
@@ -618,12 +481,7 @@
 
 		const ConnectedSummaryRow = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(SummaryRow);
 
-		ReactDOM.render(
-			<SummaryTable store={store} summaryRows={summaryRows}/>,
-			document.getElementById('content')
-		);
-
-		//////////////////////////////////// Render Header //////////////////////////////////////
+		//////////////////////////////////// Header //////////////////////////////////////
 
 		var reportMetaData = {};
 		document.title = reportMetaData.ReportName + ' ' + reportMetaData.ReportEnvironment + ' ' + reportMetaData.ReportCategory;
@@ -669,7 +527,6 @@
 					{
 						Object.keys(levelBrowser).map((key, index) => {
 							let level = levelBrowser[key].Level.toLowerCase();
-							level = level.charAt(0).toUpperCase() + level.substr(1);
 							const count = levelBrowser[key].Count;
 							return (
 								<div key={key} style={{float: 'left', marginRight: '20px'}}>
@@ -715,7 +572,7 @@
 				return (
 					<span>
 						[ <span id="expandCollapseAll" className='link' onClick={() => this.props.toggleAllRows()}>
-						{this.props.store.getState().expandedRows.length > 0 ? 'Collapse' : 'Expand'} All Rows</span> ]
+						{this.props.store.getState().expandedRows.length > 0 ? 'Collapse' : 'Expand'} All</span> ]
 					</span>
 				)
 			}
@@ -724,13 +581,22 @@
 		const ConnectedStepLevels = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(StepLevels);
 		const ConnectedExpandCollapseAll = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(ExpandCollapseAll);
 
+		console.log("Ended data processing");
+
+		//////////////////////////////////// Render //////////////////////////////////////
+
 		ReactDOM.render(
 			<PageSummary reportMetaData={reportMetaData}/>,
 			document.getElementById('headerLeft')
 		);
+
+		ReactDOM.render(
+			<SummaryTable store={store} summaryRows={summaryRows}/>,
+			document.getElementById('content')
+		);
 	</script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 	<script type="text/babel">
 		//////////////////////////////////// Pie Charts //////////////////////////////////////
 		var levelGroupped = groupBy(summaryRows, 'level');
@@ -763,9 +629,12 @@
 		$(function () {
 			new Chart(ctx, {
 				data: data,
-				type: "pie",
+				type: "doughnut",
 				options: {
-					maintainAspectRatio: false,
+					animation: {
+						duration: 0
+					},
+					maintainAspectRatio: true,
 					/*
 					LOOK INTO http://jsfiddle.net/5gyfykka/
 					tooltipTemplate: "<%= value %>",
@@ -776,7 +645,7 @@
 					showTooltips: true,
 					elements: {
 						arc: {
-							borderColor: "#000000"
+							borderColor: "black"
 						}
 					}
 				}
