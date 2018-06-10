@@ -13,7 +13,7 @@ namespace dnk.log2html.Test
 		[Explicit]
 		public void SetHardcodedTestData()
 		{
-			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("log2html.Test.TestData.txt", GetType().Assembly);
+			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.Test.TestData.txt", GetType().Assembly);
 			StringBuilder reportTemplateContent = null;
 			HtmlReportAppender.Configure(
 				content =>

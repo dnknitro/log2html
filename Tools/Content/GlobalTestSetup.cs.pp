@@ -11,9 +11,9 @@ namespace $rootnamespace$
 		public void OneTimeSetUp()
 		{
 			var baseDirectory = AppDomain.CurrentDomain.BaseDirectory.Trim('\\');
-			log2html.Config.Configure(
+			dnk.log2html.Config.Configure(
 				Path.Combine(Directory.GetParent(baseDirectory).Parent.Parent.FullName, "Results"),
-				new log2html.ReportMetaData
+				new dnk.log2html.ReportMetaData
 				{
 					ReportName = "Test Execution Report TEST",
 					ReportCategory = "Test",

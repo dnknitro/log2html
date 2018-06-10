@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html.Support", "log2htm
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{7E94573E-90EB-477F-8260-2F10E1BBCF7B}"
 	ProjectSection(SolutionItems) = preProject
-		Tools\Content\GlobalTestSetup.cs.pp = Tools\Content\GlobalTestSetup.cs.pp
-		Tools\Content\Install.ps1 = Tools\Content\Install.ps1
-		Tools\Content\log4net.config = Tools\Content\log4net.config
+		..\Tools\Content\GlobalTestSetup.cs.pp = ..\Tools\Content\GlobalTestSetup.cs.pp
+		..\Tools\Content\Install.ps1 = ..\Tools\Content\Install.ps1
+		..\Tools\Content\log4net.config = ..\Tools\Content\log4net.config
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html.Support.Test", "log2html.Support.Test\log2html.Support.Test.csproj", "{B95E572E-1EAF-4331-9927-02A20E477FE3}"

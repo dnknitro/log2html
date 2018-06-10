@@ -18,7 +18,7 @@ namespace dnk.log2html
 
 		public static readonly Lazy<string> ReportFilePath = new Lazy<string>(() =>
 		{
-			_fileContent.Append(ResourceUtils.ReadStringFromEmbeddedResource("log2html.ReportTemplate.html", typeof(HtmlReportAppender).Assembly));
+			_fileContent.Append(ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.ReportTemplate.html", typeof(HtmlReportAppender).Assembly));
 			_reportTemplateContentVisitor?.Invoke(_fileContent);
 			var reportMetaDataJson = JsonConvert.SerializeObject(Config.ReportMetaData);
 			_fileContent.Replace("var reportMetaData = {};", $"var reportMetaData = {reportMetaDataJson};");
