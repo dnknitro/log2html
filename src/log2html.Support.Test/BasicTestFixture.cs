@@ -18,7 +18,7 @@ namespace dnk.log2html.Support.Test
 				var log = LogManager.GetLogger(GetType().Name);
 				Config.SetBrowser("Chrome");
 				log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-				log.LogWithScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
+				log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
 			}
 		}
 	}
