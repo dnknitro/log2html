@@ -421,7 +421,8 @@
 							<div className={level.toLowerCase()}>
 								<div className='div-table-col summaryStatus'><span className={`statusMark ${level.toLowerCase()}StatusMark`}>{level}</span></div>
 								<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}{this.props.summaryRow.testCaseName}
+									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}
+									<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseName }} />
 								</div>
 								<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr}`}>
 									{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}
@@ -467,7 +468,7 @@
 							{detailsRow.ScreenshotPath != null && (
 								<span><a className='screenshot' target='_blank' href={detailsRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a></span>
 							)}
-							{detailsRow.Message}
+							<span dangerouslySetInnerHTML={{ __html: detailsRow.Message }} />
 						</td>
 					</tr>
 					{detailsRow.Exception != null &&

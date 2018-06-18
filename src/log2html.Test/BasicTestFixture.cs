@@ -22,7 +22,7 @@ namespace dnk.log2html.Test
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
 			Config.SetBrowser("IE");
-			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+			log.Info(prefix + "Lorem ipsum dolor sit amet, <b>consectetur</b> adipisicing elit,<br/>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			if (index > 4)
 				try
 				{
@@ -42,7 +42,7 @@ namespace dnk.log2html.Test
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
 			Config.SetBrowser("FireFox");
-			Config.SetTestCaseName("Custome Test Case Name");
+			Config.SetTestCaseName("<b style='color: red'>Custom</b> Test Case Name");
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 		}
