@@ -102,12 +102,17 @@ namespace dnk.log2html.build
 				nupkgFiles.ForEach(x => File.Delete(x));
 		}
 
-		private void NugetPushLocal(string projectRelativeFolder)
+	    const string localNugetApiKey = "123453";
+	    const string localNugetSource = "http://localhost/NuGet/api/v2/package";
+	    const string remoteNugetSource = "https://api.nuget.org/v3/index.json";
+
+		private void NugetPushLocal(string projectRelativeFolder, string source, string apiKey = null)
 		{
 			Environment.CurrentDirectory = RootDirectory;
 			var projectFolder = RootDirectory / projectRelativeFolder;
 			var nupkgFile = Directory.GetFiles(projectFolder, "*.nupkg").Single();
-			ProcessHelper.StartProcess(ToolsLocationHelper.NuGetPath, $"push {nupkgFile} 123453 -Source http://localhost/NuGet/api/v2/package", projectFolder);
+		    var apiKeyPart = string.IsNullOrEmpty(apiKey) ? string.Empty : apiKey;
+			ProcessHelper.StartProcess(ToolsLocationHelper.NuGetPath, $"push {nupkgFile} {apiKeyPart} -Source {source}", projectFolder);
 		}
 
 		Target Pack => _ => _
@@ -118,13 +123,21 @@ namespace dnk.log2html.build
 				NugetPack(@"src\log2html.Support");
 			});
 
-
 		Target PushLocal => _ => _
 			.DependsOn(Pack)
 			.Executes(() =>
 			{
-				NugetPushLocal(@"src\log2html");
-				NugetPushLocal(@"src\log2html.Support");
+				NugetPushLocal(@"src\log2html", localNugetSource, localNugetApiKey);
+				NugetPushLocal(@"src\log2html.Support", localNugetSource, localNugetApiKey);
+			});
+
+		Target PushRemote => _ => _
+			.DependsOn(Pack)
+			.Executes(() =>
+		    {
+		        Logger.Info($"don't forget to run 'nuget setApiKey secret_key' (key can be generated @ nuget.org)");
+			    NugetPushLocal(@"src\log2html", remoteNugetSource);
+			    NugetPushLocal(@"src\log2html.Support", remoteNugetSource);
 			});
 	}
 }
