@@ -37,12 +37,15 @@ namespace dnk.log2html.Test
 		}
 
 		[Test]
-		public void TestAppend2()
+        [TestCase("SetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestName")]
+        [TestCase("<b style='color: red'>Custom</b> Test Case Name")]
+
+		public void CustomTestCaseName(string testCaseName)
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			var log = LogManager.GetLogger(GetType().Name);
 			Config.SetBrowser("FireFox");
-			Config.SetTestCaseName("<b style='color: red'>Custom</b> Test Case Name");
+			Config.SetTestCaseName(testCaseName);
 			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			log.Fail(prefix + "Fail Skip test");
 		}
