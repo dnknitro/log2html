@@ -20,9 +20,8 @@ namespace dnk.log2html.Test
 		public void TestAppend1(int index)
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
-			var log = LogManager.GetLogger(GetType().Name);
-			Config.SetBrowser("IE");
-			log.Info(prefix + "Lorem ipsum dolor sit amet, <b>consectetur</b> adipisicing elit,<br/>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+			Report.SetBrowser("IE");
+		    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, <b>consectetur</b> adipisicing elit,<br/>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			if (index > 4)
 				try
 				{
@@ -30,10 +29,10 @@ namespace dnk.log2html.Test
 				}
 				catch (Exception e)
 				{
-					log.Fail(e.Message, e);
+				    Report.Log.Fail(e.Message, e);
 				}
 			else
-				log.Pass("No Fails!");
+			    Report.Log.Pass("No Fails!");
 		}
 
 		[Test]
@@ -43,20 +42,18 @@ namespace dnk.log2html.Test
 		public void CustomTestCaseName(string testCaseName)
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
-			var log = LogManager.GetLogger(GetType().Name);
-			Config.SetBrowser("FireFox");
-			Config.SetTestCaseName(testCaseName);
-			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-			log.Fail(prefix + "Fail Skip test");
+			Report.SetBrowser("FireFox");
+			Report.SetTestCaseName(testCaseName);
+		    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+		    Report.Log.Fail(prefix + "Fail Skip test");
 		}
 
 		[Test]
 		public void TestAppend3()
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
-			var log = LogManager.GetLogger(GetType().Name);
-			Config.SetBrowser("Chrome");
-			log.Warn(prefix + "Warn test");
+			Report.SetBrowser("Chrome");
+		    Report.Log.Warn(prefix + "Warn test");
 
 			var levels = new List<Level>
 			{
@@ -80,17 +77,16 @@ namespace dnk.log2html.Test
 				Level.Warn
 			};
 			foreach (var level in levels)
-				log.Info($"{level.Value} = {level.Name}");
+			    Report.Log.Info($"{level.Value} = {level.Name}");
 		}
 
 		[Test]
 		public void TestAppend4()
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
-			var log = LogManager.GetLogger(GetType().Name);
-			Config.SetBrowser("Chrome");
-			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-			log.Pass(prefix + "Fail Skip test");
+			Report.SetBrowser("Chrome");
+		    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+		    Report.Log.Pass(prefix + "Fail Skip test");
 		}
 	}
 }

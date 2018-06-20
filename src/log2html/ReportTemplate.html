@@ -318,6 +318,11 @@
 				this.durationMsec = this.endTime.getTime() - this.startTime.getTime();
 				this.durationStr = calcDuration(this.startTime, this.endTime);
 				this.relativeDuration = 0;
+
+				this.testCaseNameShort = this.testCaseName;
+				const testCaseNameRegex = /^(?:(?:\w+\.)*)((?:[^.]\w+\.\w+).*?)$/g;
+				var matches = testCaseNameRegex.exec(this.testCaseNameShort);
+				if(matches != null) this.testCaseNameShort = matches[1];
 			};
 
 			get testCaseName() { return this.detailsRows[0].TestCaseName; }
@@ -426,7 +431,7 @@
 								<div className='div-table-col summaryStatus'><span className={`statusMark ${level.toLowerCase()}StatusMark`}>{level}</span></div>
 								<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
 									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}
-									<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseName }} />
+									<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseNameShort }} />
 								</div>
 								<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr}`}>
 									{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}
@@ -491,7 +496,7 @@
 		//////////////////////////////////// Header //////////////////////////////////////
 
 		var reportMetaData = {};
-		document.title = reportMetaData.ReportName + ' ' + reportMetaData.ReportEnvironment + ' ' + reportMetaData.ReportCategory;
+		document.title = reportMetaData.ReportName + ' ' + reportMetaData.ReportEnvironment;
 
 		var startTime = summaryRows
 			.reduce((accumulator, currentValue) => currentValue.startTime < accumulator.startTime ? currentValue : accumulator, summaryRows[0])
@@ -513,7 +518,6 @@
 				<TagContainer>
 					<h1 id="reportTitle">{reportMetaData.ReportName}</h1>
 					<h4 id="environmentInfo"><label>Environment:</label> <span id="environment">{reportMetaData.ReportEnvironment}</span></h4>
-					<h4 id="testCategory"><label>Category:</label> <span id="category">{reportMetaData.ReportCategory}</span></h4>
 					<h4 id="timeInfo"><label>Start:</label> <span id="startTime">{timeOnlyFormatter.format(startTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>End:</label> <span id="endTime">{timeOnlyFormatter.format(endTime)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Duration:</label> <span id="duration">{calcDuration(startTime, endTime)}</span></h4>
 
 					<LevelsBrowsers levelBrowser={levelBrowserUnique}/>

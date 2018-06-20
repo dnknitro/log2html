@@ -20,11 +20,11 @@ namespace dnk.log2html
 		{
 			_fileContent.Append(ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.ReportTemplate.html", typeof(HtmlReportAppender).Assembly));
 			_reportTemplateContentVisitor?.Invoke(_fileContent);
-			var reportMetaDataJson = JsonConvert.SerializeObject(Config.ReportMetaData);
+			var reportMetaDataJson = JsonConvert.SerializeObject(Report.ReportMetaData);
 			_fileContent.Replace("var reportMetaData = {};", $"var reportMetaData = {reportMetaDataJson};");
-			Directory.CreateDirectory(Config.ReportFolder);
-			Config.ReportFileNameOnly = $"Report_{DateTime.Now:yyyy-MM-dd_HH.mm.ss.fff}";
-			var reportPath = Path.GetFullPath(Path.Combine(Config.ReportFolder, Config.ReportFileNameOnly + ".html"));
+			Directory.CreateDirectory(Report.ReportFolder);
+			Report.ReportFileNameOnly = $"Report_{DateTime.Now:yyyy-MM-dd_HH.mm.ss.fff}";
+			var reportPath = Path.GetFullPath(Path.Combine(Report.ReportFolder, Report.ReportFileNameOnly + ".html"));
 			_indexToWrite = _fileContent.ToString().IndexOf("{\"EndOfReportData\":true}", StringComparison.Ordinal);
 			return reportPath;
 		});

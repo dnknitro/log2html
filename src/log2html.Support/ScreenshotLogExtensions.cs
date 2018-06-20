@@ -69,8 +69,8 @@ namespace dnk.log2html.Support
 					var tempScreenshotFile = TakeScreenshot(webDriver);
 					if (File.Exists(tempScreenshotFile))
 					{
-						var targetScreenshotRelativeFolder = Config.ReportFileNameOnly;
-						var targetScreenshotAbsoluteFolder = Path.Combine(Config.ReportFolder, targetScreenshotRelativeFolder);
+						var targetScreenshotRelativeFolder = Report.ReportFileNameOnly;
+						var targetScreenshotAbsoluteFolder = Path.Combine(Report.ReportFolder, targetScreenshotRelativeFolder);
 						Directory.CreateDirectory(targetScreenshotAbsoluteFolder);
 
 						var screenshotFileName = $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}_{Thread.CurrentThread.ManagedThreadId}.png";

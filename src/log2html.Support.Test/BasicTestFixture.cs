@@ -15,10 +15,9 @@ namespace dnk.log2html.Support.Test
 			{
 				webDriver.Navigate().GoToUrl("http://google.com");
 				var prefix = MethodBase.GetCurrentMethod().Name + ": ";
-				var log = LogManager.GetLogger(GetType().Name);
-				Config.SetBrowser("Chrome");
-				log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-				log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
+				Report.SetBrowser("Chrome");
+			    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+			    Report.Log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
 			}
 		}
 	}

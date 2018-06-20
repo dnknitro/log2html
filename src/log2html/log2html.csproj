@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="CustomLoggingEvent.cs" />
     <Compile Include="LogLevel.cs" />
     <Compile Include="LogExtensions.cs" />
