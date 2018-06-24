@@ -10,6 +10,8 @@ namespace dnk.log2html.Test
 	[Parallelizable(ParallelScope.Children)]
 	public class BasicTestFixture
 	{
+		private ILog log = LogManager.GetLogger(nameof(BasicTestFixture));
+
 		[Test]
 		[TestCase(1)]
 		[TestCase(2)]
@@ -21,7 +23,7 @@ namespace dnk.log2html.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			Report.SetBrowser("IE");
-		    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, <b>consectetur</b> adipisicing elit,<br/>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+			log.Info(prefix + "Lorem ipsum dolor sit amet, <b>consectetur</b> adipisicing elit,<br/>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			if (index > 4)
 				try
 				{
@@ -29,23 +31,22 @@ namespace dnk.log2html.Test
 				}
 				catch (Exception e)
 				{
-				    Report.Log.Fail(e.Message, e);
+					log.Fail(e.Message, e);
 				}
 			else
-			    Report.Log.Pass("No Fails!");
+				log.Pass("No Fails!");
 		}
 
 		[Test]
-        [TestCase("SetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestName")]
-        [TestCase("<b style='color: red'>Custom</b> Test Case Name")]
-
+		[TestCase("SetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestNameSetVeryLongNoSpacesCustomTestName")]
+		[TestCase("<b style='color: red'>Custom</b> Test Case Name")]
 		public void CustomTestCaseName(string testCaseName)
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			Report.SetBrowser("FireFox");
 			Report.SetTestCaseName(testCaseName);
-		    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-		    Report.Log.Fail(prefix + "Fail Skip test");
+			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+			log.Fail(prefix + "Fail Skip test");
 		}
 
 		[Test]
@@ -53,7 +54,7 @@ namespace dnk.log2html.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			Report.SetBrowser("Chrome");
-		    Report.Log.Warn(prefix + "Warn test");
+			log.Warn(prefix + "Warn test");
 
 			var levels = new List<Level>
 			{
@@ -77,7 +78,7 @@ namespace dnk.log2html.Test
 				Level.Warn
 			};
 			foreach (var level in levels)
-			    Report.Log.Info($"{level.Value} = {level.Name}");
+				log.Info($"{level.Value} = {level.Name}");
 		}
 
 		[Test]
@@ -85,8 +86,8 @@ namespace dnk.log2html.Test
 		{
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			Report.SetBrowser("Chrome");
-		    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-		    Report.Log.Pass(prefix + "Fail Skip test");
+			log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+			log.Pass(prefix + "Fail Skip test");
 		}
 	}
 }

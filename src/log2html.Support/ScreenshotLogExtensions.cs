@@ -13,54 +13,54 @@ namespace dnk.log2html.Support
 {
 	public static class ScreenshotLogExtensions
 	{
-	    public static void DebugScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
-	    {
-            webDriver.LogScreenshot(Level.Debug, message, ex);
-	    }
+		public static void DebugScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
+		{
+			webDriver.LogScreenshot(Level.Debug, message, ex);
+		}
 
-	    public static void InfoScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
-	    {
-            webDriver.LogScreenshot(Level.Info, message, ex);
-	    }
+		public static void InfoScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
+		{
+			webDriver.LogScreenshot(Level.Info, message, ex);
+		}
 
-	    public static void WarnScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
-	    {
-            webDriver.LogScreenshot(Level.Warn, message, ex);
-	    }
+		public static void WarnScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
+		{
+			webDriver.LogScreenshot(Level.Warn, message, ex);
+		}
 
-	    public static void ErrorScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
-	    {
-            webDriver.LogScreenshot(Level.Error, message, ex);
-	    }
+		public static void ErrorScreenshot(this IWebDriver webDriver, string message, Exception ex = null)
+		{
+			webDriver.LogScreenshot(Level.Error, message, ex);
+		}
 
-	    public static void LogScreenshot(this IWebDriver webDriver, Level level, string message, Exception ex = null)
-	    {
-	        var log = LogManager.GetLogger(nameof(ScreenshotLogExtensions));
-            log.LogScreenshot(webDriver, level, message, ex);
-	    }
+		public static void LogScreenshot(this IWebDriver webDriver, Level level, string message, Exception ex = null)
+		{
+			var log = LogManager.GetLogger(nameof(ScreenshotLogExtensions));
+			log.LogScreenshot(webDriver, level, message, ex);
+		}
 
-	    public static void DebugScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
-	    {
-	        log.LogScreenshot(webDriver, Level.Debug, message, ex);
-	    }
+		public static void DebugScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
+		{
+			log.LogScreenshot(webDriver, Level.Debug, message, ex);
+		}
 
-	    public static void InfoScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
-	    {
-	        log.LogScreenshot(webDriver, Level.Info, message, ex);
-	    }
+		public static void InfoScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
+		{
+			log.LogScreenshot(webDriver, Level.Info, message, ex);
+		}
 
-	    public static void WarnScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
-	    {
-	        log.LogScreenshot(webDriver, Level.Warn, message, ex);
-	    }
+		public static void WarnScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
+		{
+			log.LogScreenshot(webDriver, Level.Warn, message, ex);
+		}
 
-	    public static void ErrorScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
-	    {
-	        log.LogScreenshot(webDriver, Level.Error, message, ex);
-	    }
+		public static void ErrorScreenshot(this ILog log, IWebDriver webDriver, string message, Exception ex = null)
+		{
+			log.LogScreenshot(webDriver, Level.Error, message, ex);
+		}
 
 
-	    public static void LogScreenshot(this ILog log, IWebDriver webDriver, Level level, string message, Exception ex = null)
+		public static void LogScreenshot(this ILog log, IWebDriver webDriver, Level level, string message, Exception ex = null)
 		{
 			string targetScreeshotFile = null;
 			if (webDriver != null)
@@ -81,7 +81,7 @@ namespace dnk.log2html.Support
 				}
 				catch (Exception screenshotException)
 				{
-				    log.Debug("Failed to take screenshot", screenshotException);
+					log.Debug("Failed to take screenshot", screenshotException);
 				}
 
 			const string ScreenshotPathPropertyName = "ScreenshotPath";
@@ -118,6 +118,7 @@ namespace dnk.log2html.Support
 			{
 				tempScreeenshotFile = screenshotTempFiles.Single();
 			}
+
 			return tempScreeenshotFile;
 		}
 
@@ -136,6 +137,7 @@ namespace dnk.log2html.Support
 					verticalLocation += image.Height;
 				}
 			}
+
 			return totalImage;
 		}
 	}

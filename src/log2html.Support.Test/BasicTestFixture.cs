@@ -11,14 +11,32 @@ namespace dnk.log2html.Support.Test
 		[Test]
 		public void TestScreenshot()
 		{
-			using (var webDriver = new ChromeDriver())
+			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
+			var webDriver = new ChromeDriver();
+			TestWrapper.Test(webDriver, () =>
 			{
+				var log = LogManager.GetLogger(GetType());
 				webDriver.Navigate().GoToUrl("http://google.com");
-				var prefix = MethodBase.GetCurrentMethod().Name + ": ";
-				Report.SetBrowser("Chrome");
-			    Report.Log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-			    Report.Log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
-			}
+				log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+				log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
+			});
+		}
+
+		[Test]
+		public void TestFail()
+		{
+			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
+			Assert.Throws<AssertionException>(() =>
+			{
+				var webDriver = new ChromeDriver();
+				TestWrapper.Test(webDriver, () =>
+				{
+					var log = LogManager.GetLogger(GetType());
+					webDriver.Navigate().GoToUrl("http://google.com");
+					log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+					Assert.Fail("Test Fail with Screenshot");
+				});
+			});
 		}
 	}
 }

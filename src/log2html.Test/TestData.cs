@@ -22,7 +22,9 @@ namespace dnk.log2html.Test
 					content.Replace("{\"EndOfReportData\":true}", reportRecords + "{\"EndOfReportData\":true}");
 				}
 			);
-		    Report.Log.Pass("SetHardcodedTestData!");
+
+			var log = LogManager.GetLogger(nameof(BasicTestFixture));
+			log.Pass("SetHardcodedTestData!");
 			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "log2html", "ReportTemplate.html"), reportTemplateContent.ToString());
 		}
 	}
