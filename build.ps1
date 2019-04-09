@@ -39,7 +39,7 @@ if (!$NoInit) {
     elseif ($NuGetVersion -eq "latest") { & $NuGetFile update -Self }
 
     ExecSafe { & $NuGetFile restore $BuildProjectFile -SolutionDirectory $SolutionDirectory }
-    ExecSafe { & $NuGetFile install Nuke.MSBuildLocator -ExcludeVersion -OutputDirectory $TempDirectory -SolutionDirectory $SolutionDirectory }
+    ExecSafe { & $NuGetFile install Nuke.MSBuildLocator -Version 0.4.0 -ExcludeVersion -OutputDirectory $TempDirectory -SolutionDirectory $SolutionDirectory }
 }
 
 $MSBuildFile = & "$TempDirectory\Nuke.MSBuildLocator\tools\Nuke.MSBuildLocator.exe"
