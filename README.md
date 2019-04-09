@@ -52,5 +52,5 @@ Besides standard log4net levels the library adds a few [extension methods](https
 To add browser screenshot (when using with Selenium WebDriver) to the report record an additional package [log2html.Support](https://www.nuget.org/packages/log2html.Support/) should be installed. 
 Then method `LogWithScreenshot()` can be invoked with desired Log Level and message:
 ```C#
-log.LogWithScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
+log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
 ```
