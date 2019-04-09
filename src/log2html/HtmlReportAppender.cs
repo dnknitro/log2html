@@ -23,7 +23,6 @@ namespace dnk.log2html
 			var reportMetaDataJson = JsonConvert.SerializeObject(Report.ReportMetaData);
 			_fileContent.Replace("var reportMetaData = {};", $"var reportMetaData = {reportMetaDataJson};");
 			Directory.CreateDirectory(Report.ReportFolder);
-			Report.ReportFileNameOnly = $"Report_{DateTime.Now:yyyy-MM-dd_HH.mm.ss.fff}";
 			var reportPath = Path.GetFullPath(Path.Combine(Report.ReportFolder, Report.ReportFileNameOnly + ".html"));
 			_indexToWrite = _fileContent.ToString().IndexOf("{\"EndOfReportData\":true}", StringComparison.Ordinal);
 			return reportPath;

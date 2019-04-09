@@ -62,7 +62,7 @@ namespace dnk.log2html.Support
 
 		public static void LogScreenshot(this ILog log, IWebDriver webDriver, Level level, string message, Exception ex = null)
 		{
-			string targetScreeshotFile = null;
+			string targetScreenshotFile = null;
 			if (webDriver != null)
 				try
 				{
@@ -76,7 +76,7 @@ namespace dnk.log2html.Support
 						var screenshotFileName = $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}_{Thread.CurrentThread.ManagedThreadId}.png";
 						File.Move(tempScreenshotFile, Path.Combine(targetScreenshotAbsoluteFolder, screenshotFileName));
 
-						targetScreeshotFile = Path.Combine(targetScreenshotRelativeFolder, screenshotFileName).Replace("\\", "/");
+						targetScreenshotFile = Path.Combine(targetScreenshotRelativeFolder, screenshotFileName).Replace("\\", "/");
 					}
 				}
 				catch (Exception screenshotException)
@@ -85,7 +85,7 @@ namespace dnk.log2html.Support
 				}
 
 			const string ScreenshotPathPropertyName = "ScreenshotPath";
-			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = targetScreeshotFile;
+			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = targetScreenshotFile;
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, level, message, ex);
 			LogicalThreadContext.Properties[ScreenshotPathPropertyName] = null;
 		}

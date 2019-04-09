@@ -26,7 +26,8 @@ namespace dnk.log2html.Support
 		public static void Test(IWebDriver webDriver, string testCaseName, Action testAction)
 		{
 			string browserName = null;
-			if (webDriver is RemoteWebDriver remoteWebDriver) browserName = remoteWebDriver.Capabilities.BrowserName;
+			if (webDriver is RemoteWebDriver remoteWebDriver && remoteWebDriver.Capabilities.HasCapability("browserName")) 
+				browserName = remoteWebDriver.Capabilities.GetCapability("browserName").ToString();
 
 			Test(browserName, webDriver, testCaseName, testAction);
 		}
