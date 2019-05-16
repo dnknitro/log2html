@@ -306,7 +306,16 @@
 				this.detailsRows = detailsRows;
 				this.tempBrowser = detailsRows[0].Browser;
 
+				let lastRetryRowIndex = 0;
+				for(let i = this.detailsRows.length - 1; i >= 0; i--)
+				{
+					if(this.detailsRows[i].Level !== "RETRY") continue;
+					lastRetryRowIndex = i;
+					break;
+				}
+
 				this.level = this.detailsRows
+					.slice(lastRetryRowIndex) // ignoring records prior RETRY
 					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, this.detailsRows[0])
 					.Level;
 				this.startTime =  this.detailsRows

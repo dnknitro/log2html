@@ -14,6 +14,7 @@ namespace dnk.log2html
 		// 40000		 INFO
 		// 50000		 NOTICE
 		public static readonly Level Pass = new Level(55000, "PASS");
+		public static readonly Level Retry = new Level(57000, "RETRY");
 
 		// 60000		 WARN
 		// 70000		 ERROR

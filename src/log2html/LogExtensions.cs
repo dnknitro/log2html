@@ -15,6 +15,11 @@ namespace dnk.log2html
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, LogLevel.Pass, message, ex);
 		}
 
+		public static void Retry(this ILog log, string message, Exception ex = null)
+		{
+			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, LogLevel.Retry, message, ex);
+		}
+
 		public static void Fail(this ILog log, string message, Exception ex = null)
 		{
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, LogLevel.Fail, message, ex);
