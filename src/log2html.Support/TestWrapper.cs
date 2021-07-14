@@ -50,7 +50,7 @@ namespace dnk.log2html.Support
 			}
 			catch (Exception e)
 			{
-				LogManager.GetLogger(nameof(TestWrapper)).LogScreenshot(webDriver, Level.Error, "Test case failed", e);
+				LogManager.GetLogger(typeof(TestWrapper)).LogScreenshot(webDriver, Level.Error, "Test case failed", e);
 				throw;
 			}
 			finally

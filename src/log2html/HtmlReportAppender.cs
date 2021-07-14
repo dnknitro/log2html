@@ -16,7 +16,7 @@ namespace dnk.log2html
 		private static int _indexToWrite;
 		private static Action<StringBuilder> _reportTemplateContentVisitor;
 
-		public static readonly Lazy<string> ReportFilePath = new Lazy<string>(() =>
+		private static readonly Lazy<string> ReportFilePath = new Lazy<string>(() =>
 		{
 			_fileContent.Append(ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.ReportTemplate.html", typeof(HtmlReportAppender).Assembly));
 			_reportTemplateContentVisitor?.Invoke(_fileContent);

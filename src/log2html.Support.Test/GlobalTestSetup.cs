@@ -10,12 +10,11 @@ namespace dnk.log2html.Support.Test
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
-			var baseDirectory = AppDomain.CurrentDomain.BaseDirectory.Trim('\\');
-			dnk.log2html.Report.Configure(
-				Path.Combine(Directory.GetParent(baseDirectory).Parent.Parent.Parent.FullName, "Results"),
-				new dnk.log2html.ReportMetaData
+			Report.Configure(
+				Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory.Trim('\\')).Parent.Parent.Parent.FullName, "Results"),
+				new ReportMetaData
 				{
-					ReportName = "Test Execution Report TEST",
+					ReportName = "log2html.Support.Test Execution Report",
 					ReportEnvironment = "DEV"
 				}
 			);

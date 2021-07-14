@@ -2,7 +2,6 @@
 using dnkUtils.Diagnostics;
 using log4net;
 using log4net.Core;
-using NUnit.Framework;
 
 namespace dnk.log2html
 {
@@ -21,7 +20,9 @@ namespace dnk.log2html
 			Browser = LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName]?.ToString();
 			Exception = loggingEvent.ExceptionObject?.ToNiceString();
 
-			TestCaseName = LogicalThreadContext.Properties[LogExtensions.TestCaseName]?.ToString() ?? TestContext.CurrentContext?.Test?.FullName ?? "TestCaseNA";
+			TestCaseName = LogicalThreadContext.Properties[LogExtensions.TestCaseName]?.ToString() 
+				//?? TestContext.CurrentContext?.Test?.FullName 
+				?? "TestCaseNA";
 			if (TestCaseName.Contains("AdhocContext.AdhocTestMethod")) TestCaseName = "Main";
 			//TestClassFullName = TestContext.CurrentContext?.Test?.ClassName ?? "ClassNameNA";
 			//TestMethodName = TestContext.CurrentContext?.Test?.MethodName ?? "MethodNameNA";
