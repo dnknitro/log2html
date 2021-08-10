@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using log4net;
 using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
 
@@ -15,10 +14,9 @@ namespace dnk.log2html.Support.Test
 			var webDriver = new ChromeDriver();
 			TestWrapper.Test(webDriver, () =>
 			{
-				var log = LogManager.GetLogger(GetType());
 				webDriver.Navigate().GoToUrl("http://google.com");
-				log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-				log.LogScreenshot(webDriver, LogLevel.Pass, "Log with screenshot");
+				Report.Info(prefix + "Log without screenshot");
+				Report.Info(prefix + "Log with screenshot", new dnk.log2html.Support.WebDriver.Screenshot(webDriver));
 			});
 		}
 
@@ -31,9 +29,8 @@ namespace dnk.log2html.Support.Test
 				var webDriver = new ChromeDriver();
 				TestWrapper.Test(webDriver, () =>
 				{
-					var log = LogManager.GetLogger(GetType());
 					webDriver.Navigate().GoToUrl("http://google.com");
-					log.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+					Report.Info(prefix + "Log without screenshot");
 					Assert.Fail("Test Fail with Screenshot");
 				});
 			});

@@ -1,6 +1,4 @@
-﻿using log4net.Core;
-
-namespace dnk.log2html
+﻿namespace dnk.log2html.Support.log4net
 {
 	public static class LogLevel
 	{

@@ -1,55 +1,26 @@
 ﻿using System;
-using log4net;
 
 namespace dnk.log2html
 {
-	public class Report
+	public static class Report
 	{
-		private static string _reportFolder;
-		private static string _reportFileNameOnly;
+		public static ReportImpl ReportInstance { get; set; }
 
-		public static ReportMetaData ReportMetaData = new ReportMetaData
-		{
-			ReportName = "Please call HtmlReportAppender.Configure() in your OneTimeSetUp SetUpFixture"
-		};
+		public static void Configure(ReportImpl report) => ReportInstance = report;
 
-		public static string ReportFolder
-		{
-			get
-			{
-				if (_reportFolder == null)
-					throw new NullReferenceException($"{nameof(ReportFolder)} is null. Please call Report.Configure(...) first.");
-				return _reportFolder;
-			}
-			private set => _reportFolder = value;
-		}
+		public static void Debug(string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Debug, message, ex, reportEntryVisitors);
+		public static void Pass(string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Pass, message, ex, reportEntryVisitors);
+		public static void Info(string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Info, message, ex, reportEntryVisitors);
+		public static void Warn(string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Warn, message, ex, reportEntryVisitors);
+		public static void Fail(string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Fail, message, ex, reportEntryVisitors);
 
-		public static string ReportFileNameOnly
-		{
-			get
-			{
-				if (_reportFileNameOnly == null)
-					throw new NullReferenceException($"{nameof(ReportFileNameOnly)} is null. Please call Report.Configure(...) first.");
-				return _reportFileNameOnly;
-			}
-			private set => _reportFileNameOnly = value;
-		}
+		public static void Debug(string message, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Debug, message, null, reportEntryVisitors);
+		public static void Pass(string message, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Pass, message, null, reportEntryVisitors);
+		public static void Info(string message, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Info, message, null, reportEntryVisitors);
+		public static void Warn(string message, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Warn, message, null, reportEntryVisitors);
+		public static void Fail(string message, params IReportEntryVisitor[] reportEntryVisitors) => Log(ReportLevel.Fail, message, null, reportEntryVisitors);
 
-		public static void Configure(string reportFolder, ReportMetaData reportMetaData)
-		{
-			ReportFileNameOnly = $"Report_{DateTime.Now:yyyy-MM-dd_HH.mm.ss.fff}";
-			ReportFolder = reportFolder;
-			ReportMetaData = reportMetaData;
-		}
-
-		public static void SetBrowser(string browser)
-		{
-			LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName] = browser;
-		}
-
-		public static void SetTestCaseName(string testCaseName)
-		{
-			LogicalThreadContext.Properties[LogExtensions.TestCaseName] = testCaseName;
-		}
+		public static void Log(ReportLevel level, string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => ReportInstance.Log(level, message, ex, reportEntryVisitors);
+		public static void Log(ReportEntry reportEntry, params IReportEntryVisitor[] reportEntryVisitors) => ReportInstance.Log(reportEntry, reportEntryVisitors);
 	}
 }

@@ -11,14 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{7E94
 	ProjectSection(SolutionItems) = preProject
 		..\Tools\Content\GlobalTestSetup.cs.pp = ..\Tools\Content\GlobalTestSetup.cs.pp
 		..\Tools\Content\Install.ps1 = ..\Tools\Content\Install.ps1
-		..\Tools\Content\log4net.config = ..\Tools\Content\log4net.config
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html.Support.Test", "log2html.Support.Test\log2html.Support.Test.csproj", "{B95E572E-1EAF-4331-9927-02A20E477FE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html", "log2html\log2html.csproj", "{C6E8223F-F5AF-4CFB-81D4-452C89F880B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log2html", "log2html\log2html.csproj", "{C6E8223F-F5AF-4CFB-81D4-452C89F880B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html.Support", "log2html.Support\log2html.Support.csproj", "{89B4F5BE-0B55-4935-B393-87C523FEB81A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log2html.Support", "log2html.Support\log2html.Support.csproj", "{89B4F5BE-0B55-4935-B393-87C523FEB81A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{3996CD61-BC14-471E-AEB8-8809B50E39E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,7 +48,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{53943992-DAEE-42CF-804B-B79DD3E93C67} = {3996CD61-BC14-471E-AEB8-8809B50E39E1}
 		{7E94573E-90EB-477F-8260-2F10E1BBCF7B} = {D8D4DA8F-9932-41BB-A0DB-A5496978FDC2}
+		{B95E572E-1EAF-4331-9927-02A20E477FE3} = {3996CD61-BC14-471E-AEB8-8809B50E39E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BE3CCBC-D7D8-422A-902A-94F6AE729DA6}

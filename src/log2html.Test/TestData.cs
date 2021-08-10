@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using dnkUtils;
-using log4net;
 using NUnit.Framework;
 
 namespace dnk.log2html.Test
@@ -13,19 +11,19 @@ namespace dnk.log2html.Test
 		[Explicit]
 		public void SetHardcodedTestData()
 		{
-			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.Test.TestData.txt", GetType().Assembly);
-			StringBuilder reportTemplateContent = null;
-			HtmlReportAppender.Configure(
-				content =>
-				{
-					reportTemplateContent = content;
-					content.Replace("{\"EndOfReportData\":true}", reportRecords + "{\"EndOfReportData\":true}");
-				}
-			);
+			var reportMetaData = new ReportMetaData
+			{
+				ReportName = "log2html.Test Execution Report",
+				ReportEnvironment = "DEV"
+			};
+			var reportFile = new ReportFile(new ReportTemplate(reportMetaData));
 
-			var log = LogManager.GetLogger(nameof(BasicTestFixture));
-			log.Pass("SetHardcodedTestData!");
-			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "log2html", "ReportTemplate.html"), reportTemplateContent.ToString());
+
+			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.Test.TestData.txt", GetType().Assembly);
+			reportFile.FileContent.Replace("{\"EndOfReportData\":true}", reportRecords + "{\"EndOfReportData\":true}");
+
+			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "log2html", "ReportTemplate.html"), reportFile.FileContent.ToString());
+			Report.Pass("SetHardcodedTestData!");
 		}
 	}
 }
