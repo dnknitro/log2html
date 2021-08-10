@@ -3,10 +3,24 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>dnk.log2html</RootNamespace>
+    <PackageId>log2html.core</PackageId>
+    <Authors>Volodymyr Shcherbyna</Authors>
+    <PackageProjectUrl>https://github.com/dnknitro/DynamicLog4netReport</PackageProjectUrl>
+    <PackageIcon>chart.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/dnknitro/DynamicLog4netReport</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>html report logging</PackageTags>
+    <Copyright>Copyright 2021</Copyright>
+    <PackageLicenseExpression>SimPL-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="ReportTemplate.html" />
+    <None Include="..\..\Tools\chart.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

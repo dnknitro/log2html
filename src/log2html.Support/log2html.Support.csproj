@@ -4,6 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>dnk.log2html.Support</RootNamespace>
     <LangVersion>8</LangVersion>
+    <PackageLicenseExpression>SimPL-2.0</PackageLicenseExpression>
+    <PackageId>log2html.Support.core</PackageId>
+    <Authors>Volodymyr Shcherbyna</Authors>
+    <Copyright>Copyright 2021</Copyright>
+    <PackageProjectUrl>https://github.com/dnknitro/DynamicLog4netReport</PackageProjectUrl>
+    <PackageIcon>chart.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/dnknitro/DynamicLog4netReport</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>html report selenium webdriver screenshot</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\log2html\log2html.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Tools\chart.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
