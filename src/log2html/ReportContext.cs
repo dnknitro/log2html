@@ -2,28 +2,29 @@
 
 namespace dnk.log2html
 {
-	public class ReportContext : IDisposable
+	public class ReportContext
 	{
+		public static void Configure(ITestStorage testStorage)
+		{
+			_testStorage = testStorage;
+		}
+
+		private static ITestStorage _testStorage;
+
 		public ReportContext(string testCaseName = null, string browser = null)
 		{
 			TestCaseName = testCaseName;
 			Browser = browser;
 
-			_reportContext = this;
+			if (_testStorage == null)
+				throw new NullReferenceException("ReportContext is not configured. Please call ReportContext.Configure first");
+			_testStorage.Set(ReportContextKey, this);
 		}
 
-		public bool IsCustomTestCaseName { get; set; }
 		public string TestCaseName { get; set; }
 		public string Browser { get; set; }
 
-		[ThreadStatic] private static ReportContext _reportContext;
-
-		public static ReportContext Current => _reportContext;
-
-
-		public void Dispose()
-		{
-			_reportContext = null;
-		}
+		private const string ReportContextKey = "ReportContext";
+		public static ReportContext Current => _testStorage.Get<ReportContext>(ReportContextKey);
 	}
 }

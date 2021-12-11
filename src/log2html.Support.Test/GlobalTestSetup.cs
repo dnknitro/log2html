@@ -1,4 +1,4 @@
-﻿using dnk.log2html.Support.nunit;
+﻿using dnk.log2html.Support.NUnit;
 using NUnit.Framework;
 
 namespace dnk.log2html.Support.Test
@@ -16,7 +16,8 @@ namespace dnk.log2html.Support.Test
 			};
 			var report = new ReportImpl(
 				new ReportFile(new ReportTemplate(reportMetaData)),
-				new ReportEntryFactory(new NUnitTestCaseName())
+				new ReportEntryFactory(new NUnitTestCaseName()),
+				new NUnitTestStorage()
 			);
 			Report.Configure(report);
 		}

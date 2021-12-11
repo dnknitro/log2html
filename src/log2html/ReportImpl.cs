@@ -4,10 +4,11 @@ namespace dnk.log2html
 {
 	public class ReportImpl
 	{
-		public ReportImpl(ReportFile reportFile, IReportEntryFactory reportEntryFactory)
+		public ReportImpl(ReportFile reportFile, IReportEntryFactory reportEntryFactory, ITestStorage testStorage)
 		{
 			_reportFile = reportFile;
 			_reportEntryFactory = reportEntryFactory;
+			ReportContext.Configure(testStorage);
 		}
 
 		private readonly ReportFile _reportFile;

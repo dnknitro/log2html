@@ -6,6 +6,7 @@ namespace dnk.log2html.Support
 {
 	public class TestWrapper
 	{
+
 		public static void Test(Action testAction)
 		{
 			Test((string)null, null, testAction);
@@ -37,7 +38,7 @@ namespace dnk.log2html.Support
 
 		private static void Test(string browserName, IWebDriver webDriver, string testCaseName, Action testAction)
 		{
-			using var reportContext = new ReportContext(testCaseName, browserName);
+			new ReportContext(testCaseName, browserName);
 
 			try
 			{

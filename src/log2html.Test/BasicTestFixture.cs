@@ -40,7 +40,7 @@ namespace dnk.log2html.Test
 		[TestCase("<b style='color: red'>CustomTestCaseName</b> Test Case Name")]
 		public void CustomTestCaseName(string testCaseName)
 		{
-			using var reportContext = new ReportContext(testCaseName, "FireFox");
+			new ReportContext(testCaseName, "FireFox");
 
 			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
 			Report.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
