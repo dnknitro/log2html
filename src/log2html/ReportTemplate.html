@@ -510,7 +510,7 @@
 		//////////////////////////////////// Header //////////////////////////////////////
 
 		var reportMetaData = {};
-		document.title = reportMetaData.ReportName + ' ' + reportMetaData.ReportEnvironment;
+		document.title = reportMetaData.ReportTitle;
 
 		var startTime = summaryRows
 			.reduce((accumulator, currentValue) => currentValue.startTime < accumulator.startTime ? currentValue : accumulator, summaryRows[0])

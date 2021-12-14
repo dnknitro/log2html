@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace dnk.log2html
 {
@@ -9,6 +11,7 @@ namespace dnk.log2html
 			_reportFile = reportFile;
 			_reportEntryFactory = reportEntryFactory;
 			ReportContext.Configure(testStorage);
+			Report.Configure(this);
 		}
 
 		private readonly ReportFile _reportFile;
@@ -23,5 +26,10 @@ namespace dnk.log2html
 		public void Log(ReportLevel level, string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => Log(_reportEntryFactory.Create(level, message, ex), reportEntryVisitors);
 
 		public void Log(ReportEntry reportEntry, params IReportEntryVisitor[] reportEntryVisitors) => _reportFile.Append(reportEntry, reportEntryVisitors);
+
+		public void Open()
+		{
+			Process.Start(_reportFile.ReportFilePath);
+		}
     }
 }

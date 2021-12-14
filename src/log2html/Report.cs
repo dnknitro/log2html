@@ -4,7 +4,7 @@ namespace dnk.log2html
 {
 	public static class Report
 	{
-		public static ReportImpl ReportInstance { get; set; }
+		public static ReportImpl ReportInstance { get; private set; }
 
 		public static void Configure(ReportImpl report) => ReportInstance = report;
 
@@ -22,5 +22,10 @@ namespace dnk.log2html
 
 		public static void Log(ReportLevel level, string message, Exception ex = null, params IReportEntryVisitor[] reportEntryVisitors) => ReportInstance.Log(level, message, ex, reportEntryVisitors);
 		public static void Log(ReportEntry reportEntry, params IReportEntryVisitor[] reportEntryVisitors) => ReportInstance.Log(reportEntry, reportEntryVisitors);
+
+		public static void Open()
+		{
+			ReportInstance.Open();
+		}
 	}
 }

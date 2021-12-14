@@ -52,3 +52,6 @@ To add browser screenshot (when using with Selenium WebDriver) to the report rec
 ```C#
 Report.Info("Log with screenshot", new dnk.log2html.Support.WebDriver.Screenshot(webDriver));
 ```
+
+## Create Nuget Packages
+Run `pack-all.cmd 1.0.0.35` and upload *symbols* packages from `pack` folder to https://www.nuget.org/packages/manage/upload

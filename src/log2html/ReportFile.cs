@@ -8,7 +8,10 @@ namespace dnk.log2html
 	public class ReportFile
 	{
 		public static string DefaultReportFileNameOnly = $"Report_{DateTime.Now:yyyy-MM-dd_HH.mm.ss.fff}";
+
+		// ReSharper disable PossibleNullReferenceException
 		public static string DefaultReportFolder = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory.Trim('\\')).Parent.Parent.Parent.FullName, "Results");
+		// ReSharper restore PossibleNullReferenceException
 
 		public ReportFile(ReportTemplate reportTemplate, string reportFileNameOnly = null, string reportFolder = null)
 		{
@@ -16,7 +19,7 @@ namespace dnk.log2html
 			// ReSharper disable once PossibleNullReferenceException
 			ReportFolder = reportFolder ?? DefaultReportFolder;
 			//_reportFolder = reportFolder;
-			_reportFilePath = Path.GetFullPath(Path.Combine(ReportFolder, ReportFileNameOnly + ".html"));
+			ReportFilePath = Path.GetFullPath(Path.Combine(ReportFolder, ReportFileNameOnly + ".html"));
 
 			FileContent.Append(reportTemplate.GetTemplate());
 
@@ -29,7 +32,7 @@ namespace dnk.log2html
 
 		public string ReportFileNameOnly { get; }
 		public string ReportFolder { get; }
-		private readonly string _reportFilePath;
+		public string ReportFilePath { get; }
 
 		private static readonly object _fileWriteLock = new object();
 		private int _indexToWrite;
@@ -44,7 +47,7 @@ namespace dnk.log2html
 				var json = JsonConvert.SerializeObject(reportEntry /*Formatting.Indented*/) + $",{Environment.NewLine}			";
 
 				FileContent.Insert(_indexToWrite, json);
-				File.WriteAllText(_reportFilePath, FileContent.ToString(), Encoding.UTF8);
+				File.WriteAllText(ReportFilePath, FileContent.ToString(), Encoding.UTF8);
 				_indexToWrite += json.Length;
 			}
 		}
