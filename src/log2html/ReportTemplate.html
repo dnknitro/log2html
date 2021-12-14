@@ -51,7 +51,7 @@
 	.summaryRow > div
 	{
 		border: 1px solid gray;
-		background-color: lightyellow;
+		background-color: #fbfbfb;
 		padding: 3px;
 		margin-bottom: 4px;
 		/*white-space: nowrap;*/
@@ -443,16 +443,16 @@
 						<div className="div-table-row summaryRow">
 							<div className={level.toLowerCase()}>
 								<div className='div-table-col summaryStatus'><span className={`statusMark ${level.toLowerCase()}StatusMark`}>{level}</span></div>
-								<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr}`} onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-									{timeOnlyFormatter.format(this.props.summaryRow.startTime)} - {timeOnlyFormatter.format(this.props.summaryRow.endTime)}
+								<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
+									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}
+									<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseNameShort }} />
+								</div>
+								<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr} ${timeOnlyFormatter.format(this.props.summaryRow.startTime)} - ${timeOnlyFormatter.format(this.props.summaryRow.endTime)}`} onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
+									 {this.props.summaryRow.durationStr}
 									<div className='summaryDuration'>
 										<div style={{width: '52px'}}></div>
 										{relativeDurationHack.map(x => (<span key={x} className='durationMark'></span>))}
 									</div>
-								</div>
-								<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}
-									<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseNameShort }} />
 								</div>
 							</div>
 						</div>

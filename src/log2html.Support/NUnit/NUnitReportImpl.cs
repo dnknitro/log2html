@@ -2,6 +2,15 @@
 {
 	public class NUnitReportImpl : ReportImpl
 	{
+		public NUnitReportImpl(ReportTemplate reportTemplate)
+			: base(
+				new ReportFile(reportTemplate),
+				new ReportEntryFactory(new NUnitTestCaseName()),
+				new NUnitTestStorage()
+			)
+		{
+		}
+
 		public NUnitReportImpl(ReportMetaData reportMetaData)
 			: base(
 				new ReportFile(new ReportTemplate(reportMetaData)),
