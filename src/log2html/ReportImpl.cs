@@ -29,7 +29,8 @@ namespace dnk.log2html
 
 		public void Open()
 		{
-			Process.Start(_reportFile.ReportFilePath);
+			var psi = new ProcessStartInfo(_reportFile.ReportFilePath) { UseShellExecute = true };
+			Process.Start(psi);
 		}
     }
 }
