@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Report Template</title>
@@ -48,15 +48,23 @@
 		margin-top: 10px;
 	}
 
-	.summaryRow > div
+	.summaryRow
 	{
 		border: 1px solid gray;
 		background-color: #fbfbfb;
 		padding: 3px;
-		margin-bottom: 4px;
+		margin-top: 4px;
 		/*white-space: nowrap;*/
+		-moz-border-radius: 3px;
 		border-radius:  3px;
-		width: 100%;
+	}
+
+	.summaryRowExpanded 
+	{
+		-moz-border-radius-bottomleft: 0 !important;
+		border-bottom-left-radius: 0 !important;
+		-moz-border-radius-bottomright: 0 !important;
+		border-bottom-right-radius: 0 !important;
 	}
 
 	.summaryDetailsRow > td
@@ -83,6 +91,8 @@
 	table.details
 	{
 		border-collapse: collapse;
+		border: 1px solid gray;
+		border-top: none;
 		font-size: 12pt;
 		margin-bottom: 20px;
 		width: 100%;
@@ -162,44 +172,43 @@
 	/* div table*/
 	.div-table {
 		display: table;
-		width: auto;
+		margin: auto;
 		/*border: 3px solid red;*/
 	}
 	.div-table-row {
 		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: center;
+		align-content: stretch;
+		column-gap: 10px;
 		width: auto;
 		clear: both;
 	}
 	.div-table-col {
-		float: left; /* fix for  buggy browsers */
-		display: flex;
 		width: 100%;
-  		flex-direction: column;
 		/*border: 2px solid green;*/
 		/*background-color: white;*/
 	}
-	.div-table-row-visible { display: flex; }
 	.div-table-row-hidden { display: none; }
 	/* end of div table*/
 
 	.summaryStatus {
-		padding-top: 2px !important;
-		width: 80px;
+		flex-basis: 80px;
+		flex-grow: 0;
+		flex-shrink: 0;
 	}
 	.summaryTestName {
-		width: 760px;
-		padding-top: 7px !important;
 		/*font-weight: bold;*/
 	}
-	.summaryTestName > span {
+	.summaryTestName {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 	.summaryStartEnd {
-		width: 140px;
-		padding-top: 7px !important;
-		padding-left: 4px;
-		padding-right: 4px;
+		flex-basis: 140px;
+		flex-grow: 0;
+		flex-shrink: 0;
 		/*border-right: 1px solid gray;*/
 	}
 	</style>
@@ -440,19 +449,16 @@
 
 				return (
 					<TagContainer>
-						<div className="div-table-row summaryRow">
-							<div className={level.toLowerCase()}>
-								<div className='div-table-col summaryStatus'><span className={`statusMark ${level.toLowerCase()}StatusMark`}>{level}</span></div>
-								<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-									{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}
-									<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseNameShort }} />
-								</div>
-								<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr} ${timeOnlyFormatter.format(this.props.summaryRow.startTime)} - ${timeOnlyFormatter.format(this.props.summaryRow.endTime)}`} onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
-									 {this.props.summaryRow.durationStr}
-									<div className='summaryDuration'>
-										<div style={{width: '52px'}}></div>
-										{relativeDurationHack.map(x => (<span key={x} className='durationMark'></span>))}
-									</div>
+						<div className={`div-table-row summaryRow ${this.isExpanded() ? 'summaryRowExpanded' : 'summaryRowCollapsed'} ${level.toLowerCase()}`}>
+							<div className='div-table-col summaryStatus'><span className={`statusMark ${level.toLowerCase()}StatusMark`}>{level}</span></div>
+							<div className='div-table-col summaryTestName link' onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
+								{/*<a href="#issue21"><b>&dArr;</b></a>&nbsp;*/}
+								<span dangerouslySetInnerHTML={{ __html: this.props.summaryRow.testCaseNameShort }} />
+							</div>
+							<div className='div-table-col summaryStartEnd' title={`Duration: ${this.props.summaryRow.durationStr} ${timeOnlyFormatter.format(this.props.summaryRow.startTime)} - ${timeOnlyFormatter.format(this.props.summaryRow.endTime)}`} onClick={() => this.props.toggleRow(this.props.summaryRow.testCaseName)}>
+								{this.props.summaryRow.durationStr}
+								<div className='summaryDuration'>
+									{relativeDurationHack.map(x => (<span key={x} className='durationMark'></span>))}
 								</div>
 							</div>
 						</div>
