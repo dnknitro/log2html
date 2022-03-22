@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>dnk.log2html</RootNamespace>
-    <PackageId>log2html.core</PackageId>
+	  <LangVersion>latest</LangVersion>
+    <PackageId>log2html</PackageId>
     <Authors>Volodymyr Shcherbyna</Authors>
     <PackageProjectUrl>https://github.com/dnknitro/DynamicLog4netReport</PackageProjectUrl>
     <PackageIcon>chart.png</PackageIcon>

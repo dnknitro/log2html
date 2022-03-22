@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>dnk.log2html.Support</RootNamespace>
-    <LangVersion>8</LangVersion>
+    <LangVersion>latest</LangVersion>
     <PackageLicenseExpression>SimPL-2.0</PackageLicenseExpression>
-    <PackageId>log2html.Support.core</PackageId>
+    <PackageId>log2html.Support</PackageId>
     <Authors>Volodymyr Shcherbyna</Authors>
     <Copyright>Copyright 2021</Copyright>
     <PackageProjectUrl>https://github.com/dnknitro/DynamicLog4netReport</PackageProjectUrl>
@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="dnkUtils.netStandard" Version="1.0.2" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="Selenium.WebDriver" Version="4.1.0" />
   </ItemGroup>
 

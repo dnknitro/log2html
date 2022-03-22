@@ -4,47 +4,48 @@ using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
 
-namespace dnk.log2html.Support.WebDriver
+namespace dnk.log2html.Support.WebDriver;
+
+public class Screenshot : IReportEntryVisitor
 {
-	public class Screenshot : IReportEntryVisitor
+	public Screenshot(params IWebDriver[] webDrivers)
 	{
-		public Screenshot(params IWebDriver[] webDrivers)
+		_webDrivers = webDrivers;
+	}
+
+	private readonly IWebDriver[] _webDrivers;
+
+	public void Visit(ReportEntry reportEntry, ReportFile reportFile)
+	{
+		var takesScreenshots = _webDrivers.Cast<ITakesScreenshot>().Where(x => x != null).ToArray();
+
+		if (!takesScreenshots.Any())
+			return;
+
+		var screenshotFilePaths = takesScreenshots.Select(takesScreenshot =>
 		{
-			_webDrivers = webDrivers;
-		}
+			var screenshot = takesScreenshot.GetScreenshot();
+			var screenshotFilePath = Path.GetTempFileName();
+			screenshot.SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
+			return screenshotFilePath;
+		}).ToArray();
 
-		private readonly IWebDriver[] _webDrivers;
-
-		public void Visit(ReportEntry reportEntry, ReportFile reportFile)
+		for (var i = 0; i < screenshotFilePaths.Length; i++)
 		{
-			if (!_webDrivers.Any())
-				return;
-
-			var screenshotFilePaths = _webDrivers.Take(1).Cast<ITakesScreenshot>().Select(delegate(ITakesScreenshot x)
+			var screenshotFilePath = screenshotFilePaths[i];
+			if (File.Exists(screenshotFilePath))
 			{
-				var screenshot = x.GetScreenshot();
-				var screenshotFilePath = Path.GetTempFileName();
-				screenshot.SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
-				return screenshotFilePath;
-			}).ToArray();
+				var targetScreenshotRelativeFolder = reportFile.ReportFileNameOnly;
+				var targetScreenshotAbsoluteFolder = Path.Combine(reportFile.ReportFolder, targetScreenshotRelativeFolder);
+				Directory.CreateDirectory(targetScreenshotAbsoluteFolder);
 
-			for (var i = 0; i < screenshotFilePaths.Length; i++)
-			{
-				var screenshotFilePath = screenshotFilePaths[i];
-				if (File.Exists(screenshotFilePath))
-				{
-					var targetScreenshotRelativeFolder = reportFile.ReportFileNameOnly;
-					var targetScreenshotAbsoluteFolder = Path.Combine(reportFile.ReportFolder, targetScreenshotRelativeFolder);
-					Directory.CreateDirectory(targetScreenshotAbsoluteFolder);
+				var screenshotFileName = $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}_{Thread.CurrentThread.ManagedThreadId}.png";
+				File.Move(screenshotFilePath, Path.Combine(targetScreenshotAbsoluteFolder, screenshotFileName));
 
-					var screenshotFileName = $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}_{Thread.CurrentThread.ManagedThreadId}.png";
-					File.Move(screenshotFilePath, Path.Combine(targetScreenshotAbsoluteFolder, screenshotFileName));
-
-					screenshotFilePaths[i] = Path.Combine(targetScreenshotRelativeFolder, screenshotFileName).Replace("\\", "/");
-				}
+				screenshotFilePaths[i] = Path.Combine(targetScreenshotRelativeFolder, screenshotFileName).Replace("\\", "/");
 			}
-
-			reportEntry.ScreenshotPath = string.Join(";", screenshotFilePaths);
 		}
+
+		reportEntry.ScreenshotPath = string.Join(";", screenshotFilePaths);
 	}
 }

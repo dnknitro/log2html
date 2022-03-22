@@ -16,7 +16,7 @@ namespace dnk.log2html.Test
 		[TestCase(6, "Final fail!")]
 		public void TestAppend1(int index, string failMessage)
 		{
-			var prefix = $"{MethodBase.GetCurrentMethod().Name}-{index}: ";
+			var prefix = $"{MethodBase.GetCurrentMethod()?.Name}-{index}: ";
 			Report.Info(prefix + "Lorem ipsum dolor sit amet, <b>consectetur</b> adipisicing elit,<br/>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			if (!string.IsNullOrWhiteSpace(failMessage))
 			{
@@ -42,7 +42,7 @@ namespace dnk.log2html.Test
 		{
 			new ReportContext(testCaseName, "FireFox");
 
-			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
+			var prefix = MethodBase.GetCurrentMethod()?.Name + ": ";
 			Report.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			Report.Fail(prefix + "Fail Skip test");
 		}
@@ -55,7 +55,7 @@ namespace dnk.log2html.Test
 		[TestCase(ReportLevel.Fail)]
 		public void TestAppend3(ReportLevel level)
 		{
-			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
+			var prefix = MethodBase.GetCurrentMethod()?.Name + ": ";
 
 			Report.Log(level, $"{prefix} Test Log Level");
 		}
@@ -63,7 +63,7 @@ namespace dnk.log2html.Test
 		[Test]
 		public void TestAppend4()
 		{
-			var prefix = MethodBase.GetCurrentMethod().Name + ": ";
+			var prefix = MethodBase.GetCurrentMethod()?.Name + ": ";
 			Report.Info(prefix + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 			Report.Pass(prefix + "Fail Skip test");
 		}

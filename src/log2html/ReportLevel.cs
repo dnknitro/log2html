@@ -4,6 +4,7 @@
 	{
 		Debug,
 		Info,
+		Retry,
 		Pass,
 		Warn,
 		Fail

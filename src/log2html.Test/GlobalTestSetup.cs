@@ -19,6 +19,7 @@ namespace dnk.log2html.Test
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
+			Report.AddLevelsSummary();
 			Report.Open();
 		}
 	}

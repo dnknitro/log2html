@@ -25,7 +25,7 @@ namespace dnk.log2html
 
 			Directory.CreateDirectory(ReportFolder);
 
-			_indexToWrite = FileContent.ToString().IndexOf("{\"EndOfReportData\":true}", StringComparison.Ordinal);
+			_indexToWrite = FileContent.ToString().IndexOf("{ \"EndOfReportData\": true }", StringComparison.Ordinal);
 		}
 
 		public StringBuilder FileContent { get; } = new StringBuilder();
@@ -37,11 +37,8 @@ namespace dnk.log2html
 		private static readonly object _fileWriteLock = new object();
 		private int _indexToWrite;
 
-		public void Append(ReportEntry reportEntry, params IReportEntryVisitor[] reportEntryVisitors)
+		public void Append(ReportEntry reportEntry)
 		{
-			foreach (var reportEntryVisitor in reportEntryVisitors)
-				reportEntryVisitor.Visit(reportEntry, this);
-
 			lock (_fileWriteLock)
 			{
 				var json = JsonConvert.SerializeObject(reportEntry /*Formatting.Indented*/) + $",{Environment.NewLine}			";
@@ -49,6 +46,15 @@ namespace dnk.log2html
 				FileContent.Insert(_indexToWrite, json);
 				File.WriteAllText(ReportFilePath, FileContent.ToString(), Encoding.UTF8);
 				_indexToWrite += json.Length;
+			}
+		}
+
+		public void Replace(string from, string to)
+		{
+			lock (_fileWriteLock)
+			{
+				FileContent.Replace(from, to);
+				File.WriteAllText(ReportFilePath, FileContent.ToString(), Encoding.UTF8);
 			}
 		}
 	}

@@ -356,6 +356,9 @@
 					.slice(lastRetryRowIndex) // ignoring records prior RETRY
 					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, this.detailsRows[0])
 					.Level;
+				if(this.level === 'PASS' && lastRetryRowIndex > 0) {
+					this.level = 'RETRY';
+				}
 				this.startTime = this.detailsRows
 					.reduce((accumulator, currentValue) => currentValue.TimeStampUtc < accumulator.TimeStampUtc ? currentValue : accumulator, this.detailsRows[0])
 					.TimeStampUtc;
@@ -656,15 +659,15 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 	<script type="text/babel">
 		//////////////////////////////////// Pie Charts //////////////////////////////////////
-		var levelGroupped = groupBy(summaryRows, 'level');
+		var levelGrouped = groupBy(summaryRows, 'level');
 
 		const levelCounts = [];
 		const levelBgColors = [];
 		const levelBorderColors = [];
 		const levelHoverBorderColor = [];
 		const levelLabels = [];
-		Object.keys(levelGroupped).map(key => {
-			levelCounts.push(levelGroupped[key].length);
+		Object.keys(levelGrouped).map(key => {
+			levelCounts.push(levelGrouped[key].length);
 			levelBgColors.push(levelToColor[key.toLowerCase()].color);
 			levelBorderColors.push('white');
 			levelHoverBorderColor.push('white');
@@ -719,6 +722,9 @@
 
 		gtag('config', 'UA-75477532-1');
 	</script>
+
+	<!--<Server Side LevelsBrowsers>{Server Side LevelsBrowsers}</Server Side LevelsBrowsers>-->
+
 </body>
 
 </html>
