@@ -6,10 +6,10 @@
 	  <LangVersion>latest</LangVersion>
     <PackageId>log2html</PackageId>
     <Authors>Volodymyr Shcherbyna</Authors>
-    <PackageProjectUrl>https://github.com/dnknitro/DynamicLog4netReport</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/dnknitro/log2html</PackageProjectUrl>
     <PackageIcon>chart.png</PackageIcon>
     <PackageIconUrl />
-    <RepositoryUrl>https://github.com/dnknitro/DynamicLog4netReport</RepositoryUrl>
+    <RepositoryUrl>https://github.com/dnknitro/log2html</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>html report logging</PackageTags>
     <Copyright>Copyright 2021</Copyright>

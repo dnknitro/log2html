@@ -8,10 +8,10 @@
     <PackageId>log2html.Support</PackageId>
     <Authors>Volodymyr Shcherbyna</Authors>
     <Copyright>Copyright 2021</Copyright>
-    <PackageProjectUrl>https://github.com/dnknitro/DynamicLog4netReport</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/dnknitro/log2html</PackageProjectUrl>
     <PackageIcon>chart.png</PackageIcon>
     <PackageIconUrl />
-    <RepositoryUrl>https://github.com/dnknitro/DynamicLog4netReport</RepositoryUrl>
+    <RepositoryUrl>https://github.com/dnknitro/log2html</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>html report selenium webdriver screenshot</PackageTags>
   </PropertyGroup>
