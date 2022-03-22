@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using log4net;
 
-namespace dnk.log2html
+namespace dnk.log2html.Support.log4net
 {
 	public static class LogExtensions
 	{
@@ -24,5 +23,16 @@ namespace dnk.log2html
 		{
 			log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType, LogLevel.Fail, message, ex);
 		}
+
+		public static void SetBrowser(string browser)
+		{
+			LogicalThreadContext.Properties[LogExtensions.BrowserPropertyName] = browser;
+		}
+
+		public static void SetTestCaseName(string testCaseName)
+		{
+			LogicalThreadContext.Properties[LogExtensions.TestCaseName] = testCaseName;
+		}
+
 	}
 }

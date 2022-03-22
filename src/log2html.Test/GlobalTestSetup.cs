@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using dnk.log2html.Support.NUnit;
 using NUnit.Framework;
 
 namespace dnk.log2html.Test
@@ -10,15 +9,18 @@ namespace dnk.log2html.Test
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
-			var baseDirectory = AppDomain.CurrentDomain.BaseDirectory.Trim('\\');
-			dnk.log2html.Report.Configure(
-				Path.Combine(Directory.GetParent(baseDirectory).Parent.Parent.Parent.FullName, "Results"),
-				new ReportMetaData
-				{
-					ReportName = "Test Execution Report TEST",
-					ReportEnvironment = "DEV"
-				}
-			);
+			new NUnitReportImpl(new ReportMetaData
+			{
+				ReportName = "log2html.Test Execution Report",
+				ReportEnvironment = "DEV"
+			});
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
+			Report.AddLevelsSummary();
+			Report.Open();
 		}
 	}
 }

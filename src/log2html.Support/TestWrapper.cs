@@ -1,62 +1,68 @@
 ﻿using System;
-using log4net;
-using log4net.Core;
+using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
+using Screenshot = dnk.log2html.Support.WebDriver.Screenshot;
 
-namespace dnk.log2html.Support
+namespace dnk.log2html.Support;
+
+public class TestWrapper
 {
-	public class TestWrapper
+	public static void RunTest(Action testAction)
 	{
-		public static void Test(Action testAction)
+		RunTest(new TestWrapperContext(testAction)).GetAwaiter().GetResult();
+	}
+
+	public static void RunTest(IWebDriver webDriver, Action testAction)
+	{
+		RunTest(new TestWrapperContext(testAction) {WebDriver = webDriver}).GetAwaiter().GetResult();
+	}
+
+	public static async Task RunTest(TestWrapperContext testWrapperContext)
+	{
+		if (string.IsNullOrEmpty(testWrapperContext.BrowserName)
+		    && testWrapperContext.WebDriver is RemoteWebDriver remoteWebDriver
+		    && remoteWebDriver.Capabilities.HasCapability("browserName")
+		   )
+			testWrapperContext.BrowserName = remoteWebDriver.Capabilities.GetCapability("browserName").ToString();
+
+		// ReSharper disable once ObjectCreationAsStatement
+		new ReportContext(testWrapperContext.TestCaseName, testWrapperContext.BrowserName);
+
+		try
 		{
-			Test((string) null, null, testAction);
+			await TestWithRetries(testWrapperContext);
 		}
-
-		public static void Test(string browserName, Action testAction)
+		catch (Exception e)
 		{
-			Test(browserName, null, testAction);
+			Report.Fail($"Test '{Report.ReportInstance.TestCaseNameProvider.NormalizeTestCaseName(testWrapperContext.TestCaseName)}' failed", e, new Screenshot(testWrapperContext.WebDriver));
+			throw;
 		}
-
-		public static void Test(IWebDriver webDriver, Action testAction)
+		finally
 		{
-			Test(webDriver, null, testAction);
+			testWrapperContext.WebDriver?.Dispose();
 		}
+	}
 
-		public static void Test(IWebDriver webDriver, string testCaseName, Action testAction)
-		{
-			string browserName = null;
-			if (webDriver is RemoteWebDriver remoteWebDriver && remoteWebDriver.Capabilities.HasCapability("browserName")) 
-				browserName = remoteWebDriver.Capabilities.GetCapability("browserName").ToString();
-
-			Test(browserName, webDriver, testCaseName, testAction);
-		}
-
-		public static void Test(string browserName, string testCaseName, Action testAction)
-		{
-			Test(browserName, null, testCaseName, testAction);
-		}
-
-		private static void Test(string browserName, IWebDriver webDriver, string testCaseName, Action testAction)
-		{
-			if (!string.IsNullOrWhiteSpace(browserName))
-				Report.SetBrowser(browserName);
-			if (!string.IsNullOrWhiteSpace(testCaseName))
-				Report.SetTestCaseName(testCaseName);
-
+	private static async Task TestWithRetries(TestWrapperContext testWrapperContext)
+	{
+		for (;;)
 			try
 			{
-				testAction();
+				await testWrapperContext.TestAction();
+				break;
 			}
-			catch (Exception e)
+			catch (Exception retryException)
 			{
-				LogManager.GetLogger(nameof(TestWrapper)).LogScreenshot(webDriver, Level.Error, "Test case failed", e);
-				throw;
+				testWrapperContext.RetryCounter++;
+				if (testWrapperContext.RetryCounter >= testWrapperContext.MaxRetries)
+				{
+					if (testWrapperContext.MaxRetries > 1)
+						Report.Info($"Max Retries reached ({testWrapperContext.RetryCounter}/{testWrapperContext.MaxRetries})");
+					throw;
+				}
+
+				Report.Retry($"Retrying because of exception {testWrapperContext.RetryCounter}/{testWrapperContext.MaxRetries}: {retryException.Message}", retryException);
 			}
-			finally
-			{
-				webDriver?.Dispose();
-			}
-		}
 	}
 }
