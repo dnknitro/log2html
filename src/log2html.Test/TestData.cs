@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using dnkUtils;
-using NUnit.Framework;
+﻿using dnkUtils;
 
 namespace dnk.log2html.Test
 {
-	public class TestData
+    public class TestData
 	{
 		[Test]
 		[Explicit]
@@ -19,10 +16,10 @@ namespace dnk.log2html.Test
 			var reportFile = new ReportFile(new ReportTemplate(reportMetaData));
 
 
-			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("dnk.log2html.Test.TestData.txt", GetType().Assembly);
+			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("log2html.Test.TestData.txt", GetType().Assembly);
 			reportFile.FileContent.Replace("{\"EndOfReportData\":true}", reportRecords + "{\"EndOfReportData\":true}");
 
-			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "log2html", "ReportTemplate.html"), reportFile.FileContent.ToString());
+			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "log2html", "ReportTemplate.html"), reportFile.FileContent.ToString());
 			Report.Pass("SetHardcodedTestData!");
 		}
 	}

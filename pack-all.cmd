@@ -1,6 +1,16 @@
+@echo off
 @rem %1 should be full version, e.g. `pack-all.cmd 1.0.0.34`
 
 set VERSION=%1
+
+if "%VERSION%"=="" (
+    FOR /F "tokens=* USEBACKQ" %%F IN (`MaxVersion .\pack`) DO (
+        SET VERSION=%%F
+    )
+)
+echo New version [92m%version%[0m
+
+if "%VERSION%"=="" EXIT /B -1
 
 del .\pack\*.nupkg
 

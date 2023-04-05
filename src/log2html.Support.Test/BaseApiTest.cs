@@ -17,7 +17,7 @@ namespace dnk.log2html.Support.Test
 			throw new NotImplementedException();
 		}
 
-		protected async Task RunTest(Func<Task> testAction, string customTestName = null)
+		protected async Task RunTest(Func<Task> testAction, string? customTestName = null)
 		{
 			await TestWrapper.RunTest(new TestWrapperContext(testAction) {TestCaseName = customTestName});
 		}

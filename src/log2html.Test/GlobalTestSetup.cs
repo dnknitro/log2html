@@ -1,5 +1,4 @@
 ﻿using dnk.log2html.Support.NUnit;
-using NUnit.Framework;
 
 namespace dnk.log2html.Test
 {

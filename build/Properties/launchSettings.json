@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "log2html.build": {
-      "commandName": "Project",
-      "commandLineArgs": "Pack"
-    }
-  }
-}

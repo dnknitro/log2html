@@ -1,12 +1,8 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using Shouldly;
+﻿using System.Reflection;
 
 namespace dnk.log2html.Support.Test
 {
-	[Parallelizable(ParallelScope.Children)]
+    [Parallelizable(ParallelScope.Children)]
 	public class RetryTests
 	{
 		[Test]
