@@ -331,7 +331,7 @@
 
 		console.log("Starting data processing...");
 
-		detailsRows.splice(-1, 1)
+		detailsRows.pop()
 
 		const uniqueStepNames = {};
 
@@ -356,7 +356,7 @@
 					.slice(lastRetryRowIndex) // ignoring records prior RETRY
 					.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, this.detailsRows[0])
 					.Level;
-				if(this.level === 'PASS' && lastRetryRowIndex > 0) {
+				if (this.level === 'PASS' && lastRetryRowIndex > 0) {
 					this.level = 'RETRY';
 				}
 				this.startTime = this.detailsRows
@@ -383,6 +383,7 @@
 		var summaryRows = Object.keys(groupsObject)
 			.map(key => new SummaryDataRow(groupsObject[key]))
 			.sort((a, b) => (a.testCaseName > b.testCaseName) ? 1 : -1);
+
 		const maxDuration = summaryRows.reduce(
 			(accumulator, currentValue) => { return accumulator.durationMsec < currentValue.durationMsec ? currentValue : accumulator; },
 			summaryRows[0]);

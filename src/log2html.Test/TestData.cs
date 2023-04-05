@@ -15,11 +15,12 @@ namespace dnk.log2html.Test
 			};
 			var reportFile = new ReportFile(new ReportTemplate(reportMetaData));
 
-
 			var reportRecords = ResourceUtils.ReadStringFromEmbeddedResource("log2html.Test.TestData.txt", GetType().Assembly);
-			reportFile.FileContent.Replace("{\"EndOfReportData\":true}", reportRecords + "{\"EndOfReportData\":true}");
+			const string endOfReportData = "{ \"EndOfReportData\": true }";
 
-			File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "log2html", "ReportTemplate.html"), reportFile.FileContent.ToString());
+            reportFile.FileContent.Replace(endOfReportData, reportRecords + endOfReportData);
+
+            File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "log2html", "ReportTemplate.html"), reportFile.FileContent.ToString());
 			Report.Pass("SetHardcodedTestData!");
 		}
 	}
