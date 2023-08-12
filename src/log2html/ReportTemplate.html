@@ -17,6 +17,9 @@
 	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0/redux.js"></script>
 	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js"></script>
 
+	<link crossorigin="anonymous" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
 	<style type="text/css">
 		/* consider for icons https://codepen.io/mshwery/pen/njibr?editors=1100 */
 		* {
@@ -115,6 +118,11 @@
 
 		.messageCol {
 			width: 100%;
+		}
+
+		.messageCol>span>pre {
+			max-height: 40em;
+			overflow: scroll;
 		}
 
 		tr.detailsHeaderRow>td {
@@ -716,11 +724,11 @@
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75477532-1"></script>
+	<script>hljs.highlightAll();</script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
-
 		gtag('config', 'UA-75477532-1');
 	</script>
 
