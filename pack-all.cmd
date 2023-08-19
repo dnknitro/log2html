@@ -18,5 +18,7 @@ dotnet pack src\log2html --include-source --configuration Release --output .\pac
 
 dotnet pack src\log2html.support --include-source --configuration Release --output .\pack\ -p:PackageVersion=%VERSION%
 
+git tag -a "%VERSION%" -m "%VERSION%"
+
 del .\pack\log2html.%VERSION%.nupkg
 del .\pack\log2html.Support.%VERSION%.nupkg
