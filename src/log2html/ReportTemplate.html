@@ -289,6 +289,18 @@
 	</div>
 	<script type="text/babel">
 		//////////////////////////////////// lib //////////////////////////////////////
+		const debounce = (callback, wait) => {
+			let timeoutId = null;
+			return (...args) => {
+				window.clearTimeout(timeoutId);
+				timeoutId = window.setTimeout(() => {
+				callback.apply(null, args);
+				}, wait);
+			};
+		}
+
+		const highlighSyntax = debounce(hljs.highlightAll, 200);
+
 		var groupBy = function (list, key) {
 			return list.reduce(function (accumulator, currentValue) {
 				(accumulator[currentValue[key]] = accumulator[currentValue[key]] || []).push(currentValue);
@@ -404,10 +416,9 @@
 		//////////////////////////////////// Application State //////////////////////////////////////
 
 		function expandRowsReducer(state, action) {
-			const stepNames = {};
 			const newState = {
 				expandedRows: [],
-				stepNames: stepNames
+				stepNames: {}
 			};
 
 			if (typeof state === 'undefined') {
@@ -437,10 +448,6 @@
 			return newState;
 		}
 
-		const toggleRow = rowID => ({ type: "TOGGLE_ROW", rowID: rowID });
-		const toggleAllRows = () => ({ type: "TOGGLE_ALL_ROWS" });
-		const toggleLevel = level => ({ type: "TOGGLE_LEVEL", level: level });
-
 		const mapStateToProps = state => {
 			return {
 				expandedRows: state.expandedRows,
@@ -450,13 +457,13 @@
 
 		const mapDispatchToProps = dispatch => {
 			return {
-				toggleRow: rowID => dispatch(toggleRow(rowID)),
-				toggleAllRows: () => dispatch(toggleAllRows()),
-				toggleLevel: level => dispatch(toggleLevel(level))
+				toggleRow: rowID => dispatch({ type: "TOGGLE_ROW", rowID: rowID }),
+				toggleAllRows: () => dispatch({ type: "TOGGLE_ALL_ROWS" }),
+				toggleLevel: level => dispatch({ type: "TOGGLE_LEVEL", level: level })
 			};
 		};
 
-		var store = Redux.createStore(expandRowsReducer);
+		const store = Redux.createStore(expandRowsReducer);
 
 		//////////////////////////////////// End of Application State //////////////////////////////////////
 
@@ -525,6 +532,8 @@
 		};
 
 		const DetailsRow = ({ detailsRow, anchorID }) => {
+			React.useEffect(() => { highlighSyntax() });
+
 			return (
 				<TagContainer>
 					<tr className={`detailsRow ${detailsRow.Level.toLowerCase()}`}>
@@ -724,7 +733,6 @@
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75477532-1"></script>
-	<script>hljs.highlightAll();</script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() { dataLayer.push(arguments); }
