@@ -4,27 +4,31 @@ namespace dnk.log2html;
 
 public class ReportContext
 {
-	public static void Configure(ITestStorage testStorage)
-	{
-		_testStorage = testStorage;
-	}
+    public static void Configure(ITestStorage testStorage) => _testStorage = testStorage;
 
-	private static ITestStorage _testStorage;
+    private static ITestStorage _testStorage;
 
-	public ReportContext(string testCaseName = null, string browser = null)
-	{
-		TestCaseName = testCaseName;
-		Browser = browser;
+    public ReportContext(string testCaseName = null, string browser = null)
+    {
+        TestCaseName = testCaseName;
+        Browser = browser;
 
-		if (_testStorage == null)
-			throw new NullReferenceException("ReportContext is not configured. Please call ReportContext.Configure first");
-		if (Current != null) throw new InvalidOperationException($"{nameof(ReportContext)} should be set only once per test");
-		_testStorage.Set(ReportContextKey, this);
-	}
+        if (_testStorage == null)
+        {
+            throw new NullReferenceException("ReportContext is not configured. Please call ReportContext.Configure first");
+        }
 
-	public string TestCaseName { get; set; }
-	public string Browser { get; set; }
+        if (Current != null)
+        {
+            throw new InvalidOperationException($"{nameof(ReportContext)} should be set only once per test");
+        }
 
-	private const string ReportContextKey = "ReportContext";
-	public static ReportContext Current => _testStorage.Get<ReportContext>(ReportContextKey);
+        _testStorage.Set(ReportContextKey, this);
+    }
+
+    public string TestCaseName { get; set; }
+    public string Browser { get; set; }
+
+    private const string ReportContextKey = "ReportContext";
+    public static ReportContext Current => _testStorage.Get<ReportContext>(ReportContextKey);
 }

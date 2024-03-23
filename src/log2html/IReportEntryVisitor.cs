@@ -1,7 +1,6 @@
-﻿namespace dnk.log2html
+﻿namespace dnk.log2html;
+
+public interface IReportEntryVisitor
 {
-	public interface IReportEntryVisitor
-	{
-		void Visit(ReportEntry reportEntry, ReportFile reportFile);
-	}
+    void Visit(ReportEntry reportEntry, ReportFile reportFile);
 }

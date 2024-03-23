@@ -1,12 +1,11 @@
-﻿namespace dnk.log2html
+﻿namespace dnk.log2html;
+
+public enum ReportLevel
 {
-	public enum ReportLevel
-	{
-		Debug,
-		Info,
-		Retry,
-		Pass,
-		Warn,
-		Fail
-	}
+    Debug,
+    Info,
+    Retry,
+    Pass,
+    Warn,
+    Fail
 }

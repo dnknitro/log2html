@@ -1,7 +1,6 @@
-﻿namespace dnk.log2html
+﻿namespace dnk.log2html;
+
+public interface ITestCaseName
 {
-	public interface ITestCaseName
-	{
-		string GetName();
-	}
+    string GetName();
 }

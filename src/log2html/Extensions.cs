@@ -7,7 +7,11 @@ public static class Extensions
         var testCaseName = !string.IsNullOrWhiteSpace(customTestCaseName)
             ? ReportContext.Current.TestCaseName
             : testCaseNameProvider?.GetName() ?? "Test Case Name not set";
-        if (testCaseName?.Contains("AdhocContext.AdhocTestMethod") == true) testCaseName = "Main";
+        if (testCaseName?.Contains("AdhocContext.AdhocTestMethod") == true)
+        {
+            testCaseName = "Main";
+        }
+
         return testCaseName;
     }
 
