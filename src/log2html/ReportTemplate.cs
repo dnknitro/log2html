@@ -16,7 +16,7 @@ public class ReportTemplate
 
         var reportMetaDataJson = JsonConvert.SerializeObject(_reportMetaData);
         return reportTemplate
-            .Replace("var reportMetaData = {};", $"var reportMetaData = {reportMetaDataJson};")
+            .Replace("{/*reportMetaData*/ }", reportMetaDataJson)
             .Replace("#fbfbfb", SummaryRowBgColor);
     }
 }

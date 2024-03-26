@@ -8,7 +8,7 @@ namespace dnk.log2html;
 public class ReportFile : IDisposable
 {
     private static readonly Encoding encoding = Encoding.UTF8;
-    private const string reportDataPlaceholder = "{ \"EndOfReportData\": true }";
+    private const string reportDataPlaceholder = "/*detailsRows*/";
     private const string reportSummaryPlaceholder = "{Server Side LevelsBrowsers}";
 
     public static string DefaultReportFileNameOnly = $"Report_{DateTime.Now:yyyy-MM-dd_HH.mm.ss.fff}";
@@ -30,6 +30,7 @@ public class ReportFile : IDisposable
             _ => throw new InvalidOperationException("Could not split template into two parts.")
         };
         afterData = templateParts.afterData;
+        afterDataBuffer = encoding.GetBytes(afterData);
 
         lock (_fileWriteLock)
         {
@@ -37,6 +38,10 @@ public class ReportFile : IDisposable
 
             var buffer = encoding.GetBytes(templateParts.beforeData);
             _file.Write(buffer, 0, buffer.Length);
+
+            _file.Write(afterDataBuffer, 0, afterDataBuffer.Length);
+            _file.Seek(-afterDataBuffer.Length, SeekOrigin.End);
+
             _file.Flush();
         }
     }
@@ -49,6 +54,7 @@ public class ReportFile : IDisposable
 
     private static readonly object _fileWriteLock = new();
     private readonly string afterData;
+    private readonly byte[] afterDataBuffer;
 
     public void Append(ReportEntry reportEntry)
     {
@@ -57,6 +63,10 @@ public class ReportFile : IDisposable
             var json = JsonConvert.SerializeObject(reportEntry /*, Formatting.Indented*/) + $",{Environment.NewLine}			";
             var buffer = encoding.GetBytes(json);
             _file.Write(buffer, 0, buffer.Length);
+
+            _file.Write(afterDataBuffer, 0, afterDataBuffer.Length);
+            _file.Seek(-afterDataBuffer.Length, SeekOrigin.End);
+
             _file.Flush();
         }
     }
