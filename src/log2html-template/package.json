@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && npm run post-build",
-    "post-build": "copy .\\dist\\index.html ..\\log2html\\ReportTemplate.html",
+    "post-build": "copy ..\\..\\docs\\index.html ..\\log2html\\ReportTemplate.html",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
