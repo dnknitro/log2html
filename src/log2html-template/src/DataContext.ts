@@ -23,6 +23,8 @@ if (!reportMetaData.ReportName && process.env.NODE_ENV === 'development') {
 let detailsRows = ((window as any).detailsRows as DetailsRow[])
 
 if (!detailsRows.length) {
+	const initialTimeStamp = new Date(Date.parse("2024-02-22T05:10:38.6786882Z"))
+
 	detailsRows = (process.env.NODE_ENV !== 'development'
 		// no data
 		? [
@@ -44,7 +46,7 @@ if (!detailsRows.length) {
 			{ "ID": 13, "Level": "INFO", "LevelValue": 40000, "Message": "TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "ThreadName": "ParallelWorker#2", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:42.9848336Z", "ScreenshotPath": null, "Browser": "IE", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend1(5)" },
 			{ "ID": 14, "Level": "INFO", "LevelValue": 40000, "Message": "TestAppend1: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "ThreadName": "ParallelWorker#1", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:43.0988322Z", "ScreenshotPath": null, "Browser": "IE", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend1(6)" },
 			{ "ID": 15, "Level": "INFO", "LevelValue": 40000, "Message": "TestAppend2: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "ThreadName": "ParallelWorker#4", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:43.6045741Z", "ScreenshotPath": null, "Browser": "FireFox", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend2" },
-			{ "ID": 16, "Level": "WARN", "LevelValue": 60000, "Message": "TestAppend3: Warn test", "ThreadName": "ParallelWorker#3", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:44.2036445Z", "ScreenshotPath": null, "Browser": "Chrome", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend3" },
+			{ "ID": 16, "Level": "PASS", "LevelValue": 60000, "Message": "TestAppend3: Pass test", "ThreadName": "ParallelWorker#3", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:44.2036445Z", "ScreenshotPath": null, "Browser": "Chrome", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend3" },
 			{ "ID": 17, "Level": "DEBUG", "LevelValue": 30000, "Message": "TestAppend1: Debug", "ThreadName": "ParallelWorker#2", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:45.1730337Z", "ScreenshotPath": "http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif", "Browser": "IE", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend1(5)" },
 			{ "ID": 18, "Level": "DEBUG", "LevelValue": 30000, "Message": "TestAppend1: Debug", "ThreadName": "ParallelWorker#1", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:46.0792519Z", "ScreenshotPath": "http://opspl.com/wp-content/uploads/2017/01/automation-vs-manual-testing.gif", "Browser": "IE", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend1(6)" },
 			{ "ID": 19, "Level": "FAIL", "LevelValue": 75000, "Message": "TestAppend2: Fail Skip test", "ThreadName": "ParallelWorker#4", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:10:46.4143842Z", "ScreenshotPath": null, "Browser": "FireFox", "Exception": null, "TestCaseName": "DynamicAppenderTestFixture.TestAppend2" },
@@ -96,23 +98,28 @@ if (!detailsRows.length) {
 			{ "ID": 1122, "Level": "INFO", "LevelValue": 1, "Message": "<pre><code  class=\"language-json\">[\r\n  {\r\n    \"Gender\": 0,\r\n    \"FirstName\": \"Tom\",\r\n    \"LastName\": \"Murphy\",\r\n    \"FullName\": \"Tom Murphy\",\r\n    \"UserName\": \"Tom_Murphy22\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/296.jpg\",\r\n    \"Email\": \"Tom_Murphy72@gmail.com\",\r\n    \"DateOfBirth\": \"1960-11-28T09:01:38.7056047-06:00\",\r\n    \"Address\": {\r\n      \"Street\": \"0302 Wade Cape\",\r\n      \"Suite\": \"Apt. 416\",\r\n      \"City\": \"Okunevaville\",\r\n      \"State\": \"Nevada\",\r\n      \"ZipCode\": \"95644-9558\",\r\n      \"Geo\": {\r\n        \"Lat\": -41.0164,\r\n        \"Lng\": 132.0968\r\n      }\r\n    },\r\n    \"Phone\": \"986-283-2903 x58899\",\r\n    \"Website\": \"sidney.com\",\r\n    \"Company\": {\r\n      \"Name\": \"Bergstrom - Anderson\",\r\n      \"CatchPhrase\": \"Configurable 24 hour moratorium\",\r\n      \"Bs\": \"utilize out-of-the-box convergence\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 1,\r\n    \"FirstName\": \"Meredith\",\r\n    \"LastName\": \"Rath\",\r\n    \"FullName\": \"Meredith Rath\",\r\n    \"UserName\": \"Meredith_Rath60\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/783.jpg\",\r\n    \"Email\": \"Meredith_Rath67@gmail.com\",\r\n    \"DateOfBirth\": \"1973-01-05T20:48:00.5760532-06:00\",\r\n    \"Address\": {\r\n      \"Street\": \"05185 Mitchell Cliffs\",\r\n      \"Suite\": \"Suite 643\",\r\n      \"City\": \"Rosannaberg\",\r\n      \"State\": \"Oklahoma\",\r\n      \"ZipCode\": \"68615-5543\",\r\n      \"Geo\": {\r\n        \"Lat\": 56.5145,\r\n        \"Lng\": -110.2888\r\n      }\r\n    },\r\n    \"Phone\": \"1-976-822-8911\",\r\n    \"Website\": \"jordyn.net\",\r\n    \"Company\": {\r\n      \"Name\": \"Luettgen and Sons\",\r\n      \"CatchPhrase\": \"Persevering 24 hour hierarchy\",\r\n      \"Bs\": \"target B2C paradigms\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 1,\r\n    \"FirstName\": \"Angela\",\r\n    \"LastName\": \"Volkman\",\r\n    \"FullName\": \"Angela Volkman\",\r\n    \"UserName\": \"Angela40\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/335.jpg\",\r\n    \"Email\": \"Angela_Volkman@gmail.com\",\r\n    \"DateOfBirth\": \"1985-01-31T14:29:09.8946633-06:00\",\r\n    \"Address\": {\r\n      \"Street\": \"76434 Dion Orchard\",\r\n      \"Suite\": \"Apt. 508\",\r\n      \"City\": \"Lake Ethel\",\r\n      \"State\": \"New York\",\r\n      \"ZipCode\": \"47662\",\r\n      \"Geo\": {\r\n        \"Lat\": 48.5616,\r\n        \"Lng\": 161.6553\r\n      }\r\n    },\r\n    \"Phone\": \"(855) 220-3162 x546\",\r\n    \"Website\": \"kennedi.info\",\r\n    \"Company\": {\r\n      \"Name\": \"Trantow Inc\",\r\n      \"CatchPhrase\": \"Public-key interactive flexibility\",\r\n      \"Bs\": \"redefine user-centric eyeballs\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 0,\r\n    \"FirstName\": \"Stuart\",\r\n    \"LastName\": \"McClure\",\r\n    \"FullName\": \"Stuart McClure\",\r\n    \"UserName\": \"Stuart.McClure\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1185.jpg\",\r\n    \"Email\": \"Stuart.McClure96@hotmail.com\",\r\n    \"DateOfBirth\": \"1968-10-19T10:12:16.4161225-05:00\",\r\n    \"Address\": {\r\n      \"Street\": \"656 Kihn Row\",\r\n      \"Suite\": \"Suite 545\",\r\n      \"City\": \"Lefflerton\",\r\n      \"State\": \"Massachusetts\",\r\n      \"ZipCode\": \"55685-7681\",\r\n      \"Geo\": {\r\n        \"Lat\": 30.2176,\r\n        \"Lng\": 104.6409\r\n      }\r\n    },\r\n    \"Phone\": \"331.349.7388 x312\",\r\n    \"Website\": \"ellis.name\",\r\n    \"Company\": {\r\n      \"Name\": \"Schoen, Dach and Nitzsche\",\r\n      \"CatchPhrase\": \"Stand-alone directional structure\",\r\n      \"Bs\": \"incentivize sticky initiatives\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 1,\r\n    \"FirstName\": \"Renee\",\r\n    \"LastName\": \"Crist\",\r\n    \"FullName\": \"Renee Crist\",\r\n    \"UserName\": \"Renee58\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/330.jpg\",\r\n    \"Email\": \"Renee18@hotmail.com\",\r\n    \"DateOfBirth\": \"1992-04-19T02:34:03.8779666-05:00\",\r\n    \"Address\": {\r\n      \"Street\": \"72872 Rosenbaum Ranch\",\r\n      \"Suite\": \"Suite 379\",\r\n      \"City\": \"Hobartfort\",\r\n      \"State\": \"Arizona\",\r\n      \"ZipCode\": \"92222\",\r\n      \"Geo\": {\r\n        \"Lat\": 65.2471,\r\n        \"Lng\": -58.3028\r\n      }\r\n    },\r\n    \"Phone\": \"960-252-6383 x87340\",\r\n    \"Website\": \"salvatore.org\",\r\n    \"Company\": {\r\n      \"Name\": \"O'Reilly - Adams\",\r\n      \"CatchPhrase\": \"User-friendly impactful capacity\",\r\n      \"Bs\": \"deploy sexy solutions\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 0,\r\n    \"FirstName\": \"Alan\",\r\n    \"LastName\": \"Batz\",\r\n    \"FullName\": \"Alan Batz\",\r\n    \"UserName\": \"Alan_Batz55\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/595.jpg\",\r\n    \"Email\": \"Alan.Batz@yahoo.com\",\r\n    \"DateOfBirth\": \"1976-05-01T02:38:15.6559576-05:00\",\r\n    \"Address\": {\r\n      \"Street\": \"812 Rocky Stream\",\r\n      \"Suite\": \"Suite 621\",\r\n      \"City\": \"South Kristin\",\r\n      \"State\": \"Maine\",\r\n      \"ZipCode\": \"79475-6683\",\r\n      \"Geo\": {\r\n        \"Lat\": -29.2966,\r\n        \"Lng\": 159.7217\r\n      }\r\n    },\r\n    \"Phone\": \"1-885-990-3827 x781\",\r\n    \"Website\": \"jazmyne.com\",\r\n    \"Company\": {\r\n      \"Name\": \"Prohaska - Roberts\",\r\n      \"CatchPhrase\": \"Ameliorated dynamic website\",\r\n      \"Bs\": \"revolutionize robust interfaces\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 1,\r\n    \"FirstName\": \"Dorothy\",\r\n    \"LastName\": \"Heidenreich\",\r\n    \"FullName\": \"Dorothy Heidenreich\",\r\n    \"UserName\": \"Dorothy_Heidenreich\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/228.jpg\",\r\n    \"Email\": \"Dorothy.Heidenreich50@hotmail.com\",\r\n    \"DateOfBirth\": \"1966-07-10T10:28:02.8011097-05:00\",\r\n    \"Address\": {\r\n      \"Street\": \"778 Sawayn Ridges\",\r\n      \"Suite\": \"Apt. 982\",\r\n      \"City\": \"North Justina\",\r\n      \"State\": \"Kentucky\",\r\n      \"ZipCode\": \"80279-2787\",\r\n      \"Geo\": {\r\n        \"Lat\": -18.8591,\r\n        \"Lng\": 107.9448\r\n      }\r\n    },\r\n    \"Phone\": \"(493) 268-7500 x2881\",\r\n    \"Website\": \"kathleen.info\",\r\n    \"Company\": {\r\n      \"Name\": \"Fahey, Jones and West\",\r\n      \"CatchPhrase\": \"Ameliorated reciprocal adapter\",\r\n      \"Bs\": \"envisioneer compelling solutions\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 0,\r\n    \"FirstName\": \"Irving\",\r\n    \"LastName\": \"Hintz\",\r\n    \"FullName\": \"Irving Hintz\",\r\n    \"UserName\": \"Irving60\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/352.jpg\",\r\n    \"Email\": \"Irving_Hintz84@gmail.com\",\r\n    \"DateOfBirth\": \"1970-06-17T04:56:49.740092-05:00\",\r\n    \"Address\": {\r\n      \"Street\": \"11471 Patience Mountain\",\r\n      \"Suite\": \"Apt. 058\",\r\n      \"City\": \"New Emmettfort\",\r\n      \"State\": \"Wyoming\",\r\n      \"ZipCode\": \"98790-3345\",\r\n      \"Geo\": {\r\n        \"Lat\": 76.7188,\r\n        \"Lng\": -75.9573\r\n      }\r\n    },\r\n    \"Phone\": \"941.276.7026 x936\",\r\n    \"Website\": \"kylee.name\",\r\n    \"Company\": {\r\n      \"Name\": \"Kihn Group\",\r\n      \"CatchPhrase\": \"Automated 4th generation policy\",\r\n      \"Bs\": \"extend global platforms\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 0,\r\n    \"FirstName\": \"Roland\",\r\n    \"LastName\": \"Stoltenberg\",\r\n    \"FullName\": \"Roland Stoltenberg\",\r\n    \"UserName\": \"Roland.Stoltenberg\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/947.jpg\",\r\n    \"Email\": \"Roland25@yahoo.com\",\r\n    \"DateOfBirth\": \"1961-10-09T07:13:09.0135086-05:00\",\r\n    \"Address\": {\r\n      \"Street\": \"8158 Bernier Plains\",\r\n      \"Suite\": \"Suite 731\",\r\n      \"City\": \"Kossfurt\",\r\n      \"State\": \"Maine\",\r\n      \"ZipCode\": \"06080\",\r\n      \"Geo\": {\r\n        \"Lat\": 33.7458,\r\n        \"Lng\": -9.3436\r\n      }\r\n    },\r\n    \"Phone\": \"(634) 721-4075 x8051\",\r\n    \"Website\": \"adan.net\",\r\n    \"Company\": {\r\n      \"Name\": \"Wolf - Hamill\",\r\n      \"CatchPhrase\": \"Multi-tiered client-server frame\",\r\n      \"Bs\": \"visualize cross-media content\"\r\n    },\r\n    \"Random\": {}\r\n  },\r\n  {\r\n    \"Gender\": 1,\r\n    \"FirstName\": \"Tasha\",\r\n    \"LastName\": \"Kshlerin\",\r\n    \"FullName\": \"Tasha Kshlerin\",\r\n    \"UserName\": \"Tasha_Kshlerin\",\r\n    \"Avatar\": \"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/64.jpg\",\r\n    \"Email\": \"Tasha.Kshlerin@yahoo.com\",\r\n    \"DateOfBirth\": \"1986-12-15T11:27:47.4979244-06:00\",\r\n    \"Address\": {\r\n      \"Street\": \"679 Alex Islands\",\r\n      \"Suite\": \"Apt. 114\",\r\n      \"City\": \"Rachaelhaven\",\r\n      \"State\": \"Colorado\",\r\n      \"ZipCode\": \"89015\",\r\n      \"Geo\": {\r\n        \"Lat\": 32.1716,\r\n        \"Lng\": -125.7515\r\n      }\r\n    },\r\n    \"Phone\": \"924-317-2119\",\r\n    \"Website\": \"santiago.com\",\r\n    \"Company\": {\r\n      \"Name\": \"Doyle Group\",\r\n      \"CatchPhrase\": \"Universal encompassing orchestration\",\r\n      \"Bs\": \"cultivate value-added models\"\r\n    },\r\n    \"Random\": {}\r\n  }\r\n]</code></pre>", "ThreadName": "ParallelWorker#14", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:51:56.6464552Z", "ScreenshotPath": null, "Exception": null, "TestCaseName": "2nd TestAppend4", "Browser": null },
 			{ "ID": 1123, "Level": "INFO", "LevelValue": 1, "Message": "TestAppend4: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "ThreadName": "ParallelWorker#14", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:51:56.6465803Z", "ScreenshotPath": null, "Exception": null, "TestCaseName": "2nd TestAppend4", "Browser": null },
 			{ "ID": 1124, "Level": "PASS", "LevelValue": 3, "Message": "TestAppend4: Fail Skip test", "ThreadName": "ParallelWorker#14", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:51:56.6465924Z", "ScreenshotPath": null, "Exception": null, "TestCaseName": "2nd TestAppend4", "Browser": null },
-		]) as unknown as DetailsRow[]
+			...Array.from({ length: 1000 }, (_value, index) => index)
+				.map(i => ({
+					"ID": i,
+					"Level": i < 997 ? "INFO" : "PASS",
+					"LevelValue": i < 997 ? 1 : 3,
+					"Message": `${i} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+					"TimeStampUtc": new Date(initialTimeStamp.getTime() + (i + 1) * 500).toISOString(),
+					"TestCaseName": "A long one"
+				}))
+		].map((x, i) => {
+			x.ID = i
+			x.TimeStampUtc = new Date(initialTimeStamp.getTime() + i * 100).toISOString()
+			return x
+		})) as unknown as DetailsRow[]
 }
 
 detailsRows.forEach(x => {
 	x.TimeStampUtc = new Date(x.TimeStampUtc)
 })
 
-const groupsObject = groupBy(detailsRows, 'TestCaseName')
-
-const summaryRows = Object.values(groupsObject)
+const summaryRows = Object.values(groupBy(detailsRows, 'TestCaseName'))
 	.map((group): SummaryRow => {
-		const minRow = minBy(group, 'TimeStampUtc') as DetailsRow
-		const maxRow = maxBy(group, 'TimeStampUtc') as DetailsRow
-
-		const startTime = minRow.TimeStampUtc
-		const endTime = maxRow.TimeStampUtc
-
 		let lastRetryRowIndex = 0
 		for (let i = group.length - 1; i >= 0; i--) {
 			if (group[i].Level !== "RETRY") continue
@@ -120,14 +127,18 @@ const summaryRows = Object.values(groupsObject)
 			break
 		}
 
-
 		let level = group
 			.slice(lastRetryRowIndex) // ignoring records prior RETRY
 			.reduce((accumulator, currentValue) => currentValue.LevelValue > accumulator.LevelValue ? currentValue : accumulator, group[0])
 			.Level
+		console.log({ level, lastRetryRowIndex })
 		if (level === 'PASS' && lastRetryRowIndex > 0) {
 			level = 'RETRY'
 		}
+
+		const startTime = (minBy(group, 'TimeStampUtc') as DetailsRow).TimeStampUtc
+		const endTime = (maxBy(group, 'TimeStampUtc') as DetailsRow).TimeStampUtc
+		const durationStr = calcDuration(startTime, endTime)
 
 		const testCaseName = group[0].TestCaseName
 		let testCaseNameShort = testCaseName
@@ -135,12 +146,10 @@ const summaryRows = Object.values(groupsObject)
 		const matches = testCaseNameRegex.exec(testCaseNameShort)
 		if (matches != null) testCaseNameShort = matches[1]
 
-		const durationStr = calcDuration(startTime, endTime)
-
 		const detailsRowsLevels = (Object.entries(groupBy(group, 'Level')).map(group => [group[0], group[1].length]) as ([LogLevel, number])[])
 			.sort((a, b) => a[0].localeCompare(b[0]))
 
-		return ({
+		return {
 			testCaseName,
 			testCaseNameShort,
 			startTime,
@@ -152,8 +161,7 @@ const summaryRows = Object.values(groupsObject)
 			relativeDuration: 0,
 			detailsRows: group,
 			detailsRowsLevels,
-			uniqueStepNames: Object.keys(groupBy(group, 'Level'))
-		})
+		}
 	})
 	.sort((a, b) => (a.testCaseName > b.testCaseName) ? 1 : -1)
 
