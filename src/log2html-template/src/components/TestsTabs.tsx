@@ -36,13 +36,16 @@ export const TestsTabs = () => {
 					const key = summaryRow.testCaseName
 					const tab = tabs.find(x => x.key === key)
 					if (!tab) {
-						setTabs([...tabs, {
-							label: summaryRow.testCaseNameShort,
-							key,
-							children: <DetailsTable summaryRow={summaryRow} />,
-							closable: true,
-							icon: <LogLevelTag level={summaryRow.level} />,
-						}])
+						setTabs([
+							{
+								label: summaryRow.testCaseNameShort,
+								key,
+								children: <DetailsTable summaryRow={summaryRow} />,
+								closable: true,
+								icon: <LogLevelTag level={summaryRow.level} />,
+							},
+							...tabs
+						])
 					}
 					setActiveTabKey(key)
 				}} />,

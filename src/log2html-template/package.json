@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run post-build",
+    "build": "tsc && vite build --emptyOutDir && npm run post-build",
     "post-build": "copy ..\\..\\docs\\index.html ..\\log2html\\ReportTemplate.html",
+    "build-analyze": "npx vite-bundle-visualizer",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.5",
     "antd": "^5.15.4",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
@@ -30,6 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vite-bundle-visualizer": "^1.1.0",
     "vite-plugin-singlefile": "^2.0.1"
   }
 }

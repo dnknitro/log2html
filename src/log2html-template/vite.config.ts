@@ -7,7 +7,8 @@ export default defineConfig({
 	plugins: [react()/*, viteSingleFile()*/],
 	base: 'https://dnknitro.github.io/log2html/',
 	build: {
-		outDir: '../../docs/'
+		outDir: '../../docs/',
+		// sourcemap: true,
 		// 	rollupOptions: {
 		// 		external: ['react', 'react-dom'],
 		// 		output: {

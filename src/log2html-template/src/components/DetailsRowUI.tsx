@@ -1,4 +1,6 @@
-// import { useEffect } from "react"
+import { PictureFilled } from "@ant-design/icons"
+// import { Typography } from "react"
+import { Typography } from "antd"
 import { DetailsRow } from "../types"
 import { timeOnlyFormatter } from "../utils"
 import { LogLevelTag } from "./LogLevelTag"
@@ -14,7 +16,7 @@ export const DetailsRowUI = ({ detailsRow }: { detailsRow: DetailsRow }) => {
 			<td className='messageCol'>
 				{/* {anchorID > 0 && <a name={`issue${anchorID}`}></a>} */}
 				{detailsRow.ScreenshotPath != null && (
-					<span><a className='screenshot' target='_blank' href={detailsRow.ScreenshotPath}><span className='screenshotIcon' title='Open Screenshot'></span></a></span>
+					<Typography.Link target='_blank' href={detailsRow.ScreenshotPath} title='Open Screenshot' className="screenshot"><PictureFilled /></Typography.Link>
 				)}
 				<span dangerouslySetInnerHTML={{ __html: detailsRow.Message }} />
 			</td>

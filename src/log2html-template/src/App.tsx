@@ -12,18 +12,20 @@ function App() {
 
 	return <>
 		<DataContext.Provider value={defaultDataContextData}>
-			<Flex gap="middle" align='center'>
-				<div><TestsHeader /></div>
-				<div><ChartUI /></div>
-			</Flex>
+			<div>
+				<Flex gap="middle" align='center'>
+					<div><TestsHeader /></div>
+					<div><ChartUI /></div>
+				</Flex>
 
-			<Space direction="vertical" size="small">
-				<Input placeholder="type to search" style={{ width: 300 }} autoFocus allowClear value={searchKeyword} onChange={e => setSearchKeyword(e.target.value)} />
+				<Space direction="vertical" size="small" style={{ width: '100%' }}>
+					<Input placeholder="type to search" style={{ width: 300 }} autoFocus allowClear value={searchKeyword} onChange={e => setSearchKeyword(e.target.value)} />
 
-				<SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
-					<TestsTabs />
-				</SearchContext.Provider>
-			</Space>
+					<SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
+						<TestsTabs />
+					</SearchContext.Provider>
+				</Space>
+			</div>
 		</DataContext.Provider>
 	</>
 }
