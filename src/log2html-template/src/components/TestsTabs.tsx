@@ -15,6 +15,7 @@ type Tab = {
 	icon: ReactNode,
 }
 
+// deprecated
 export const TestsTabs = () => {
 	const { allTestsCount } = useContext(DataContext)
 

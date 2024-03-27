@@ -33,5 +33,4 @@ export type SummaryRow = {
 	relativeDuration: number
 	detailsRows: DetailsRow[]
 	detailsRowsLevels: ([LogLevel, number])[]
-	uniqueStepNames: string[]
 }

@@ -5,7 +5,7 @@ import { toggleLevel } from "../utils"
 import { DetailsRowUI } from "./DetailsRowUI"
 import { LogLevels } from "./LogLevels"
 
-export const DetailsTable = ({ summaryRow }: { summaryRow: SummaryRow }) => {
+export const DetailsTable = ({ summaryRow, showTitle }: { summaryRow: SummaryRow, showTitle?: boolean }) => {
 	const { detailsRows, detailsRowsLevels } = summaryRow
 
 	const [visibleLevels, setVisibleLevels] = useState(detailsRowsLevels.map(([level]) => level).filter(level => level !== 'DEBUG'))
@@ -22,8 +22,8 @@ export const DetailsTable = ({ summaryRow }: { summaryRow: SummaryRow }) => {
 
 
 	return (<>
-		<Space direction="vertical">
-			<Typography.Title level={4} style={{ margin: 0 }}>{summaryRow.testCaseName}</Typography.Title>
+		<Space direction="vertical" style={{width: '100%'}}>
+			{showTitle && <Typography.Title level={4} style={{ margin: 0 }}>{summaryRow.testCaseName}</Typography.Title>}
 			<Affix>
 				<LogLevels allLevels={detailsRowsLevels} visibleLevels={visibleLevels} toggleLevel={level => setVisibleLevels(toggleLevel(level, visibleLevels))} />
 			</Affix>
