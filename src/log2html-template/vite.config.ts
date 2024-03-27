@@ -1,6 +1,5 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import { viteSingleFile } from "vite-plugin-singlefile"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,6 +8,13 @@ export default defineConfig({
 	build: {
 		outDir: '../../docs/',
 		// sourcemap: true,
+		rollupOptions: {
+			output: {
+				entryFileNames: `assets/[name].js`,
+				chunkFileNames: `assets/[name].js`,
+				assetFileNames: `assets/[name].[ext]`
+			}
+		},
 		// 	rollupOptions: {
 		// 		external: ['react', 'react-dom'],
 		// 		output: {
