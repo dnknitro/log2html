@@ -5,24 +5,23 @@ import { LogLevel } from "../types"
 import { levelToColor } from "../utils"
 
 export const ChartUI = () => {
-	const { summaryRowsGroups } = useContext(DataContext)
-
-	const logLevelToCount = Object.entries(summaryRowsGroups).map(([key, group]) => ([key as LogLevel, group.length])) as ([LogLevel, string | number])[]
+	const { allLevelsAndCounts } = useContext(DataContext)
 
 	const chartData = [
 		['Level' as LogLevel, 'Amount'],
-		...logLevelToCount
+		...allLevelsAndCounts.map(x => [`${x[0]} ${x[1]}`, x[1]])
 	] as ([LogLevel, string | number])[]
-	const chartColors = logLevelToCount.map(([level]) => levelToColor.get(level)) as string[]
+	const chartColors = allLevelsAndCounts.map(([level]) => levelToColor.get(level)) as string[]
 
 	return (
-		<Chart
-			chartType="PieChart"
-			data={chartData}
-			options={{
-				colors: chartColors,
-			}}
-			width={"100%"}
-		/>
+		<div style={{ height: '165px' }}>
+			<Chart
+				chartType="PieChart"
+				data={chartData}
+				options={{
+					colors: chartColors,
+				}}
+			/>
+		</div>
 	)
 }

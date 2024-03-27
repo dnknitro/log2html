@@ -1,6 +1,7 @@
 // import { useEffect } from "react"
 import { DetailsRow } from "../types"
 import { timeOnlyFormatter } from "../utils"
+import { LogLevelTag } from "./LogLevelTag"
 
 export const DetailsRowUI = ({ detailsRow }: { detailsRow: DetailsRow }) => {
 	// // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,7 +10,7 @@ export const DetailsRowUI = ({ detailsRow }: { detailsRow: DetailsRow }) => {
 	return <>
 		<tr className={`detailsRow ${detailsRow.Level.toLowerCase()}`}>
 			<td className='timeCol' title={`[${detailsRow.ThreadName}]`}>{timeOnlyFormatter.format(detailsRow.TimeStampUtc)}</td>
-			<td className='statusCol'><span className={`statusMark ${detailsRow.Level.toLowerCase()}StatusMark`}>{detailsRow.Level}</span></td>
+			<td className='statusCol'><LogLevelTag level={detailsRow.Level} /></td>
 			<td className='messageCol'>
 				{/* {anchorID > 0 && <a name={`issue${anchorID}`}></a>} */}
 				{detailsRow.ScreenshotPath != null && (
