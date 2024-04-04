@@ -12,21 +12,8 @@
 </head>
 
 <body>
-	<!-- <script type="text/javascript">
-		const debounce = (callback, wait) => {
-			let timeoutId = null;
-			return (...args) => {
-				window.clearTimeout(timeoutId);
-				timeoutId = window.setTimeout(() => {
-					callback.apply(null, args);
-				}, wait);
-			};
-		}
-
-		window.highlighSyntax = debounce(hljs.highlightAll, 200);
-	</script> -->
-
 	<script type="text/javascript">
+		window.reportVersion = '1.0.9';
 		window.reportMetaData = {/*reportMetaData*/ };
 		document.title = window.reportMetaData.ReportTitle ?? 'Report Template';
 		window.detailsRows = [/*detailsRows*/];

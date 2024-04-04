@@ -1,10 +1,11 @@
 {
   "name": "log2html-template",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.9",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "increment-version": "npm version patch",
     "build": "tsc && vite build --emptyOutDir && npm run post-build",
     "post-build": "copy ..\\..\\docs\\index.html ..\\log2html\\ReportTemplate.html",
     "build-analyze": "npx vite-bundle-visualizer",

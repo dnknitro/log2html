@@ -4,11 +4,14 @@ import { useContext } from "react"
 import { DataContext } from "../DataContext"
 import { calcDuration, timeOnlyFormatter } from "../utils"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const htmlVersion = (window as any).reportVersion
+
 export const TestsHeader = () => {
 	const { reportMetaData, reportStartTime, reportEndTime/*, summaryRows, levelsAndBrowsers*/ } = useContext(DataContext)
 
 	return (<>
-		<Typography.Title level={2}>{reportMetaData.ReportName}</Typography.Title>
+		<Typography.Title level={2} title={`report JS version ${import.meta.env.VITE_REACT_APP_VERSION}; HTML version ${htmlVersion}`}>{reportMetaData.ReportName}</Typography.Title>
 		<Typography.Title level={5}>
 			<label>Environment:</label> {reportMetaData.ReportEnvironment}
 		</Typography.Title>
