@@ -1,5 +1,6 @@
 import { Flex, Typography } from "antd"
 import { useContext } from "react"
+
 import { DataContext } from "../DataContext"
 import { calcDuration, timeOnlyFormatter } from "../utils"
 
@@ -13,9 +14,9 @@ export const TestsHeader = () => {
 		</Typography.Title>
 		<Typography.Title level={5}>
 			<Flex gap="middle" align='flex-start'>
-				<span><label>Start:</label> {timeOnlyFormatter.format(reportStartTime)}</span>
-				<span><label>End:</label> {timeOnlyFormatter.format(reportEndTime)}</span>
-				<span><label>Duration:</label> {calcDuration(reportStartTime, reportEndTime)}</span>
+				<span className='nowrap'><label>Start:</label> {timeOnlyFormatter.format(reportStartTime)}</span>
+				<span className='nowrap'><label>End:</label> {timeOnlyFormatter.format(reportEndTime)}</span>
+				<span className='nowrap'><label>Duration:</label> {calcDuration(reportStartTime, reportEndTime)}</span>
 			</Flex>
 		</Typography.Title>
 	</>)

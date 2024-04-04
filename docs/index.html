@@ -12,6 +12,20 @@
 </head>
 
 <body>
+	<!-- <script type="text/javascript">
+		const debounce = (callback, wait) => {
+			let timeoutId = null;
+			return (...args) => {
+				window.clearTimeout(timeoutId);
+				timeoutId = window.setTimeout(() => {
+					callback.apply(null, args);
+				}, wait);
+			};
+		}
+
+		window.highlighSyntax = debounce(hljs.highlightAll, 200);
+	</script> -->
+
 	<script type="text/javascript">
 		window.reportMetaData = {/*reportMetaData*/ };
 		document.title = window.reportMetaData.ReportTitle ?? 'Report Template';
@@ -19,6 +33,7 @@
 	</script>
 
 	<div id="root"></div>
+	<!--<Server Side LevelsBrowsers>{Server Side LevelsBrowsers}</Server Side LevelsBrowsers>-->
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75477532-1"></script>

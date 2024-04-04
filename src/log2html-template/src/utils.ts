@@ -46,6 +46,21 @@ export const levelToColor = new Map<LogLevel, string>([
 	['FATAL', '#F24965'],
 ])
 
+export const levelToAntColor = (level: LogLevel) => {
+	switch (level) {
+		case 'DEBUG': return 'default'
+		case 'PASS': return 'success'
+		case 'INFO': return 'cyan'
+		case 'FAILSKIP': return 'magenta'
+		case 'WARN': return 'warning'
+		case 'RETRY': return 'lime'
+		case 'FAIL': return 'error'
+		case 'ERROR': return 'error'
+		case 'FATAL': return 'error'
+		default: return levelToColor.get(level)
+	}
+}
+
 const styleSheet = document.styleSheets[0]
 levelToColor.forEach((color, logLevel) => {
 	const level = logLevel.toLowerCase()

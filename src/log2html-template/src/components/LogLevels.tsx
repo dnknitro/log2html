@@ -1,4 +1,5 @@
 import { Flex, Switch } from "antd"
+
 import { LogLevel } from "../types"
 import { levelToColor } from "../utils"
 

@@ -102,7 +102,7 @@ public class ReportFile : IDisposable
         {
             if (disposing)
             {
-                // TODO: free managed resources
+                // free managed resources
             }
 
             try

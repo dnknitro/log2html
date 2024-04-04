@@ -1,5 +1,6 @@
 import { Affix, Space, Typography } from "antd"
 import { useState } from "react"
+
 import { SummaryRow } from "../types"
 import { toggleLevel } from "../utils"
 import { DetailsRowUI } from "./DetailsRowUI"
@@ -8,7 +9,7 @@ import { LogLevels } from "./LogLevels"
 export const DetailsTable = ({ summaryRow, showTitle }: { summaryRow: SummaryRow, showTitle?: boolean }) => {
 	const { detailsRows, detailsRowsLevels } = summaryRow
 
-	const [visibleLevels, setVisibleLevels] = useState(detailsRowsLevels.map(([level]) => level).filter(level => level !== 'DEBUG'))
+	const [visibleLevels, setVisibleLevels] = useState(detailsRowsLevels.map(([level]) => level).filter(level => detailsRowsLevels.length < 2 || level !== 'DEBUG'))
 
 	// const { searchKeyword } = useContext(SearchContext)
 	// const filteredDetailsRows = useMemo(() => {
@@ -22,7 +23,7 @@ export const DetailsTable = ({ summaryRow, showTitle }: { summaryRow: SummaryRow
 
 
 	return (<>
-		<Space direction="vertical" style={{width: '100%'}}>
+		<Space direction="vertical" style={{ width: '100%', overflow: 'auto' }}>
 			{showTitle && <Typography.Title level={4} style={{ margin: 0 }}>{summaryRow.testCaseName}</Typography.Title>}
 			<Affix>
 				<LogLevels allLevels={detailsRowsLevels} visibleLevels={visibleLevels} toggleLevel={level => setVisibleLevels(toggleLevel(level, visibleLevels))} />
