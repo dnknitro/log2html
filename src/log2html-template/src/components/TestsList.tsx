@@ -35,7 +35,7 @@ export const TestsList = ({ onTestClick }: { onTestClick: (summaryRow: SummaryRo
 					<Card key={summaryRow.testCaseName} hoverable size="small" className="testNameCard" onClick={() => onTestClick(summaryRow)}>
 						<Flex align="center" gap="small">
 							<LogLevelTag level={summaryRow.level} />
-							<Typography.Text copyable style={{ fontWeight: 'bold', flex: '1' }}>{summaryRow.testCaseNameShort}</Typography.Text>
+							<Typography.Text copyable style={{ fontWeight: 'bold', flex: '1' }}><span dangerouslySetInnerHTML={{__html: summaryRow.testCaseNameShort}}/></Typography.Text>
 							<div style={{ display: 'flex' }} title={`Duration: ${summaryRow.durationStr} ${timeOnlyFormatter.format(summaryRow.startTime)} ... ${timeOnlyFormatter.format(summaryRow.endTime)}`}>
 								<span style={{ marginTop: '8px', marginRight: '4px' }} className={summaryRow.level}>{relativeDurationHack.map(x => (<span key={x} className='durationMark'></span>))}</span>
 								{summaryRow.durationStr}

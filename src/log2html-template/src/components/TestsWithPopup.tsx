@@ -17,7 +17,7 @@ export const TestsWithPopup = () => {
 		}} />
 
 		<Modal
-			title={<Typography.Title level={3} style={{marginTop: 0}}><LogLevelTag level={activeSummaryRow?.level ?? "DEBUG"} /><span dangerouslySetInnerHTML={{ __html: activeSummaryRow?.testCaseName ?? '' }} /></Typography.Title>}
+			title={<Typography.Title level={3} style={{ marginTop: 0 }}><LogLevelTag level={activeSummaryRow?.level ?? "DEBUG"} /><span dangerouslySetInnerHTML={{ __html: activeSummaryRow?.testCaseName ?? '' }} /></Typography.Title>}
 			destroyOnClose
 			width='96%'
 			footer={null}
