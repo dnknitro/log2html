@@ -101,14 +101,22 @@ if (!detailsRows.length) {
 			{ "ID": 1123, "Level": "INFO", "LevelValue": 1, "Message": "TestAppend4: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "ThreadName": "ParallelWorker#14", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:51:56.6465803Z", "ScreenshotPath": null, "Exception": null, "TestCaseName": "2nd TestAppend4", "Browser": null },
 			{ "ID": 1124, "Level": "PASS", "LevelValue": 3, "Message": "TestAppend4: Fail Skip test", "ThreadName": "ParallelWorker#14", "StackTrace": null, "TimeStampUtc": "2024-02-22T05:51:56.6465924Z", "ScreenshotPath": null, "Exception": null, "TestCaseName": "2nd TestAppend4", "Browser": null },
 			...Array.from({ length: 1000 }, (_value, index) => index)
-				.map(i => ({
-					"ID": i,
-					"Level": i < 997 ? "INFO" : "PASS",
-					"LevelValue": i < 997 ? 1 : 3,
-					"Message": `${i} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-					"TimeStampUtc": new Date(initialTimeStamp.getTime() + (i + 1) * 500).toISOString(),
-					"TestCaseName": "A long one"
-				}))
+				.map(i => {
+					let level = i < 997 ? "INFO" : "PASS"
+					let levelValue = i < 997 ? 1 : 3
+					if (i === 800) {
+						level = 'FAIL'
+						levelValue = 5
+					}
+					return ({
+						"ID": i,
+						"Level": level,
+						"LevelValue": levelValue,
+						"Message": `${i} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+						"TimeStampUtc": new Date(initialTimeStamp.getTime() + (i + 1) * 500).toISOString(),
+						"TestCaseName": "A long one"
+					})
+				})
 		].map((x, i) => {
 			x.ID = i
 			x.TimeStampUtc = new Date(initialTimeStamp.getTime() + i * 100).toISOString()

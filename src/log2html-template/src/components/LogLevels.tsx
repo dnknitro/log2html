@@ -3,9 +3,9 @@ import { Flex, Switch } from "antd"
 import { LogLevel } from "../types"
 import { levelToColor } from "../utils"
 
-export const LogLevels = ({ allLevels, visibleLevels, toggleLevel }: { allLevels: ([LogLevel, number])[], visibleLevels: LogLevel[], toggleLevel: (level: LogLevel) => void }) => {
+export const LogLevels = ({ allLevels, visibleLevels, toggleLevel, children }: React.PropsWithChildren<{ allLevels: ([LogLevel, number])[], visibleLevels: LogLevel[], toggleLevel: (level: LogLevel) => void }>) => {
 	return (
-		<Flex gap="small" align='flex-start'>
+		<Flex gap="small" align='baseline' justify='left'>
 			{Array.from(allLevels).map(([level, amount]) => {
 				const isVisible = visibleLevels.includes(level)
 				const label = `${amount} ${level}`
@@ -14,6 +14,7 @@ export const LogLevels = ({ allLevels, visibleLevels, toggleLevel }: { allLevels
 						style={{ backgroundColor: isVisible ? levelToColor.get(level) : 'lightgray' }} />
 				)
 			})}
+			{children}
 		</Flex>
 	)
 }
