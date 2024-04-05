@@ -11,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log2html.Test", "log2html.Test\log2html.Test.csproj", "{D62CAD67-785A-4454-B4AF-D86F13325990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html.Support.Test", "log2html.Support.Test\log2html.Support.Test.csproj", "{3645B4C1-6161-4E55-B06F-9CA47277ACDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log2html.Support.Test", "log2html.Support.Test\log2html.Support.Test.csproj", "{3645B4C1-6161-4E55-B06F-9CA47277ACDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log2html.nuget.test", "log2html.nuget.test\log2html.nuget.test.csproj", "{0F0D51DF-8BDA-4BF5-9B9D-F0B82CA5A97B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{3645B4C1-6161-4E55-B06F-9CA47277ACDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3645B4C1-6161-4E55-B06F-9CA47277ACDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3645B4C1-6161-4E55-B06F-9CA47277ACDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F0D51DF-8BDA-4BF5-9B9D-F0B82CA5A97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F0D51DF-8BDA-4BF5-9B9D-F0B82CA5A97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F0D51DF-8BDA-4BF5-9B9D-F0B82CA5A97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F0D51DF-8BDA-4BF5-9B9D-F0B82CA5A97B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D62CAD67-785A-4454-B4AF-D86F13325990} = {3996CD61-BC14-471E-AEB8-8809B50E39E1}
 		{3645B4C1-6161-4E55-B06F-9CA47277ACDE} = {3996CD61-BC14-471E-AEB8-8809B50E39E1}
+		{0F0D51DF-8BDA-4BF5-9B9D-F0B82CA5A97B} = {3996CD61-BC14-471E-AEB8-8809B50E39E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BE3CCBC-D7D8-422A-902A-94F6AE729DA6}
