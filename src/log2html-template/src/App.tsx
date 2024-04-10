@@ -1,11 +1,13 @@
 import { Flex, Input, Space } from 'antd'
 import { useState } from 'react'
-import './App.css'
-import { DataContext, defaultDataContextData } from './DataContext'
-import { SearchContext } from './SearchContext'
+
 import { ChartUI } from './components/ChartUI'
 import { TestsHeader } from './components/TestsHeader'
 import { TestsWithPopup } from './components/TestsWithPopup'
+import { DataContext, defaultDataContextData } from './DataContext'
+import { SearchContext } from './SearchContext'
+
+import './App.css'
 
 function App() {
 	const [searchKeyword, setSearchKeyword] = useState("")
