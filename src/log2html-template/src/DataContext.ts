@@ -188,19 +188,6 @@ summaryRows.forEach(summaryRow => {
 const reportStartTime = (minBy(detailsRows, 'TimeStampUtc') as DetailsRow).TimeStampUtc
 const reportEndTime = (maxBy(detailsRows, 'TimeStampUtc') as DetailsRow).TimeStampUtc
 
-// const levelsAndBrowsers = new Map<string, { Count: number, Level: LogLevel, Browser: string }>()
-// summaryRows.map(item => {
-// 	let key = item.level
-// 	if (item.tempBrowser) key = key + ' ' + item.tempBrowser
-
-// 	const current = levelsAndBrowsers.get(key)
-// 	if (!current) {
-// 		levelsAndBrowsers.set(key, { Count: 1, Level: item.level, Browser: item.tempBrowser ?? '' })
-// 	} else {
-// 		current.Count++
-// 	}
-// })
-
 export const defaultDataContextData = {
 	reportMetaData,
 	reportStartTime,

@@ -25,7 +25,7 @@ export const TestsList = ({ onTestClick }: { onTestClick: (summaryRow: SummaryRo
 
 	return (<>
 		<Space direction="vertical" size="small" style={{ width: '100%' }}>
-			<div style={{ paddingTop: '16px', paddingLeft: '8px' }}>
+			<div style={{ paddingLeft: '8px' }}>
 				<LogLevels allLevels={allLevelsAndCounts} visibleLevels={visibleLevels} toggleLevel={level => setVisibleLevels(toggleLevel(level, visibleLevels))} />
 			</div>
 

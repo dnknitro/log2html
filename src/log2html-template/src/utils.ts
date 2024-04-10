@@ -62,17 +62,20 @@ export const levelToAntColor = (level: LogLevel) => {
 }
 
 const styleSheet = document.styleSheets[0]
-levelToColor.forEach((color, logLevel) => {
-	const level = logLevel.toLowerCase()
+if (styleSheet)
+	levelToColor.forEach((color, logLevel) => {
+		const level = logLevel.toLowerCase()
 
-	styleSheet.insertRule(`.${level} .durationMark { background-color: ${color} !important; border-color: ${color} !important; }`, 1)
-	// styleSheet.insertRule(`.${level}StatusMark { background-color: ${color} !important; text-align: center; }`, 1)
-	styleSheet.insertRule(`.status${level} { color: ${color} !important; }`, 1)
+		styleSheet.insertRule(`.${level} .durationMark { background-color: ${color} !important; border-color: ${color} !important; }`, 1)
+		// styleSheet.insertRule(`.${level}StatusMark { background-color: ${color} !important; text-align: center; }`, 1)
+		styleSheet.insertRule(`.status${level} { color: ${color} !important; }`, 1)
 
-	styleSheet.insertRule(`.${logLevel} .durationMark { background-color: ${color} !important; border-color: ${color} !important; }`, 1)
-	// styleSheet.insertRule(`.${logLevel}StatusMark { background-color: ${color} !important; text-align: center; }`, 1)
-	styleSheet.insertRule(`.status${logLevel} { color: ${color} !important; }`, 1)
-})
+		styleSheet.insertRule(`.${logLevel} .durationMark { background-color: ${color} !important; border-color: ${color} !important; }`, 1)
+		// styleSheet.insertRule(`.${logLevel}StatusMark { background-color: ${color} !important; text-align: center; }`, 1)
+		styleSheet.insertRule(`.status${logLevel} { color: ${color} !important; }`, 1)
+	})
+else
+	console.warn('could not update CSS stylesheet')
 
 export const toggleLevel = (level: LogLevel, levels: LogLevel[]) => {
 	const newLevels = [...levels]

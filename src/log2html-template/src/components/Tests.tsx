@@ -6,12 +6,12 @@ import { DetailsTable } from "./DetailsTable"
 import { LogLevelTag } from "./LogLevelTag"
 import { TestsList } from "./TestsList"
 
-export const TestsWithPopup = () => {
+export const Tests = () => {
 	const [activeSummaryRow, setActiveSummaryRow] = useState<SummaryRow>()
 	const isModalOpen = !!activeSummaryRow
 	const closeModal = () => setActiveSummaryRow(undefined)
 
-	return <>
+	return <div>
 		<TestsList onTestClick={summaryRow => {
 			setActiveSummaryRow(summaryRow)
 		}} />
@@ -24,5 +24,5 @@ export const TestsWithPopup = () => {
 			open={isModalOpen} onOk={closeModal} onCancel={closeModal}>
 			<DetailsTable summaryRow={activeSummaryRow!} showTitle={false} />
 		</Modal>
-	</>
+	</div>
 }
