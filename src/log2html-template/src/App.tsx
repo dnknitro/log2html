@@ -14,8 +14,10 @@ function App() {
 		<DataContext.Provider value={defaultDataContextData}>
 			<SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
 				<table>
-					<tr><td><TestsHeader /></td></tr>
-					<tr><td><Tests /></td></tr>
+					<tbody>
+						<tr><td><TestsHeader /></td></tr>
+						<tr><td><Tests /></td></tr>
+					</tbody>
 				</table>
 			</SearchContext.Provider>
 		</DataContext.Provider>

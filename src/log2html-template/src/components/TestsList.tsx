@@ -24,7 +24,7 @@ export const TestsList = ({ onTestClick }: { onTestClick: (summaryRow: SummaryRo
 	}, [searchKeyword, summaryRows, visibleLevels])
 
 	return (<>
-		<Space direction="vertical" size="small" style={{ width: '100%' }}>
+		<Space orientation="vertical" size="small" style={{ width: '100%' }}>
 			<div style={{ paddingLeft: '8px' }}>
 				<LogLevels allLevels={allLevelsAndCounts} visibleLevels={visibleLevels} toggleLevel={level => setVisibleLevels(toggleLevel(level, visibleLevels))} />
 			</div>

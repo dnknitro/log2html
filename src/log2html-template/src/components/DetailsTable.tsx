@@ -29,9 +29,9 @@ export const DetailsTable = ({ summaryRow, showTitle }: { summaryRow: SummaryRow
 	}, [filteredDetailsRows])
 
 	return (<>
-		<FloatButton icon={<VerticalAlignTopOutlined />} type="default" tooltip='Jump to top' style={{ top: 8 }}
+		<FloatButton icon={<VerticalAlignTopOutlined />} type="default" tooltip='Jump to top'
 			onClick={() => topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })} />
-		<Space direction="vertical" style={{ width: '100%', overflow: 'auto' }}>
+		<Space orientation="vertical" style={{ width: '100%', overflow: 'auto' }}>
 			{showTitle && <Typography.Title level={4} style={{ margin: 0 }}>{summaryRow.testCaseName}</Typography.Title>}
 			{/* <Affix> */}
 			<div ref={topRef}>

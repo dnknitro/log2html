@@ -8,12 +8,11 @@ import { ChartUI } from "./ChartUI"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const htmlVersion = (window as any).reportVersion
+const ChartUIMemo = memo(ChartUI)
 
 export const TestsHeader = () => {
 	const { reportMetaData, reportStartTime, reportEndTime/*, summaryRows, levelsAndBrowsers*/ } = useContext(DataContext)
 	const { searchKeyword, setSearchKeyword } = useContext(SearchContext)
-
-	const ChartUIMemo = memo(ChartUI)
 
 	return (
 		<Flex align='stretch'>

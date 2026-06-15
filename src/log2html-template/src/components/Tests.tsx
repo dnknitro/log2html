@@ -18,7 +18,7 @@ export const Tests = () => {
 
 		<Modal
 			title={<Typography.Title level={3} style={{ marginTop: 0 }}><LogLevelTag level={activeSummaryRow?.level ?? "DEBUG"} /><span dangerouslySetInnerHTML={{ __html: activeSummaryRow?.testCaseName ?? '' }} /></Typography.Title>}
-			destroyOnClose
+			destroyOnHidden
 			width='96%'
 			footer={null}
 			open={isModalOpen} onOk={closeModal} onCancel={closeModal}>

@@ -9,11 +9,14 @@ import { calcDuration } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let reportMetaData: ReportMetaData = (window as any).reportMetaData
-if (!reportMetaData.ReportName && process.env.NODE_ENV === 'development') {
-	const testReportName = `${process.env.NODE_ENV} Test Execution Report`
+const isDevelopment = import.meta.env.DEV
+const mode = import.meta.env.MODE
+
+if (!reportMetaData.ReportName && isDevelopment) {
+	const testReportName = `${mode} Test Execution Report`
 	reportMetaData = {
 		"ReportName": testReportName,
-		"ReportEnvironment": `${process.env.NODE_ENV}`,
+		"ReportEnvironment": mode,
 		"ReportStartDateTime": new Date().toString(),
 		"ReportTitle": testReportName + ' Title',
 	}
@@ -26,7 +29,7 @@ let detailsRows = ((window as any).detailsRows as DetailsRow[])
 if (!detailsRows.length) {
 	const initialTimeStamp = new Date(Date.parse("2024-02-22T05:10:38.6786882Z"))
 
-	detailsRows = (process.env.NODE_ENV !== 'development'
+	detailsRows = (!isDevelopment
 		// no data
 		? [
 			{ "ID": 1, "Level": "INFO", "LevelValue": 40000, "Message": "NO log records", "ThreadName": "", "StackTrace": null, "TimeStampUtc": new Date().toISOString(), "ScreenshotPath": null, "Browser": "", "Exception": null, "TestCaseName": "NO log records" },
