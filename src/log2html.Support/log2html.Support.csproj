@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>dnk.log2html.Support</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageLicenseExpression>SimPL-2.0</PackageLicenseExpression>
