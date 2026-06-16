@@ -31,6 +31,40 @@ table.details>tbody>tr>td {
   padding: 3px;
 }
 
+.detailsRowAnimated {
+  animation: detailsRowIn 300ms ease-out;
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.detailsRowHidden {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.detailsRowVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes detailsRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detailsRowAnimated {
+    animation: none;
+    transition: none;
+  }
+}
+
 .messageCol {
   width: 100%;
 }
